@@ -1,0 +1,2813 @@
+@prefix : <http://purl.obolibrary.org/obo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix obo: <http://purl.obolibrary.org/obo/obo/> .
+@prefix MP: <http://purl.obolibrary.org/obo/obo/MP_> .
+@base <http://purl.obolibrary.org/obo/> .
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  MP_0000001
+
+<MP_0000001> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "mammalian phenotype"^^xsd:string .
+
+
+
+###  MP_0000003
+
+<MP_0000003> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal adipose tissue morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005375> .
+
+
+
+###  MP_0000010
+
+<MP_0000010> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal abdominal fat pad morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005334> .
+
+
+
+###  MP_0000018
+
+<MP_0000018> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small ears"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002177> .
+
+
+
+###  MP_0000249
+
+<MP_0000249> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal blood vessel physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001544> .
+
+
+
+###  MP_0000367
+
+<MP_0000367> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal coat/ hair morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010678> .
+
+
+
+###  MP_0000428
+
+<MP_0000428> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal craniofacial morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005382> .
+
+
+
+###  MP_0000432
+
+<MP_0000432> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal head morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000428> .
+
+
+
+###  MP_0000435
+
+<MP_0000435> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "shortened head"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0011495> .
+
+
+
+###  MP_0000572
+
+<MP_0000572> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal autopod morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002109> .
+
+
+
+###  MP_0000639
+
+<MP_0000639> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal adrenal gland morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002163> .
+
+
+
+###  MP_0000653
+
+<MP_0000653> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal sex gland morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002160> ,
+                                                            <MP_0002163> .
+
+
+
+###  MP_0000685
+
+<MP_0000685> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal immune system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005387> .
+
+
+
+###  MP_0000746
+
+<MP_0000746> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "weakness"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004262> .
+
+
+
+###  MP_0000771
+
+<MP_0000771> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> .
+
+
+
+###  MP_0000778
+
+<MP_0000778> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal nervous system tract morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003632> .
+
+
+
+###  MP_0000780
+
+<MP_0000780> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal corpus callosum morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008219> ,
+                                                            <MP_0008540> .
+
+
+
+###  MP_0000781
+
+<MP_0000781> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased corpus callosum size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000780> .
+
+
+
+###  MP_0000783
+
+<MP_0000783> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal forebrain morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> .
+
+
+
+###  MP_0000787
+
+<MP_0000787> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal telencephalon morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000783> .
+
+
+
+###  MP_0000788
+
+<MP_0000788> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebral cortex morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008540> .
+
+
+
+###  MP_0000790
+
+<MP_0000790> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal stratification in cerebral cortex"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000788> .
+
+
+
+###  MP_0000792
+
+<MP_0000792> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cortical marginal zone morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000934> .
+
+
+
+###  MP_0000801
+
+<MP_0000801> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal temporal lobe morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008540> .
+
+
+
+###  MP_0000807
+
+<MP_0000807> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> ,
+                                                            <MP_0000801> ,
+                                                            <MP_0004166> .
+
+
+
+###  MP_0000812
+
+<MP_0000812> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal dentate gyrus morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000807> .
+
+
+
+###  MP_0000813
+
+<MP_0000813> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus layer morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000807> .
+
+
+
+###  MP_0000819
+
+<MP_0000819> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal olfactory bulb morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009944> .
+
+
+
+###  MP_0000822
+
+<MP_0000822> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain ventricle morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002200> .
+
+
+
+###  MP_0000823
+
+<MP_0000823> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal lateral ventricle morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> ,
+                                                            <MP_0000822> .
+
+
+
+###  MP_0000825
+
+<MP_0000825> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "dilated lateral ventricles"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000823> .
+
+
+
+###  MP_0000841
+
+<MP_0000841> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hindbrain morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> .
+
+
+
+###  MP_0000847
+
+<MP_0000847> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal metencephalon morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000841> .
+
+
+
+###  MP_0000849
+
+<MP_0000849> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellum morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000847> .
+
+
+
+###  MP_0000852
+
+<MP_0000852> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small cerebellum"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000849> .
+
+
+
+###  MP_0000853
+
+<MP_0000853> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "absent cerebellar foliation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000857> .
+
+
+
+###  MP_0000854
+
+<MP_0000854> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellum development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000849> ,
+                                                            <MP_0006108> .
+
+
+
+###  MP_0000857
+
+<MP_0000857> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar foliation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000854> ,
+                                                            <MP_0009964> .
+
+
+
+###  MP_0000872
+
+<MP_0000872> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellum external granule cell layer morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000854> .
+
+<pd> rdf:type  <MP_0000872> .
+<foo> rdf:type  <MP_0000872> .
+
+
+
+###  MP_0000875
+
+<MP_0000875> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar Purkinje cell layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009956> .
+
+
+
+###  MP_0000877
+
+<MP_0000877> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal Purkinje cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000875> ,
+                                                            <MP_0002882> .
+
+
+
+###  MP_0000884
+
+<MP_0000884> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "delaminated Purkinje cell layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000875> .
+
+
+
+###  MP_0000885
+
+<MP_0000885> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "ectopic Purkinje cell"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000877> ,
+                                                            <MP_0011723> .
+
+
+
+###  MP_0000886
+
+<MP_0000886> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar granule layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009956> .
+
+
+
+###  MP_0000889
+
+<MP_0000889> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar molecular layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009956> .
+
+
+
+###  MP_0000913
+
+<MP_0000913> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> ,
+                                                            <MP_0003861> .
+
+
+
+###  MP_0000929
+
+<MP_0000929> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "open neural tube"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003720> .
+
+
+
+###  MP_0000934
+
+<MP_0000934> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal telencephalon development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> ,
+                                                            <MP_0003232> .
+
+
+
+###  MP_0000937
+
+<MP_0000937> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal motor neuron morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002882> ,
+                                                            <MP_0008503> .
+
+
+
+###  MP_0000950
+
+<MP_0000950> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal seizure response to pharmacological agent"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009357> ,
+                                                            <MP_0009745> .
+
+
+
+###  MP_0000955
+
+<MP_0000955> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal spinal cord morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003632> .
+
+
+
+###  MP_0001116
+
+<MP_0001116> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small gonad"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002211> .
+
+<sg> rdf:type  <MP_0001116> .
+
+
+
+###  MP_0001117
+
+<MP_0001117> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "absent gametes"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001124> ,
+                                                            <MP_0004806> .
+
+
+<sg> rdf:type  <MP_0001117> .
+
+
+
+###  MP_0001119
+
+<MP_0001119> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal female reproductive system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002160> .
+
+
+
+###  MP_0001120
+
+<MP_0001120> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal uterus morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009209> .
+
+
+
+###  MP_0001124
+
+<MP_0001124> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal gametes"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002208> .
+
+
+
+###  MP_0001126
+
+<MP_0001126> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal ovary morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000653> ,
+                                                            <MP_0009209> .
+
+
+
+###  MP_0001127
+
+<MP_0001127> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small ovary"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001116> ,
+                                                            <MP_0004853> .
+
+
+
+###  MP_0001145
+
+<MP_0001145> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal male reproductive system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002160> .
+
+
+
+###  MP_0001146
+
+<MP_0001146> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal testis morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000653> ,
+                                                            <MP_0009205> .
+
+
+
+###  MP_0001147
+
+<MP_0001147> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small testis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001116> ,
+                                                            <MP_0004849> .
+
+
+
+###  MP_0001156
+
+<MP_0001156> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal spermatogenesis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001929> .
+
+
+
+###  MP_0001175
+
+<MP_0001175> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal lung morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002132> .
+
+
+
+###  MP_0001259
+
+<MP_0001259> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal body weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003956> .
+
+
+
+###  MP_0001262
+
+<MP_0001262> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased body weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001259> ,
+                                                            <MP_0001265> .
+
+
+
+###  MP_0001265
+
+<MP_0001265> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003956> .
+
+
+
+###  MP_0001286
+
+<MP_0001286> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal eye development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002092> .
+
+
+
+###  MP_0001379
+
+<MP_0001379> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal penile erection"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003698> ,
+                                                            <MP_0009697> .
+
+
+
+###  MP_0001392
+
+<MP_0001392> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal locomotor behavior"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003491> .
+
+
+
+###  MP_0001402
+
+<MP_0001402> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "hypoactivity"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003313> .
+
+
+
+###  MP_0001405
+
+<MP_0001405> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "impaired coordination"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001516> .
+
+<pd> rdf:type <MP_0001405>  .
+
+
+###  MP_0001463
+
+<MP_0001463> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal spatial learning"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002063> .
+
+
+
+###  MP_0001468
+
+<MP_0001468> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal temporal memory"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002063> .
+
+
+
+###  MP_0001469
+
+<MP_0001469> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal contextual conditioning behavior"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001468> ,
+                                                            <MP_0002062> .
+
+
+
+###  MP_0001475
+
+<MP_0001475> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "reduced long term depression"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001898> .
+
+
+
+###  MP_0001491
+
+<MP_0001491> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "unresponsive to tactile stimuli"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004270> ,
+                                                            <MP_0005316> .
+
+
+
+###  MP_0001510
+
+<MP_0001510> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal coat appearance"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000367> .
+
+
+
+###  MP_0001516
+
+<MP_0001516> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal motor coordination/ balance"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002066> .
+
+
+
+###  MP_0001544
+
+<MP_0001544> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cardiovascular system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005385> .
+
+
+
+###  MP_0001672
+
+<MP_0001672> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal embryogenesis/ development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005380> .
+
+
+
+###  MP_0001688
+
+<MP_0001688> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal somite development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002085> .
+
+
+
+###  MP_0001697
+
+<MP_0001697> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal embryo size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001672> ,
+                                                            <MP_0002088> ,
+                                                            <MP_0010866> .
+
+
+
+###  MP_0001698
+
+<MP_0001698> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased embryo size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001697> .
+
+
+
+###  MP_0001731
+
+<MP_0001731> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal postnatal growth"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002089> .
+
+
+
+###  MP_0001732
+
+<MP_0001732> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "postnatal growth retardation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001731> .
+
+
+
+###  MP_0001764
+
+<MP_0001764> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal homeostasis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005376> .
+
+
+
+###  MP_0001784
+
+<MP_0001784> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal fluid regulation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001764> .
+
+
+
+###  MP_0001879
+
+<MP_0001879> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal lymphatic vessel morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000685> .
+
+
+
+###  MP_0001898
+
+<MP_0001898> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal long term depression"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002915> .
+
+
+<pd> rdf:type <MP_0001898> .
+
+
+###  MP_0001919
+
+<MP_0001919> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal reproductive system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005389> .
+
+
+
+###  MP_0001924
+
+<MP_0001924> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "infertility"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002161> .
+
+
+
+###  MP_0001925
+
+<MP_0001925> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "male infertility"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001924> ,
+                                                            <MP_0003698> .
+
+
+
+###  MP_0001926
+
+<MP_0001926> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "female infertility"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001924> ,
+                                                            <MP_0003699> .
+
+
+
+###  MP_0001927
+
+<MP_0001927> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal estrous cycle"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009344> .
+
+
+
+###  MP_0001929
+
+<MP_0001929> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal gametogenesis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002160> .
+
+
+
+###  MP_0001943
+
+<MP_0001943> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal respiration"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002133> .
+
+
+
+###  MP_0001951
+
+<MP_0001951> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal breathing pattern"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002327> .
+
+
+
+###  MP_0001953
+
+<MP_0001953> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "respiratory failure"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001943> .
+
+
+
+###  MP_0001954
+
+<MP_0001954> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "respiratory distress"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001951> .
+
+
+
+###  MP_0001968
+
+<MP_0001968> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal touch/ nociception"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002067> ,
+                                                            <MP_0010771> .
+
+
+
+###  MP_0001970
+
+<MP_0001970> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal pain threshold"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001968> .
+
+
+
+###  MP_0001973
+
+<MP_0001973> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "increased thermal nociceptive threshold"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002733> ,
+                                                            <MP_0003043> .
+
+
+
+###  MP_0002062
+
+<MP_0002062> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal associative learning"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002063> .
+
+
+
+###  MP_0002063
+
+<MP_0002063> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal learning/memory/conditioning"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004924> .
+
+
+
+###  MP_0002064
+
+<MP_0002064> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "seizures"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003633> ,
+                                                            <MP_0004924> .
+
+<ep> rdf:type <MP_0002064> .
+
+
+
+###  MP_0002066
+
+<MP_0002066> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal motor capabilities/coordination/movement"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004924> .
+
+
+
+###  MP_0002067
+
+<MP_0002067> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal sensory capabilities/reflexes/nociception"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004924> .
+
+
+
+###  MP_0002073
+
+<MP_0002073> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hair growth"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001510> .
+
+
+
+###  MP_0002080
+
+<MP_0002080> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "prenatal lethality"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010769> ,
+                                                            <MP_0010770> .
+
+
+
+###  MP_0002081
+
+<MP_0002081> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "perinatal lethality"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010769> ,
+                                                            <MP_0010832> .
+
+
+
+###  MP_0002082
+
+<MP_0002082> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "postnatal lethality"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010769> ,
+                                                            <MP_0010832> .
+
+
+
+###  MP_0002083
+
+<MP_0002083> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "premature death"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010769> .
+
+
+
+###  MP_0002085
+
+<MP_0002085> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal embryonic tissue morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001672> .
+
+
+
+###  MP_0002088
+
+<MP_0002088> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal embryonic growth/weight/body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004196> .
+
+
+
+###  MP_0002089
+
+<MP_0002089> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal postnatal growth/weight/body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005378> .
+
+
+
+###  MP_0002092
+
+<MP_0002092> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal eye morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005391> .
+
+
+
+###  MP_0002102
+
+<MP_0002102> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal ear morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005377> .
+
+
+
+###  MP_0002109
+
+<MP_0002109> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal limb morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005371> .
+
+
+
+###  MP_0002111
+
+<MP_0002111> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal tail morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005371> .
+
+
+
+###  MP_0002132
+
+<MP_0002132> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal respiratory system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005388> .
+
+
+
+###  MP_0002133
+
+<MP_0002133> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal respiratory system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005388> .
+
+
+
+###  MP_0002151
+
+<MP_0002151> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neural tube morphology/development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002085> ,
+                                                            <MP_0003861> .
+
+
+
+###  MP_0002152
+
+<MP_0002152> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003632> .
+
+
+
+###  MP_0002160
+
+<MP_0002160> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal reproductive system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005389> .
+
+
+
+###  MP_0002161
+
+<MP_0002161> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal fertility/fecundity"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001919> .
+
+
+
+###  MP_0002163
+
+<MP_0002163> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal gland morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005379> .
+
+
+
+###  MP_0002177
+
+<MP_0002177> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal outer ear morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000432> ,
+                                                            <MP_0002102> .
+
+
+
+###  MP_0002199
+
+<MP_0002199> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain commissure morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000778> ,
+                                                            <MP_0008026> .
+
+
+
+###  MP_0002200
+
+<MP_0002200> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain ventricle/choroid plexus morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> .
+
+
+
+###  MP_0002206
+
+<MP_0002206> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal CNS synaptic transmission"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003635> .
+
+
+<ep> rdf:type <MP_0002206> .
+
+
+
+###  MP_0002208
+
+<MP_0002208> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal germ cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001929> .
+
+
+
+###  MP_0002209
+
+<MP_0002209> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased germ cell number"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002208> .
+
+
+
+###  MP_0002210
+
+<MP_0002210> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal sex determination"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002160> .
+
+
+
+###  MP_0002211
+
+<MP_0002211> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal primary sex determination"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002210> .
+
+
+
+###  MP_0002286
+
+<MP_0002286> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "cryptorchism"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001146> .
+
+
+
+###  MP_0002327
+
+<MP_0002327> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal respiratory function"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001943> .
+
+
+
+###  MP_0002557
+
+<MP_0002557> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal social/conspecific interaction"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004924> .
+
+
+
+###  MP_0002566
+
+<MP_0002566> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal sexual interaction"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002557> .
+
+
+
+###  MP_0002637
+
+<MP_0002637> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small uterus"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004902> .
+
+
+
+###  MP_0002673
+
+<MP_0002673> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal sperm number"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001929> .
+
+
+
+###  MP_0002733
+
+<MP_0002733> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal thermal nociception"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001968> .
+
+
+
+###  MP_0002739
+
+<MP_0002739> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal olfactory bulb development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000819> ,
+                                                            <MP_0000913> .
+
+
+
+###  MP_0002758
+
+<MP_0002758> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "long tail"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002111> .
+
+
+
+###  MP_0002762
+
+<MP_0002762> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "ectopic cerebellar granule cells"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004098> ,
+                                                            <MP_0011723> .
+
+
+
+###  MP_0002768
+
+<MP_0002768> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "small adrenal glands"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000639> .
+
+
+
+###  MP_0002772
+
+<MP_0002772> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "brachypodia"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000572> .
+
+
+
+###  MP_0002802
+
+<MP_0002802> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal discrimination learning"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002063> .
+
+
+
+###  MP_0002881
+
+<MP_0002881> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "long hair"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002073> .
+
+
+
+###  MP_0002882
+
+<MP_0002882> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neuron morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003632> .
+
+
+
+###  MP_0002883
+
+<MP_0002883> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "chromatolysis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002882> .
+
+
+
+###  MP_0002906
+
+<MP_0002906> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "increased susceptibility to pharmacologically induced seizures"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000950> .
+
+
+
+###  MP_0002915
+
+<MP_0002915> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal synaptic depression"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002206> .
+
+
+
+###  MP_0002950
+
+<MP_0002950> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neural crest cell migration"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003091> ,
+                                                            <MP_0008932> .
+
+
+
+###  MP_0002969
+
+<MP_0002969> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "impaired social transmission of food preference"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002802> .
+
+
+
+###  MP_0003043
+
+<MP_0003043> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "hypoalgesia"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001970> .
+
+
+
+###  MP_0003091
+
+<MP_0003091> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cell migration"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005621> .
+
+
+
+###  MP_0003232
+
+<MP_0003232> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal forebrain development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000783> ,
+                                                            <MP_0000913> .
+
+
+
+###  MP_0003313
+
+<MP_0003313> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal locomotor activation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001392> .
+
+
+
+###  MP_0003415
+
+<MP_0003415> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "priapism"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001379> .
+
+
+
+###  MP_0003491
+
+<MP_0003491> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal voluntary movement"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002066> .
+
+
+
+###  MP_0003631
+
+<MP_0003631> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "nervous system phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0003632
+
+<MP_0003632> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal nervous system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003631> .
+
+
+
+###  MP_0003633
+
+<MP_0003633> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal nervous system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003631> .
+
+
+
+###  MP_0003635
+
+<MP_0003635> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal synaptic transmission"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003633> .
+
+
+
+###  MP_0003660
+
+<MP_0003660> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "chylothorax"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010334> .
+
+
+
+###  MP_0003698
+
+<MP_0003698> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal male reproductive system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001919> .
+
+
+
+###  MP_0003699
+
+<MP_0003699> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal female reproductive system physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001919> .
+
+
+
+###  MP_0003720
+
+<MP_0003720> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neural tube closure"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002151> .
+
+
+
+###  MP_0003861
+
+<MP_0003861> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal nervous system development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003632> .
+
+
+
+###  MP_0003956
+
+<MP_0003956> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002089> .
+
+
+
+###  MP_0004038
+
+<MP_0004038> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "lymphangiectasis"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010200> .
+
+
+
+###  MP_0004077
+
+<MP_0004077> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal striatum morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> ,
+                                                            <MP_0006007> .
+
+
+
+###  MP_0004097
+
+<MP_0004097> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar cortex morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000849> .
+
+
+
+###  MP_0004098
+
+<MP_0004098> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar granule cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000886> .
+
+
+
+###  MP_0004166
+
+<MP_0004166> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal limbic system morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000783> .
+
+
+
+###  MP_0004196
+
+<MP_0004196> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal prenatal growth/weight/body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005378> .
+
+
+
+###  MP_0004262
+
+<MP_0004262> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal physical strength"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002066> .
+
+
+
+###  MP_0004270
+
+<MP_0004270> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "analgesia"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001968> .
+
+
+
+###  MP_0004806
+
+<MP_0004806> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "absent germ cells"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002209> .
+
+
+
+###  MP_0004849
+
+<MP_0004849> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal testis size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001146> .
+
+
+
+###  MP_0004853
+
+<MP_0004853> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal ovary size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001126> .
+
+
+
+###  MP_0004889
+
+<MP_0004889> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "increased energy expenditure"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005450> .
+
+
+
+###  MP_0004901
+
+<MP_0004901> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased male germ cell number"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002209> ,
+                                                            <MP_0006362> .
+
+
+
+###  MP_0004902
+
+<MP_0004902> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal uterus size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001120> .
+
+
+
+###  MP_0004924
+
+<MP_0004924> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal behavior"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005386> .
+
+
+
+###  MP_0005076
+
+<MP_0005076> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cell differentiation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005621> .
+
+
+
+###  MP_0005159
+
+<MP_0005159> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "azoospermia"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001117> ,
+                                                            <MP_0001156> ,
+                                                            <MP_0002673> ,
+                                                            <MP_0004901> .
+
+
+
+###  MP_0005316
+
+<MP_0005316> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal response to tactile stimuli"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001968> .
+
+
+
+###  MP_0005334
+
+<MP_0005334> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal fat pad morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000003> .
+
+
+
+###  MP_0005336
+
+<MP_0005336> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal inguinal fat pad morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000010> .
+
+
+
+###  MP_0005371
+
+<MP_0005371> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "limbs/digits/tail phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005375
+
+<MP_0005375> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "adipose tissue phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005376
+
+<MP_0005376> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "homeostasis/metabolism phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005377
+
+<MP_0005377> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "hearing/vestibular/ear phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005378
+
+<MP_0005378> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "growth/size phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005379
+
+<MP_0005379> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "endocrine/exocrine gland phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005380
+
+<MP_0005380> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "embryogenesis phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005382
+
+<MP_0005382> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "craniofacial phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005384
+
+<MP_0005384> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "cellular phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005385
+
+<MP_0005385> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "cardiovascular system phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005386
+
+<MP_0005386> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "behavior/neurological phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005387
+
+<MP_0005387> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "immune system phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005388
+
+<MP_0005388> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "respiratory system phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005389
+
+<MP_0005389> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "reproductive system phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005391
+
+<MP_0005391> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "vision/eye phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0005448
+
+<MP_0005448> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal energy balance"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001764> .
+
+
+
+###  MP_0005450
+
+<MP_0005450> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal energy expenditure"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005448> .
+
+
+
+###  MP_0005452
+
+<MP_0005452> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal adipose tissue amount"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000003> .
+
+
+
+###  MP_0005457
+
+<MP_0005457> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal percent body fat"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005452> .
+
+
+
+###  MP_0005459
+
+<MP_0005459> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased percent body fat"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005457> .
+
+
+
+###  MP_0005621
+
+<MP_0005621> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cell physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005384> .
+
+
+
+###  MP_0005657
+
+<MP_0005657> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neural plate morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002085> ,
+                                                            <MP_0003861> .
+
+
+
+###  MP_0005659
+
+<MP_0005659> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased susceptibility to diet-induced obesity"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004889> ,
+                                                            <MP_0010182> .
+
+
+
+###  MP_0006007
+
+<MP_0006007> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal basal ganglion morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000783> .
+
+<pd> rdf:type <MP_0006007> .
+
+
+
+
+###  MP_0006108
+
+<MP_0006108> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hindbrain development"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000913> .
+
+
+
+###  MP_0006362
+
+<MP_0006362> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal male germ cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002208> .
+
+
+
+###  MP_0006378
+
+<MP_0006378> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal spermatogonia morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0006362> .
+
+
+
+###  MP_0008026
+
+<MP_0008026> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal brain white matter morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002152> .
+
+
+
+###  MP_0008219
+
+<MP_0008219> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal dorsal telencephalic commissure morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002199> .
+
+
+
+###  MP_0008284
+
+<MP_0008284> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus pyramidal cell layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000813> .
+
+
+
+###  MP_0008285
+
+<MP_0008285> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus granule cell layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000813> .
+
+
+
+###  MP_0008439
+
+<MP_0008439> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cortical plate morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000934> .
+
+
+
+###  MP_0008440
+
+<MP_0008440> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal subplate morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000934> .
+
+
+
+###  MP_0008441
+
+<MP_0008441> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "thin cortical plate"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008439> .
+
+
+
+###  MP_0008489
+
+<MP_0008489> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "slow postnatal weight gain"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001262> ,
+                                                            <MP_0001732> .
+
+
+
+###  MP_0008503
+
+<MP_0008503> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal spinal cord grey matter morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000955> .
+
+
+
+###  MP_0008540
+
+<MP_0008540> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebrum morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> .
+
+
+
+###  MP_0008903
+
+<MP_0008903> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal mesenteric fat pad morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000010> .
+
+
+
+###  MP_0008932
+
+<MP_0008932> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal embryonic tissue physiology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001672> .
+
+
+
+###  MP_0008974
+
+<MP_0008974> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "proportional dwarf"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001265> .
+
+
+
+###  MP_0009198
+
+<MP_0009198> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal male genitalia morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001145> .
+
+
+
+###  MP_0009205
+
+<MP_0009205> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal internal male genitalia morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009198> .
+
+
+
+###  MP_0009208
+
+<MP_0009208> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal female genitalia morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001119> .
+
+
+
+###  MP_0009209
+
+<MP_0009209> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal internal female genitalia morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009208> .
+
+
+
+###  MP_0009293
+
+<MP_0009293> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased inguinal fat pad weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005336> .
+
+
+
+###  MP_0009299
+
+<MP_0009299> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased mesenteric fat pad weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008903> .
+
+
+
+###  MP_0009344
+
+<MP_0009344> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal ovulation cycle"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003699> .
+
+
+
+###  MP_0009357
+
+<MP_0009357> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal seizure response to inducing agent"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002064> .
+
+
+
+###  MP_0009672
+
+<MP_0009672> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal birth weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009701> .
+
+
+
+###  MP_0009674
+
+<MP_0009674> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased birth weight"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009672> ,
+                                                            <MP_0009703> .
+
+
+
+###  MP_0009697
+
+<MP_0009697> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal copulation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001919> .
+
+
+
+###  MP_0009701
+
+<MP_0009701> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal birth body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0005378> .
+
+
+
+###  MP_0009703
+
+<MP_0009703> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased birth body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0009701> .
+
+
+
+###  MP_0009718
+
+<MP_0009718> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "absent Purkinje cell layer"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000875> .
+
+
+
+###  MP_0009745
+
+<MP_0009745> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal behavioral response to xenobiotic"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004924> .
+
+
+
+###  MP_0009937
+
+<MP_0009937> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal neuron differentiation"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002882> ,
+                                                            <MP_0003861> ,
+                                                            <MP_0005076> .
+
+
+
+###  MP_0009938
+
+<MP_0009938> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus granule cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008285> ,
+                                                            <MP_0009939> .
+
+
+
+###  MP_0009939
+
+<MP_0009939> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus neuron morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000807> ,
+                                                            <MP_0002882> .
+
+
+
+###  MP_0009940
+
+<MP_0009940> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal hippocampus pyramidal cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0008284> ,
+                                                            <MP_0009939> .
+
+
+
+###  MP_0009944
+
+<MP_0009944> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal olfactory lobe morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000787> .
+
+
+
+###  MP_0009956
+
+<MP_0009956> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellar layer morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004097> .
+
+
+
+###  MP_0009964
+
+<MP_0009964> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebellum lobule morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004097> .
+
+
+
+###  MP_0009969
+
+<MP_0009969> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal cerebral cortex pyramidal cell morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000788> ,
+                                                            <MP_0002882> .
+
+
+
+###  MP_0010182
+
+<MP_0010182> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "decreased susceptibility to weight gain"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0011117> .
+
+
+
+###  MP_0010200
+
+<MP_0010200> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "enlarged lymphatic vessel"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001879> .
+
+
+
+###  MP_0010334
+
+<MP_0010334> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "pleural effusion"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001784> ,
+                                                            <MP_0002133> .
+
+
+
+###  MP_0010678
+
+<MP_0010678> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal skin adnexa morphology"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010771> .
+
+
+
+###  MP_0010768
+
+<MP_0010768> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "mortality/aging"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0010769
+
+<MP_0010769> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal survival"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010768> .
+
+
+
+###  MP_0010770
+
+<MP_0010770> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "preweaning lethality"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010769> .
+
+
+
+###  MP_0010771
+
+<MP_0010771> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "integument phenotype"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_0010832
+
+<MP_0010832> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "lethality during fetal growth through weaning"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0010770> .
+
+
+
+###  MP_0010866
+
+<MP_0010866> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal prenatal body size"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0004196> .
+
+
+
+###  MP_0011117
+
+<MP_0011117> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal susceptibility to weight gain"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0001259> .
+
+
+
+###  MP_0011495
+
+<MP_0011495> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "abnormal head shape"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000432> .
+
+
+
+###  MP_0011723
+
+<MP_0011723> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "ectopic neuron"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002882> .
+
+
+
+###  MP_9999995
+
+<MP_9999995> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "fake5"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0003631> .
+
+
+
+###  MP_9999996
+
+<MP_9999996> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "fake4"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_9999997> .
+
+
+
+###  MP_9999997
+
+<MP_9999997> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "fake3"^^xsd:string .
+
+
+
+###  MP_9999998
+
+<MP_9999998> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "fake2"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0000001> .
+
+
+
+###  MP_9999999
+
+<MP_9999999> rdf:type owl:Class ;
+                                            
+                                            rdfs:label "fake"^^xsd:string ;
+                                            
+                                            rdfs:subClassOf <MP_0002882> .
+
+
+<pd> rdfs:label "Parkinsons disease (fake for testing)" .
+## 'abnormal basal ganglion morphology'
+## 'abnormal cerebellum external granule cell layer morphology'
+## 'abnormal long term depression'
+## 'impaired coordination'
+
+<sg> rdfs:label "Small gonads disease (fake for testing)" .
+## 'absent gametes'
+## 'small gonad'
+
+<foo> rdfs:label "Foo disease (fake for testing)" .
+## 'abnormal cerebellum external granule cell layer morphology'
+
+<ep> rdfs:label "Epilepsy (fake for testing)" .
+## 'abnormal CNS synaptic transmission'
+## seizures
