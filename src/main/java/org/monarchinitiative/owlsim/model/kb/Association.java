@@ -15,7 +15,7 @@ public interface Association {
 	public Attribute getAttribute();
 	
 	/**
-	 * @return frequence of occurrences of class within type
+	 * @return frequency of occurrences of class within type
 	 */
 	public double getFrequency();
 
