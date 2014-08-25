@@ -1,7 +1,6 @@
 /**
+ * Computation of Most Informative Comman Ancestirs
  * 
- */
-/**
  * @author cjm
  *
  */
