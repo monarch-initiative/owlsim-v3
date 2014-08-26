@@ -43,8 +43,7 @@ public class NaiveBayesianProfileMatcher extends AbstractProfileMatcher implemen
 		// TODO
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		
-		MatchSetImpl mp = new MatchSetImpl();
-		mp.setQuery(q);
+		MatchSet mp =  MatchSetImpl.create(q);
 		
 		mp.sortMatches();
 		return mp;

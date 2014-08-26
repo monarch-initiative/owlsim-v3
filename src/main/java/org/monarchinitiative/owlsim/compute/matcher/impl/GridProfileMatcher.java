@@ -56,9 +56,7 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 		queryClassArray = qClassIds.toArray(new String[qsize]);
 		EWAHCompressedBitmap queryProfileBMArr[] = getProfileSetBM(queryClassArray);
 		
-		// TODO
-		MatchSetImpl mp = new MatchSetImpl();
-		mp.setQuery(q);
+		MatchSet mp =  MatchSetImpl.create(q);
 		
 		// TODO: customize target set
 		Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();

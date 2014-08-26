@@ -1,31 +1,12 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BasicProbabilisticProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
-import org.monarchinitiative.owlsim.io.JSONWriter;
-import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.Match;
-import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 public class BasicProbabilisticProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 

@@ -11,9 +11,10 @@ import org.monarchinitiative.owlsim.model.match.Match;
  */
 public class MatchImpl implements Match {
 	
-	String matchId;
-	String matchLabel;
-	double probability;
+	private String matchId;
+	private String matchLabel;
+	private double probability;
+	private Integer rank;
 	
 	/**
 	 * @param matchId
@@ -65,9 +66,17 @@ public class MatchImpl implements Match {
 	
 
 
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" " + getPercentageScore()+" p="+probability;
+		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " sc="+getPercentageScore()+" p="+probability;
 	}
 }

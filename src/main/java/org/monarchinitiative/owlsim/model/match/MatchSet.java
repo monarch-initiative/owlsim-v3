@@ -20,6 +20,11 @@ public interface MatchSet {
 	 */
 	public List<Match> getMatches();
 
+	/**
+	 * @return all matches with rank
+	 */
+	public List<Match> getMatchesWithRank(int rank);
+
 	// TODO - iterator
 	
 	/**
@@ -31,6 +36,12 @@ public interface MatchSet {
 	 * sort all matches, best match first
 	 */
 	public void sortMatches();
+	
+	/**
+	 * rank sorted matches, best has rank=1, 
+	 * identical scores share ranks
+	 */
+	public void rankMatches();
 	
 	// TODO - record kb metadata
 	public ExecutionMetadata getExecutionMetadata();

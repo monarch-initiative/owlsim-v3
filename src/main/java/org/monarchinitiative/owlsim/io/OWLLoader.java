@@ -33,6 +33,8 @@ public class OWLLoader {
 	 */
 	public void load(IRI iri) throws OWLOntologyCreationException {
 		owlOntology = getOWLOntologyManager().loadOntology(iri);
+		if (owlOntology == null)
+			throw new OWLOntologyCreationException("Load failed to produce an ontology");
 	}
 	
 	/**
@@ -42,6 +44,8 @@ public class OWLLoader {
 	public void load(File file) throws OWLOntologyCreationException {
 	    IRI iri = IRI.create(file);
 	    owlOntology =  getOWLOntologyManager().loadOntologyFromOntologyDocument(iri);
+		if (owlOntology == null)
+			throw new OWLOntologyCreationException("Load failed to produce an ontology");
 	    
 	}
 

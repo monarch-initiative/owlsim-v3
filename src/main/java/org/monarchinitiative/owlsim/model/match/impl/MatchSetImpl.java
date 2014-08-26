@@ -21,20 +21,14 @@ public class MatchSetImpl implements MatchSet {
 	private BasicQuery query;
 	private List<Match> matches; // TODO - make this neutral
 	ExecutionMetadata executionMetadata;
-
-	/**
-	 * constructor
-	 */
-	public MatchSetImpl() {
-		super();
-		matches = new ArrayList<Match>();
-	}
+	private boolean isSorted;
 	
 	/**
 	 * constructor
 	 */
 	public MatchSetImpl(BasicQuery query) {
 		super();
+		isSorted = false;
 		this.query = query;
 		matches = new ArrayList<Match>();
 	}
@@ -70,6 +64,19 @@ public class MatchSetImpl implements MatchSet {
 	}
 
 	/**
+	 * assumes already sorted or ranked
+	 * @return matches
+	 */
+	public List<Match> getMatchesWithRank(int rank) {
+		List<Match> ms = new ArrayList<Match>();
+		for (Match m : matches) {
+			if (m.getRank() == rank)
+				ms.add(m);
+		}
+		return ms;
+	}
+
+	/**
 	 * @param matches
 	 */
 	public void setMatches(List<Match> matches) {
@@ -87,6 +94,8 @@ public class MatchSetImpl implements MatchSet {
 	 */
 	public void sortMatches() {
 		Collections.sort(matches, MatchComparator);
+		isSorted = true;
+		rankMatches();
 	}
 	
 	private static Comparator<Match> MatchComparator = 
@@ -98,6 +107,23 @@ public class MatchSetImpl implements MatchSet {
 		}  
 	};
 
+	public void rankMatches() {
+		if (!isSorted)
+			sortMatches();
+		int rank = 0;
+		Double lastScore = null;
+		for (Match m : matches) {
+			double s = m.getScore();
+			// TODO - avoid double equality test
+			if (lastScore == null ||
+					s != lastScore) {
+				rank++;
+			}
+			m.setRank(rank);
+			lastScore = s;
+					
+		}
+	}
 	
 
 

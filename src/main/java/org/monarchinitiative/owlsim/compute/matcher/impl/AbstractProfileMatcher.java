@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.jena.atlas.logging.Log;
+import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
@@ -26,7 +28,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  */
 public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	
-	//private Logger LOG = Logger.getLogger(AbstractProfileMatcher.class);
+	private Logger LOG = Logger.getLogger(AbstractProfileMatcher.class);
 
 	protected BMKnowledgeBase knowledgeBase;
 	private FilterEngine filterEngine;

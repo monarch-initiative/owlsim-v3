@@ -54,9 +54,7 @@ public class MaximumInformationContentSimilarityProfileMatcher
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		//LOG.info("QUERY PROFILE for "+q+" "+queryProfileBM.getPositions());
 		
-		// TODO
-		MatchSetImpl mp = new MatchSetImpl();
-		mp.setQuery(q);
+		MatchSet mp =  MatchSetImpl.create(q);
 		
 		// TODO: customize target set
 		Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();

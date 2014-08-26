@@ -31,4 +31,15 @@ public interface Match {
 	 */
 	public double getScore();
 
+	/**
+	 * note that identical scares will have the same rank
+	 * 
+	 * @return rank within owner MatchSet
+	 */
+	public int getRank() ;
+
+	/**
+	 * @param rank
+	 */
+	public void setRank(int rank);
 }

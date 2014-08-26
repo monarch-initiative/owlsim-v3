@@ -16,6 +16,7 @@ public class GridMatchImpl implements Match {
 	String matchLabel;
 	double score;
 	ClassInformationContentPair[] queryMatchArray;
+	int rank;
 	
 	/**
 	 * @param matchId
@@ -63,10 +64,19 @@ public class GridMatchImpl implements Match {
 		return (int) (Math.round(score * 100));
 	}
 
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
 	
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" " + getPercentageScore()+" score="+score;
+		return matchId + " \"" + matchLabel+ "\" Rank="+getRank() + " sc=" + getPercentageScore()+" score="+score;
 	}
 }

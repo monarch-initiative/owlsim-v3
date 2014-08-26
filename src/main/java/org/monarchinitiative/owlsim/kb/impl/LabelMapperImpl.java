@@ -13,6 +13,8 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Utilities for mapping labels to identifiers
  * 
@@ -73,7 +75,9 @@ public class LabelMapperImpl implements LabelMapper {
 	public Set<String> lookupByUniqueLabels(Set<String> labels) throws NonUniqueLabelException {
 		Set<String> ids = new HashSet<String>();
 		for (String label : labels) {
-			ids.add(lookupByUniqueLabel(label));
+			String cid = lookupByUniqueLabel(label);
+			Preconditions.checkNotNull(cid);
+			ids.add(cid);
 		}
 		return ids;
 	}
