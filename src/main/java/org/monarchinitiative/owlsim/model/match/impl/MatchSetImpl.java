@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.Query;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
 
 /**
  * A collection of matches for a single query profile against a set of
@@ -17,7 +17,7 @@ import org.monarchinitiative.owlsim.model.match.Query;
  *
  */
 public class MatchSetImpl implements MatchSet {
-	private Query query;
+	private BasicQuery query;
 	private List<Match> matches; // TODO - make this neutral
 
 	/**
@@ -31,24 +31,24 @@ public class MatchSetImpl implements MatchSet {
 	/**
 	 * constructor
 	 */
-	public MatchSetImpl(Query query) {
+	public MatchSetImpl(BasicQuery query) {
 		super();
 		this.query = query;
 		matches = new ArrayList<Match>();
 	}
 	
-	public static MatchSet create(Query query) {
+	public static MatchSet create(BasicQuery query) {
 		return new MatchSetImpl(query);
 	}
 	
 
-	public Query getQuery() {
+	public BasicQuery getQuery() {
 		return query;
 	}
 
 
 
-	public void setQuery(Query query) {
+	public void setQuery(BasicQuery query) {
 		this.query = query;
 	}
 

@@ -12,8 +12,8 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.Query;
-import org.monarchinitiative.owlsim.model.match.impl.QueryImpl;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.google.common.collect.Sets;
@@ -162,7 +162,7 @@ public abstract class AbstractProfileMatcherMPTest {
 		String expectedDiseaseFrag = expectedDisease == null ? null : expectedDisease.toString();
 		load("mp-subset.ttl");
 		LOG.info("Ontology = "+profileMatcher.getKnowledgeBase());
-		Query q = QueryImpl.create(queryClassLabels, profileMatcher.getKnowledgeBase().getLabelMapper());
+		BasicQuery q = BasicQueryImpl.create(queryClassLabels, profileMatcher.getKnowledgeBase().getLabelMapper());
 		LOG.info("Query = "+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 

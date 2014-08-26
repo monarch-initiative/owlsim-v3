@@ -1,8 +1,8 @@
 package org.monarchinitiative.owlsim.app;
 
 
-import org.monarchinitiative.owlsim.model.match.Query;
-import org.monarchinitiative.owlsim.model.match.impl.QueryImpl;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 
 import com.google.inject.AbstractModule;
 

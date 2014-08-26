@@ -1,6 +1,13 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
 import java.util.ArrayList;
+
+import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,6 +23,7 @@ import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 import org.monarchinitiative.owlsim.model.kb.impl.AttributeImpl;
 import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -62,7 +70,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	//private Set<OWLClass> classesInSignature;
 	private Set<OWLNamedIndividual> individualsInSignature;
 	private Map<String,Map<String,Set<Object>>> propertyValueMapMap;
-	
+
 	private int[] classFrequencyArray;
 
 	CURIEMapperImpl curieMapper;
@@ -216,7 +224,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			//LOG.info("String inferences for "+c+" --> " + clsIndex);
 			Set<Integer> sups = getIntegersForClassSet(owlReasoner.getSuperClasses(c, false));
 			sups.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(c)));
-	
+
 			ontoEWAHStore.setDirectSuperClasses(
 					clsIndex, 
 					getIntegersForClassSet(owlReasoner.getSuperClasses(c, true)));
@@ -236,6 +244,29 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 
 	}
+
+	private void storeIndividualProprties() {
+		// TODO
+	}
+
+	// TODO - complete this
+	// TODO - separate this out as it is not an OWLAPI model. Maybe sparql is overkill here?
+	// use sparql to query the memory model
+	private void storeIndividualToClassFrequencies() {
+		String sparql = "";
+		Query query = QueryFactory.create(sparql);
+		Model model = null;
+		QueryExecution qexec = QueryExecutionFactory.create(query, model);
+		ResultSet results = qexec.execSelect() ;
+		for ( ; results.hasNext() ; ) {
+			QuerySolution soln = results.nextSolution() ;
+			RDFNode x = soln.get("varName") ;       // Get a result variable by name.
+			Resource r = soln.getResource("VarR") ; // Get a result variable - must be a resource
+			Literal l = soln.getLiteral("VarL") ;   // Get a result variable - must be a literal
+		}
+	}
+
+
 
 	private Set<Integer> getIntegersForClassSet(NodeSet<OWLClass> nodeset) {
 		Set<Integer> bits = new HashSet<Integer>();
@@ -274,7 +305,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		Preconditions.checkNotNull(id);
 		return getIndex(getOWLClass(id));
 	}
-	
+
 	/**
 	 * @param index
 	 * @return OWLClass Node that corresponds to this index
@@ -282,7 +313,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Node<OWLClass> getClassNode(int index) {
 		return classNodeArray[index];
 	}
-	
+
 	/**
 	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
 	 * In this case the representative classId is returned
@@ -295,7 +326,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		OWLClass c = n.getRepresentativeElement();
 		return curieMapper.getShortForm(c.getIRI());
 	}
-	
+
 
 	/**
 	 * @param id
@@ -519,6 +550,6 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			return Collections.emptySet();
 	}
 
-	
+
 
 }

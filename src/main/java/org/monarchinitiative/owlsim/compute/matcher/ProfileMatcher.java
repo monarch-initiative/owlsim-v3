@@ -2,7 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.Query;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
 
 /**
  * methods for scoring a set of candidates given a class query profile
@@ -17,7 +17,7 @@ public interface ProfileMatcher {
 	 * @param q
 	 * @return scored matches
 	 */
-	public MatchSet findMatchProfile(Query q);
+	public MatchSet findMatchProfile(BasicQuery q);
 
 	/**
 	 * @return ontology interface

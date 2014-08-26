@@ -9,7 +9,7 @@ import java.util.Set;
  * @author cjm
  *
  */
-public interface QueryWithNegation extends Query {
+public interface QueryWithNegation extends BasicQuery {
 
 	/**
 	 * @return negative features

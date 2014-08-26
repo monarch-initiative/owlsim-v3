@@ -2,7 +2,7 @@ package org.monarchinitiative.owlsim.model.match;
 
 import java.util.Set;
 
-import org.monarchinitiative.owlsim.model.match.impl.QueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 
 import com.google.inject.ImplementedBy;
 
@@ -14,8 +14,8 @@ import com.google.inject.ImplementedBy;
  * @author cjm
  *
  */
-@ImplementedBy(QueryImpl.class)
-public interface Query {
+@ImplementedBy(BasicQueryImpl.class)
+public interface BasicQuery {
 	
 	/**
 	 * @return all (positive) class Ids in query

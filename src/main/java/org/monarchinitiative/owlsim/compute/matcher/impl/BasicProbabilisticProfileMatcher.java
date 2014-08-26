@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.Query;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -45,7 +45,7 @@ public class BasicProbabilisticProfileMatcher extends AbstractProfileMatcher imp
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSet findMatchProfile(Query q) {
+	public MatchSet findMatchProfile(BasicQuery q) {
 		
 		double fpr = getFalsePositiveRate();
 		double fnr = getFalseNegativeRate();

@@ -13,7 +13,7 @@ public interface MatchSet {
 	/**
 	 * @return query that produced the match set
 	 */
-	public Query getQuery();
+	public BasicQuery getQuery();
 	
 	/**
 	 * @return all matches

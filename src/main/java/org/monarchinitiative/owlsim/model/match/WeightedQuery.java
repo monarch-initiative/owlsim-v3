@@ -10,7 +10,7 @@ import java.util.Map;
  * @author cjm
  *
  */
-public interface WeightedQuery extends Query {
+public interface WeightedQuery extends BasicQuery {
 
 	/**
 	 * @return map between classId and weight

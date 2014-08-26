@@ -15,9 +15,9 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.Query;
+import org.monarchinitiative.owlsim.model.match.BasicQuery;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
-import org.monarchinitiative.owlsim.model.match.impl.QueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.google.common.collect.Sets;
