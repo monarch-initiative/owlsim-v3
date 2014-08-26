@@ -1,0 +1,34 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org>
+
+Class: root
+Class: x1
+  SubClassOf: root
+Class: x2
+  SubClassOf: root
+ Class: leaf
+  SubClassOf: x1, x2 
+
+
+Class: ex1
+ EquivalentTo: x1
+Class: ex2
+ EquivalentTo: x2
+Class: eleaf
+ EquivalentTo: leaf
+Class: eroot
+ EquivalentTo: root
+
+Individual: ithing
+Individual: iroot
+ Types: root
+Individual: ix1
+ Types: x1
+Individual: ix2
+ Types: x2
+Individual: ileaf
+ Types: leaf
+Individual: ix12
+ Types: x1, x2
+

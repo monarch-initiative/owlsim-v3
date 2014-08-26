@@ -6,6 +6,7 @@ import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
@@ -15,7 +16,7 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 	}
 
 	@Override
-	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testSgDiseaseExact(DISEASE.sg, null);
 
 	}
@@ -34,7 +35,7 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	@Override
 	public void testEpDiseaseFuzzy() throws Exception {
-		testEpDiseaseFuzzy(DISEASE.ep, null);
+		testEpDiseaseFuzzy(DISEASE.sg, null);
 	}
 
 

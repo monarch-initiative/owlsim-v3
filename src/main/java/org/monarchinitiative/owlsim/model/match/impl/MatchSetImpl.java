@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
@@ -19,6 +20,7 @@ import org.monarchinitiative.owlsim.model.match.BasicQuery;
 public class MatchSetImpl implements MatchSet {
 	private BasicQuery query;
 	private List<Match> matches; // TODO - make this neutral
+	ExecutionMetadata executionMetadata;
 
 	/**
 	 * constructor
@@ -52,7 +54,13 @@ public class MatchSetImpl implements MatchSet {
 		this.query = query;
 	}
 
+	public ExecutionMetadata getExecutionMetadata() {
+		return executionMetadata;
+	}
 
+	public void setExecutionMetadata(ExecutionMetadata executionMetadata) {
+		this.executionMetadata = executionMetadata;
+	}
 
 	/**
 	 * @return matches

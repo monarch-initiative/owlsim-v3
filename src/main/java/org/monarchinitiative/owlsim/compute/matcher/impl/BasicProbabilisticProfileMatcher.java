@@ -26,8 +26,7 @@ public class BasicProbabilisticProfileMatcher extends AbstractProfileMatcher imp
 	private double defaultFalseNegativeRate = 0.10;
 	
 	private BasicProbabilisticProfileMatcher(BMKnowledgeBase kb) {
-		super();
-		this.knowledgeBase = kb;
+		super(kb);
 	}
 	
 	/**
@@ -45,7 +44,7 @@ public class BasicProbabilisticProfileMatcher extends AbstractProfileMatcher imp
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSet findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) {
 		
 		double fpr = getFalsePositiveRate();
 		double fnr = getFalseNegativeRate();

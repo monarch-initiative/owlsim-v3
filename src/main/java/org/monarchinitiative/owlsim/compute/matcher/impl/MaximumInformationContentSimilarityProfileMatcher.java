@@ -7,6 +7,7 @@ import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -48,7 +49,7 @@ public class MaximumInformationContentSimilarityProfileMatcher
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSetImpl findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) {
 		
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		//LOG.info("QUERY PROFILE for "+q+" "+queryProfileBM.getPositions());

@@ -1,11 +1,14 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -26,8 +29,7 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 	 * @param kb
 	 */
 	public JaccardSimilarityProfileMatcher(BMKnowledgeBase kb) {
-		super();
-		this.knowledgeBase = kb;
+		super(kb);
 	}
 	
 
@@ -44,8 +46,9 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 	/**
 	 * @param q
 	 * @return match profile containing probabilities of each individual
+	 * @throws UnknownFilterException 
 	 */
-	public MatchSetImpl findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) throws UnknownFilterException {
 		
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		
@@ -54,7 +57,8 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 		mp.setQuery(q);
 		
 		// TODO: customize target set
-		Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();
+		//Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();
+		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		
 		double pvector[] = new double[indIds.size()];
 		String indArr[] = new String[indIds.size()];

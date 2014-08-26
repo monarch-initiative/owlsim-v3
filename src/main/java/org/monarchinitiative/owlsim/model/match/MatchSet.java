@@ -32,8 +32,11 @@ public interface MatchSet {
 	 */
 	public void sortMatches();
 	
-	// TODO - match metadata (kb version, time of execution, etc)
+	// TODO - record kb metadata
+	public ExecutionMetadata getExecutionMetadata();
+	public void setExecutionMetadata(ExecutionMetadata executionMetadata);
 	
+
 	// TODO - filters
 	
 }

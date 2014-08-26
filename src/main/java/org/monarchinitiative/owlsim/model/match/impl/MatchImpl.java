@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
+import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 
 /**
@@ -61,8 +62,9 @@ public class MatchImpl implements Match {
 	public double getScore() {
 		return probability * 100;
 	}
-
 	
+
+
 	// TODO - move to abstract
 	@Override
 	public String toString() {

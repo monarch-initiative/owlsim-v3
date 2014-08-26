@@ -40,7 +40,7 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSet findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) {
 		return null;
 	}
 

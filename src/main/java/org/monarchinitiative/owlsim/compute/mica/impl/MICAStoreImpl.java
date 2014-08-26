@@ -29,7 +29,8 @@ public class MICAStoreImpl {
 	}
 
 	private void populateGrid() throws NoRootException {
-		int n = knowledgeBase.getClassIdsInSignature().size();
+		int n = knowledgeBase.getNumClassNodes();
+		LOG.info("Pre-calculating grid of size "+n+" * "+n);
 		micaGrid = new int[n][n];
 		EWAHCompressedBitmap[] bmArr = new EWAHCompressedBitmap[n];
 		for (int i=0; i<n; i++) {

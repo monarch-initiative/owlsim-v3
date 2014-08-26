@@ -1,12 +1,19 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.filter.Filter;
+import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
+import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -22,6 +29,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	//private Logger LOG = Logger.getLogger(AbstractProfileMatcher.class);
 
 	protected BMKnowledgeBase knowledgeBase;
+	private FilterEngine filterEngine;
 
 	
 	/**
@@ -31,15 +39,8 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	public AbstractProfileMatcher(BMKnowledgeBase knowledgeBase) {
 		super();
 		this.knowledgeBase = knowledgeBase;
+		this.filterEngine = FilterEngine.create(knowledgeBase);
 	}
-
-
-
-	public AbstractProfileMatcher() {
-		super();
-	}
-
-
 
 	/**
 	 * @return ontology interface
@@ -77,5 +78,17 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return MatchImpl.create(matchId, matchLabel, s);
 	}
 
+	protected List<String> getFilteredIndividualIds(Filter filter) throws UnknownFilterException {
+		return filterEngine.applyFilter(filter);
+	}
+	
+	public MatchSet findMatchProfile(BasicQuery q) {
+		long t1 = System.currentTimeMillis();
+		MatchSet ms = findMatchProfileImpl(q);
+		long t2 = System.currentTimeMillis();
+		ms.setExecutionMetadata(ExecutionMetadataImpl.create(t1, t2));
+		return ms;
+	}
 
+	protected abstract MatchSet findMatchProfileImpl(BasicQuery q);
 }

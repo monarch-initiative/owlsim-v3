@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class MaximumInformationContentSimilarityProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
@@ -14,7 +15,7 @@ public class MaximumInformationContentSimilarityProfileMatcherMPTest extends Abs
 	}
 
 	@Override
-	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testSgDiseaseExact(DISEASE.sg, null);
 
 	}

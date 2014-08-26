@@ -19,7 +19,17 @@ public class FilterEngine {
 	
 	BMKnowledgeBase knowledgeBase;
 	private Logger LOG = Logger.getLogger(FilterEngine.class);
+	
 
+	
+	private FilterEngine(BMKnowledgeBase knowledgeBase) {
+		super();
+		this.knowledgeBase = knowledgeBase;
+	}
+
+	public static FilterEngine create(BMKnowledgeBase knowledgeBase) {
+		return new FilterEngine(knowledgeBase);
+	}
 	
 	/**
 	 * @param filter
@@ -27,6 +37,9 @@ public class FilterEngine {
 	 * @throws UnknownFilterException 
 	 */
 	public List<String> applyFilter(Filter filter) throws UnknownFilterException {
+		if (filter == null) {
+			return new ArrayList<String>(knowledgeBase.getIndividualIdsInSignature());
+		}
 		List<String> ids = new ArrayList<String>();
 		for (String id : knowledgeBase.getIndividualIdsInSignature()) {
 			if (test(id, filter)) {

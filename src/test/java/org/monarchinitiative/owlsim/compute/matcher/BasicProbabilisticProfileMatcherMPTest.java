@@ -13,6 +13,7 @@ import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
@@ -33,7 +34,7 @@ public class BasicProbabilisticProfileMatcherMPTest extends AbstractProfileMatch
 	}
 
 	@Override
-	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testSgDiseaseExact(DISEASE.sg, 100);
 
 	}

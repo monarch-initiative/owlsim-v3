@@ -1,0 +1,14 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org>
+
+Class: x1
+Class: y1
+ EquivalentTo: x1
+
+Individual: i0
+
+Individual: i1
+ Types: x1
+ SameAs: i2
+Individual: i2

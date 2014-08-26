@@ -39,22 +39,37 @@ public interface BMKnowledgeBase {
 	
 	
 	/**
+	 * Note: there can be >1 class in a node
+	 * 
 	 * @return set of all class identifiers
 	 */
 	public Set<String> getClassIdsInSignature();
 
 	/**
+	 * Note multiple equivalent classes can form a class node
+	 * 
+	 * @return size of the kb by class node
+	 */
+	public int getNumClassNodes();
+
+	/**
+	 * Note: there can be >1 individual in a node
+	 * 
 	 * @return set of all individual identifiers
 	 */
 	public Set<String> getIndividualIdsInSignature();
 	
 	/**
+	 * TODO
+	 * 
 	 * @param id
 	 * @return Attribute class with the id
 	 */
 	public Attribute getAttribute(String id);
 
 	/**
+	 * TODO
+	 * 
 	 * @param id
 	 * @return Entity individual with the id
 	 */
@@ -80,9 +95,15 @@ public interface BMKnowledgeBase {
 	
 	/**
 	 * @param id - an individual
-	 * @return class set bitmap
+	 * @return types (direct and indirect) as bitmap
 	 */
 	public EWAHCompressedBitmap getTypesBM(String id);
+
+	/**
+	 * @param id - an individual
+	 * @return direct types as bitmap
+	 */
+	public EWAHCompressedBitmap getDirectTypesBM(String id);
 
 	
 	/**
@@ -92,12 +113,29 @@ public interface BMKnowledgeBase {
 	
 	/**
 	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
-	 * In this case the representative classId is returned
+	 * In this case the *representative* classId is returned
 	 * 
 	 * @param index
 	 * @return classId
 	 */
 	public String getClassId(int index);
+
+	/**
+	 * @param classId
+	 * @return integer index for class
+	 */
+	public int getClassIndex(String classId);
+
+	/**
+	 * Return all classIds corresponding to a single index.
+	 * 
+	 * Note each index corresponds to a single equivalence set. This returns
+	 * all members of the equivalence set
+	 * 
+	 * @param index
+	 * @return classIds
+	 */
+	public Set<String> getClassIds(int index);
 	
 	/**
 	 * @return array indexed by classIndex yielding the number of individuals per class

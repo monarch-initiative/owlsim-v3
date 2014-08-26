@@ -3,6 +3,7 @@ package org.monarchinitiative.owlsim.compute.matcher.impl;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -29,8 +30,7 @@ public class NaiveBayesianProfileMatcher extends AbstractProfileMatcher implemen
 	 * @param kb
 	 */
 	public NaiveBayesianProfileMatcher(BMKnowledgeBase kb) {
-		super();
-		this.knowledgeBase = kb;
+		super(kb);
 	}
 	
 
@@ -39,7 +39,7 @@ public class NaiveBayesianProfileMatcher extends AbstractProfileMatcher implemen
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSetImpl findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) {
 		// TODO
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		

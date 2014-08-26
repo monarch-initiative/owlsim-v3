@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
 
 /**
@@ -13,6 +14,7 @@ import org.monarchinitiative.owlsim.model.match.BasicQuery;
 public class BasicQueryImpl implements BasicQuery {
 	
 	private Set<String> queryClassIds;
+	private Filter filter;
 	
 	// TODO: inject this?
 	public BasicQueryImpl(Set<String> queryClassIds) {
@@ -38,7 +40,18 @@ public class BasicQueryImpl implements BasicQuery {
 	public void setQueryClassIds(Set<String> queryClassIds) {
 		this.queryClassIds = queryClassIds;
 	}
+	
+	
 
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+	@Override
 	public String toString() {
 		return queryClassIds.toString();
 	}

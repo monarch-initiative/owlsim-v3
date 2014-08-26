@@ -26,8 +26,11 @@ import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLNamedObject;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
@@ -123,6 +126,10 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ids.add(curieMapper.getShortForm(i.getIRI()));
 		}
 		return ids;
+	}
+	
+	public int getNumClassNodes() {
+		return classNodeArray.length;
 	}
 
 	/**
@@ -245,8 +252,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	}
 
-	private void storeIndividualProprties() {
-		// TODO
+	// TODO
+	private void storeIndividualProperties() {
+		for (OWLNamedIndividual i : individualsInSignature) {
+			for ( OWLIndividualAxiom ax : owlOntology.getAxioms(i) ) {
+				if (ax instanceof OWLObjectPropertyAssertionAxiom) {
+					OWLObjectPropertyExpression p = ((OWLObjectPropertyAssertionAxiom)ax).getProperty();
+				}
+			}
+		}		
 	}
 
 	// TODO - complete this
@@ -325,6 +339,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		Node<OWLClass> n = getClassNode(index);
 		OWLClass c = n.getRepresentativeElement();
 		return curieMapper.getShortForm(c.getIRI());
+	}
+
+	public Set<String> getClassIds(int index) {
+		Node<OWLClass> n = getClassNode(index);
+		Set<String> cids = new HashSet<String>();
+		for (OWLClass c : n.getEntities()) {
+			cids.add( curieMapper.getShortForm(c.getIRI()) );
+		}
+		return cids;
 	}
 
 
@@ -466,6 +489,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return ontoEWAHStore.getTypes(getIndividualIndex(id));
 	}
 
+	/**
+	 * @param id
+	 * @return bitmap representation of all (direct and indirect) instantiated classes
+	 */
+	public EWAHCompressedBitmap getDirectTypesBM(String id) {
+		Preconditions.checkNotNull(id);
+		return ontoEWAHStore.getDirectTypes(getIndividualIndex(id));
+	}
 
 
 	private OWLClass getOWLThing() {

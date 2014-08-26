@@ -15,7 +15,9 @@ import com.google.caliper.Benchmark;
 import com.google.caliper.runner.CaliperMain;
 
 /**
- * Tests performance of MICAStore
+ * Tests performance of MICAStore using caliper
+ * 
+ * TODO - fix or remove
  * 
  * @author cjm
  *

@@ -8,6 +8,7 @@ import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCa
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.GridMatchImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
@@ -47,7 +48,7 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSetImpl findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(BasicQuery q) {
 		
 		
 		Set<String> qClassIds = q.getQueryClassIds();

@@ -10,6 +10,7 @@ import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
@@ -67,7 +68,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	@Test
 	public abstract void testSgDiseaseExact() throws Exception;
 
-	protected void testSgDiseaseExact(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	protected void testSgDiseaseExact(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"absent gametes", 
 				"small gonad"
@@ -89,7 +90,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testSgDiseaseLeaveOneOut() throws Exception;
-	protected void testSgDiseaseLeaveOneOut(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	protected void testSgDiseaseLeaveOneOut(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"small gonad"
 				),
@@ -105,7 +106,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testMultiPhenotypeDisease() throws Exception;
-	protected void testMultiPhenotypeDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	protected void testMultiPhenotypeDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"reproductive system phenotype",   // present in sg
 				"abnormal cerebellum development",  // superclass of phenotype in pd and foo
@@ -131,7 +132,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testEpDiseaseFuzzy() throws Exception;
-	protected void testEpDiseaseFuzzy(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	protected void testEpDiseaseFuzzy(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"reproductive system phenotype",  // not in disease profile
 				"abnormal synaptic transmission"  // more general
@@ -147,7 +148,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testNervousSystemDisease() throws Exception;
-	protected void testNervousSystemDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException {
+	protected void testNervousSystemDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"nervous system phenotype"  // foo, pd and ep all have this
 				),
@@ -157,7 +158,7 @@ public abstract class AbstractProfileMatcherMPTest {
 
 	private void testQuery(Set<String> queryClassLabels, 
 			DISEASE expectedDisease, 
-			Number expectedScore) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException {
+			Number expectedScore) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 
 		String expectedDiseaseFrag = expectedDisease == null ? null : expectedDisease.toString();
 		load("mp-subset.ttl");
