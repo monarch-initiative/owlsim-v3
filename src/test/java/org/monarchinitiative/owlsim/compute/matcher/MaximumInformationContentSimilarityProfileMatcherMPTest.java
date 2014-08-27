@@ -29,14 +29,13 @@ public class MaximumInformationContentSimilarityProfileMatcherMPTest extends Abs
 	@Override
 	public void testMultiPhenotypeDisease() throws Exception {
 		// ep, pd and foo all have equal ranking by max IC
-		testMultiPhenotypeDisease(null, null);
+		testMultiPhenotypeDisease(DISEASE.sg, null); // based on rarity of phenotype
 	}
 
 
 	@Override
 	public void testEpDiseaseFuzzy() throws Exception {
-		// TODO - test by rank - ep and pd have equal ranking by this method
-		//testEpDiseaseFuzzy(DISEASE.ep, null);
+		testEpDiseaseFuzzy(null, null);
 	}
 
 

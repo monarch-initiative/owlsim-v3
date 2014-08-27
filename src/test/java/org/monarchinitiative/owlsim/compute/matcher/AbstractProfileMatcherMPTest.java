@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -175,17 +176,26 @@ public abstract class AbstractProfileMatcherMPTest {
 			//String json = gson.toJson(mp);
 			System.out.println(mp);
 		}
-		Match topMatch = mp.getMatches().get(0);
-		LOG.info("topMatch="+topMatch+" //Expected="+expectedDiseaseFrag);
-		if (expectedDiseaseFrag != null)
-			Assert.assertTrue(topMatch.getMatchId().contains("/"+expectedDiseaseFrag));
-		if (expectedScore != null) {
-			if (expectedScore instanceof Integer) {
-				Assert.assertTrue(topMatch.getPercentageScore() == expectedScore.intValue());
+		List<Match> topMatches = mp.getMatchesWithRank(1);
+		LOG.info("topMatches="+topMatches+" //Expected="+expectedDiseaseFrag+" IN "+profileMatcher);
+		if (expectedDiseaseFrag != null) {
+			boolean isMatchesExpected = false;
+			for (Match m : topMatches) {
+				if (m.getMatchId().contains("/"+expectedDiseaseFrag)) {
+					isMatchesExpected = true;
+					
+					if (expectedScore != null) {
+						if (expectedScore instanceof Integer) {
+							Assert.assertTrue(m.getPercentageScore() == expectedScore.intValue());
+						}
+						else {
+							LOG.warn("FOO");
+						}
+					}
+
+				}
 			}
-			else {
-				LOG.warn("FOO");
-			}
+			Assert.assertTrue(isMatchesExpected);
 		}
 	}
 
