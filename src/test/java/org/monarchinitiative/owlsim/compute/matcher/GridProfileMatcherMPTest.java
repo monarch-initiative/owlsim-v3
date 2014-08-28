@@ -2,6 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
 
+import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherMPTest.DISEASE;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -29,7 +30,7 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	@Override
 	public void testMultiPhenotypeDisease() throws Exception {
-		testMultiPhenotypeDisease(DISEASE.pd, null); // most phenotypes matching
+		testMultiPhenotypeDisease(DISEASE.foo, null); //
 	}
 
 
@@ -41,7 +42,11 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	@Override
 	public void testNervousSystemDisease() throws Exception {
-		testNervousSystemDisease(DISEASE.ep, null);
+		testNervousSystemDisease(DISEASE.foo, null);
 	}
-
+	@Override
+	public void testPdDisease() throws Exception {
+		testNervousSystemDisease(DISEASE.pd, 100);
+		
+	}
 }

@@ -2,17 +2,17 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
 
-import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherMPTest.DISEASE;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BasicProbabilisticProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.GMProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class BasicProbabilisticProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
+public class GMProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return BasicProbabilisticProfileMatcher.create(kb);
+		return GMProfileMatcher.create(kb);
 	}
 
 	@Override
@@ -44,10 +44,12 @@ public class BasicProbabilisticProfileMatcherMPTest extends AbstractProfileMatch
 	public void testNervousSystemDisease() throws Exception {
 		testNervousSystemDisease(DISEASE.ep, 100);
 	}
+
 	@Override
 	public void testPdDisease() throws Exception {
 		testNervousSystemDisease(DISEASE.pd, 100);
 		
 	}
+
 
 }

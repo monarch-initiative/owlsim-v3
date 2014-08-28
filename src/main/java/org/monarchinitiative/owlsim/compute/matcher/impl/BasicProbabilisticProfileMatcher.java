@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -54,8 +55,7 @@ public class BasicProbabilisticProfileMatcher extends AbstractProfileMatcher imp
 		
 		MatchSet mp = MatchSetImpl.create(q);
 		
-		// TODO: customize target set
-		Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();
+		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		
 		double pvector[] = new double[indIds.size()];
 		String indArr[] = new String[indIds.size()];

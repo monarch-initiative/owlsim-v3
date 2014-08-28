@@ -55,13 +55,7 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 		// TODO
 		MatchSet mp =  MatchSetImpl.create(q);
 		
-		// TODO: customize target set
-		//Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
-		
-		double pvector[] = new double[indIds.size()];
-		String indArr[] = new String[indIds.size()];
-		int n=0;
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
 			
@@ -69,9 +63,6 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 			int numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
 			int numInQueryOrInTarget = queryProfileBM.orCardinality(targetProfileBM);
 			double j = numInQueryAndInTarget / (double) numInQueryOrInTarget;
-			pvector[n] = j;
-			indArr[n] = itemId;
-			n++;
 			String label = knowledgeBase.getLabelMapper().getArbitraryLabel(itemId);
 			mp.add(createMatch(itemId, label, j));
 		}

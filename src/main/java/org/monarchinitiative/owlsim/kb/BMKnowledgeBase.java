@@ -60,6 +60,13 @@ public interface BMKnowledgeBase {
 	public Set<String> getIndividualIdsInSignature();
 	
 	/**
+	 * @param individualId
+	 * @return
+	 */
+	public int getIndividualIndex(String individualId);
+
+	
+	/**
 	 * TODO
 	 * 
 	 * @param id
@@ -82,6 +89,12 @@ public interface BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String classId);
 
 	/**
+	 * @param classIndex
+	 * @return direct superclasses of classId as bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSuperClassesBM(int classIndex);
+
+	/**
 	 * @param classId
 	 * @return superclasses (direct, indirect and equivalent) of classId as bitmap
 	 */
@@ -92,6 +105,13 @@ public interface BMKnowledgeBase {
 	 * @return union of all superclasses as a bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(Set<String> classIds);
+	
+	/**
+	 * @param classIndex
+	 * @return  superclasses (direct and indirect) of classId as bitmap
+	 */
+	public EWAHCompressedBitmap getSuperClassesBM(int classIndex);
+
 	
 	/**
 	 * @param id - an individual
@@ -154,5 +174,22 @@ public interface BMKnowledgeBase {
 	 * @return values
 	 */
 	public Set<Object> getPropertyValues(String individualId, String property);
+
+	/**
+	 * not advised for general use unless performance is critical
+	 * 
+	 * @return index keyed by parent yielding child node set as bitmap
+	 */
+	public EWAHCompressedBitmap[] getStoredDirectSubClassIndex();
+
+	/**
+	 * Every kb is guaranteed to have exactly one root index
+	 * 
+	 * @return root class Id
+	 */
+	public int getRootIndex();
+
+
+
 
 }

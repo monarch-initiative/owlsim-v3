@@ -34,10 +34,10 @@ import com.google.common.collect.Sets;
  * @author cjm
  *
  */
-public class ProfileMatcherSpeciesTest {
+public class GMProfileMatcherSpeciesTest {
 
 	protected BMKnowledgeBase kb;
-	private Logger LOG = Logger.getLogger(ProfileMatcherSpeciesTest.class);
+	private Logger LOG = Logger.getLogger(GMProfileMatcherSpeciesTest.class);
 	protected boolean writeToStdout = true;
 	List<TestQuery> testQueries = new ArrayList<TestQuery>();
 	
@@ -68,16 +68,6 @@ public class ProfileMatcherSpeciesTest {
 		addQuery(q, expectedId, 1);
 	}
 	
-	@Test
-	public void test1() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
-		load("species.owl");
-		setQueries();
-		LOG.info("CLASSES: "+kb.getClassIdsInSignature());
-		testMatcher(GridProfileMatcher.create(kb));
-		testMatcher(JaccardSimilarityProfileMatcher.create(kb));
-		testMatcher(MaximumInformationContentSimilarityProfileMatcher.create(kb));
-		testMatcher(BasicProbabilisticProfileMatcher.create(kb));
-	}
 
 	@Test
 	public void testGM() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
@@ -90,13 +80,15 @@ public class ProfileMatcherSpeciesTest {
 
 	private void setQueries() throws NonUniqueLabelException {
 		
-		addQuery(getQuery("spider"), "ProtoSpider");
-		addQuery(getQuery("shark", "octopus"), "Sharktopus");
+		//addQuery(getQuery("spider"), "ProtoSpider");
+		addQuery(getQuery("shark", "octopus"), "Sharktopus", 2);
+		
 		addQuery(getQuery("poriferan", "human"), "SpongeBob");
 		addQuery(getQuery("arthropod", "human"), "SpiderMan"); // more general
-		addQuery(getQuery("tarantula", "human"), "SpiderMan"); // more specific
-		addQuery(getQuery("spider", "mouse"), "SpiderMan", 2);
+		//addQuery(getQuery("tarantula", "human"), "SpiderMan"); // more specific
+		//addQuery(getQuery("spider", "mouse"), "SpiderMan", 2);
 
+		/*
 		// cephalopod-human hybrids
 		addQuery(getQuery("xenopus", "human", "cuttlefish"), "GreatOldOne", 2); // MaxIC ranks smallTrait as best
 		addQuery(getQuery("amphibian", "human", "cuttlefish"), "GreatOldOne", 1);
@@ -122,7 +114,7 @@ public class ProfileMatcherSpeciesTest {
 		// note that it's necessary to 'hold all the cards' to maximize cute trait
 		// for scores that test all features of matched entity, e.g. SimJ
 		addQuery(getQuery("koala"), "CuteTrait", 3);
-		
+		*/
 		
 		
 	}

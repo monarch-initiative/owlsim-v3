@@ -176,6 +176,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		individualNodeToIntegerMap = new HashMap<Node<OWLNamedIndividual>, Integer>();
 		final HashMap<Node<OWLClass>, Integer> classNodeToFrequencyMap = new HashMap<Node<OWLClass>, Integer>();
 		for (OWLClass c : classesInSignature) {
+			if (owlReasoner.getInstances(c, false).isEmpty()) {
+				//TODO: deal with subclasses
+				//LOG.info("Skipping non-instantiated class: "+c);
+				//continue;
+			}
 			Node<OWLClass> node = owlReasoner.getEquivalentClasses(c);
 			if (node.contains(getOWLNothing())) {
 				LOG.warn("Ignoring unsatisfiable class: "+c);
@@ -228,13 +233,16 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		//  and the semantics are unchanged
 		for (OWLClass c : getClassesInSignature()) {
 			int clsIndex = 	getIndex(c);
-			//LOG.info("String inferences for "+c+" --> " + clsIndex);
+			//LOG.info("Storing inferences for "+c+" --> " + clsIndex);
 			Set<Integer> sups = getIntegersForClassSet(owlReasoner.getSuperClasses(c, false));
 			sups.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(c)));
 
 			ontoEWAHStore.setDirectSuperClasses(
 					clsIndex, 
 					getIntegersForClassSet(owlReasoner.getSuperClasses(c, true)));
+			ontoEWAHStore.setDirectSubClasses(
+					clsIndex, 
+					getIntegersForClassSet(owlReasoner.getSubClasses(c, true)));
 			ontoEWAHStore.setSuperClasses(
 					clsIndex, 
 					sups);
@@ -285,6 +293,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	private Set<Integer> getIntegersForClassSet(NodeSet<OWLClass> nodeset) {
 		Set<Integer> bits = new HashSet<Integer>();
 		for (Node<OWLClass> n : nodeset.getNodes()) {
+			if (n.contains(getOWLNothing()))
+				continue;
 			bits.add(getIndexForClassNode(n));
 		}
 		return bits;
@@ -441,6 +451,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String cid) {
 		return ontoEWAHStore.getDirectSuperClasses(getClassIndex(cid));
 	}
+	
+	public EWAHCompressedBitmap getSuperClassesBM(int classIndex) {
+		return ontoEWAHStore.getSuperClasses(classIndex);
+	}
+	
+	public EWAHCompressedBitmap getDirectSuperClassesBM(int classIndex) {
+		return ontoEWAHStore.getDirectSuperClasses(classIndex);
+	}
 
 	/**
 	 * @param clsIds
@@ -579,6 +597,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			return new HashSet<Object>(m.get(property));
 		else
 			return Collections.emptySet();
+	}
+
+	public EWAHCompressedBitmap[] getStoredDirectSubClassIndex() {
+		return ontoEWAHStore.getStoredDirectSubClasses();
+	}
+
+	@Override
+	public int getRootIndex() {
+		return getIndex(getOWLThing());
 	}
 
 

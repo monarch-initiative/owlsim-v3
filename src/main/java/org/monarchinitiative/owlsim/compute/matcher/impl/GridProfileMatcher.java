@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -58,8 +59,7 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 		
 		MatchSet mp =  MatchSetImpl.create(q);
 		
-		// TODO: customize target set
-		Set<String> indIds = knowledgeBase.getIndividualIdsInSignature();
+		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
 			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
@@ -73,11 +73,18 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 						getMicaCalculator().getMostInformativeCommonAncestorWithIC(queryProfileBM,
 								targetProfileBM);
 
+				// Scores are summed.
+				// Equivalent to naive assumption of independence
+				// p1 * p2 * ... p_n
 				score += mica.ic;
 				qmatchArr[j] = mica;
 			
 			}
-			// TODO - penalize targets with multiple annotations
+			// penalize targets with multiple annotations
+			// TODO - allow weighting
+			// Note directTypes should be pre-filtered for redundancy, if
+			// calculated using an owl reasoner
+			score /= Math.sqrt(knowledgeBase.getDirectTypesBM(itemId).cardinality());
 
 			String label = knowledgeBase.getLabelMapper().getArbitraryLabel(itemId);
 			Match m = GridMatchImpl.create(itemId, label, score, qmatchArr);

@@ -2,6 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
 
+import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherMPTest.DISEASE;
 import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
@@ -43,5 +44,9 @@ public class MaximumInformationContentSimilarityProfileMatcherMPTest extends Abs
 	public void testNervousSystemDisease() throws Exception {
 		testNervousSystemDisease(DISEASE.ep, null);
 	}
-
+	@Override
+	public void testPdDisease() throws Exception {
+		testNervousSystemDisease(DISEASE.pd, 100);
+		
+	}
 }

@@ -1,6 +1,8 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -8,6 +10,7 @@ import org.apache.jena.atlas.logging.Log;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
@@ -62,6 +65,13 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 
 	protected EWAHCompressedBitmap getProfileBM(BasicQuery q) {
 		return knowledgeBase.getSuperClassesBM(q.getQueryClassIds());
+	}
+	protected EWAHCompressedBitmap getDirectProfileBM(BasicQuery q) {
+		Set<Integer> positions = new HashSet<Integer>();
+		for (String cid : q.getQueryClassIds()) {
+			positions.add(knowledgeBase.getClassIndex(cid));
+		}
+		return EWAHUtils.converIndexSetToBitmap(positions);
 	}
 
 	protected EWAHCompressedBitmap[] getProfileSetBM(String[] qcids) {

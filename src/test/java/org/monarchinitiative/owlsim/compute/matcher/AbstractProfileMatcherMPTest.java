@@ -157,6 +157,28 @@ public abstract class AbstractProfileMatcherMPTest {
 				expectedScore);
 	}
 
+	/**
+	 * should be precise match for pd
+	 *   ## 'abnormal basal ganglion morphology'
+	 *   ## 'abnormal cerebellum external granule cell layer morphology'
+	 *   ## 'abnormal long term depression'
+	 *   ## 'impaired coordination'
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public abstract void testPdDisease() throws Exception;
+	protected void testPd(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+		testQuery(Sets.newHashSet(
+				"abnormal basal ganglion morphology", 
+				"abnormal cerebellum external granule cell layer morphology",
+				"abnormal long term depression",
+				"impaired coordination" 
+				),
+				d,
+				expectedScore);
+	}
+
 	private void testQuery(Set<String> queryClassLabels, 
 			DISEASE expectedDisease, 
 			Number expectedScore) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
@@ -183,7 +205,7 @@ public abstract class AbstractProfileMatcherMPTest {
 			for (Match m : topMatches) {
 				if (m.getMatchId().contains("/"+expectedDiseaseFrag)) {
 					isMatchesExpected = true;
-					
+
 					if (expectedScore != null) {
 						if (expectedScore instanceof Integer) {
 							Assert.assertTrue(m.getPercentageScore() == expectedScore.intValue());
