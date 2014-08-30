@@ -1,0 +1,22 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org/ab.owl>
+
+Class: a
+ SubClassOf: a-or-b
+Class: b
+ SubClassOf: a-or-b
+ SubClassOf: b-or-c
+Class: c
+ SubClassOf: b-or-c
+ 
+ Class: a-or-b
+ Class: b-or-c
+ 
+Individual: ia Types: a
+Individual: ib Types: b
+Individual: ic Types: c
+Individual: iab Types: a, b
+Individual: iac Types: a, c
+Individual: ibc Types: b, c
+Individual: iabc Types: a, b, c

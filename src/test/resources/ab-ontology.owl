@@ -1,0 +1,11 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org/ab.owl>
+
+Class: a
+Class: b
+
+Individual: ia Types: a
+Individual: ib Types: b
+Individual: iab Types: a, b
+

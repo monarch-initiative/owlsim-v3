@@ -26,8 +26,9 @@ public class EWAHKnowledgeBaseStore {
 	private int numberOfClasses;
 	private int numberOfIndividuals;
 	private EWAHCompressedBitmap[] storedSuperClasses;
-	private EWAHCompressedBitmap[] storedDirectSubClasses;
 	private EWAHCompressedBitmap[] storedDirectSuperClasses;
+	private EWAHCompressedBitmap[] storedSubClasses;
+	private EWAHCompressedBitmap[] storedDirectSubClasses;
 	private EWAHCompressedBitmap[] storedTypes;
 	private EWAHCompressedBitmap[] storedDirectTypes;
 	
@@ -42,6 +43,7 @@ public class EWAHKnowledgeBaseStore {
 		
 		storedSuperClasses = new EWAHCompressedBitmap[numberOfClasses];
 		storedDirectSuperClasses = new EWAHCompressedBitmap[numberOfClasses];
+		storedSubClasses = new EWAHCompressedBitmap[numberOfClasses];
 		storedDirectSubClasses = new EWAHCompressedBitmap[numberOfClasses];
 		storedTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedDirectTypes = new EWAHCompressedBitmap[numberOfIndividuals];
@@ -89,6 +91,13 @@ public class EWAHKnowledgeBaseStore {
 		return bm;
 	}
 
+	/**
+	 * @param clsIndex
+	 * @return all subClasses (direct and indirect) of query class as Bitmap
+	 */
+	public EWAHCompressedBitmap getSubClasses(int clsIndex) {
+		return storedSubClasses[clsIndex];
+	}
 
 
 	/**
@@ -156,15 +165,27 @@ public class EWAHKnowledgeBaseStore {
 			EWAHCompressedBitmap[] storedDirectSubClasses) {
 		storedDirectSubClasses = storedDirectSubClasses;
 	}
+	
 
 	/**
 	 * @param clsIndex
-	 * @param subClasses
+	 * @param subClasses - direct
 	 */
 	public void setDirectSubClasses(int clsIndex,
 			Set<Integer> subClasses) {
 		storedDirectSubClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(subClasses);
 	}
+	
+	/**
+	 * @param clsIndex
+	 * @param subClasses - direct and indirect, including reflexive
+	 */
+	public void setSubClasses(int clsIndex,
+			Set<Integer> subClasses) {
+		storedSubClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(subClasses);
+	}
+	
+	
 
 	/**
 	 * Adds stored set of types (direct and indirect) for an individual.

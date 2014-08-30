@@ -237,15 +237,21 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			Set<Integer> sups = getIntegersForClassSet(owlReasoner.getSuperClasses(c, false));
 			sups.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(c)));
 
+			Set<Integer> subs = getIntegersForClassSet(owlReasoner.getSubClasses(c, false));
+			subs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(c)));
+
 			ontoEWAHStore.setDirectSuperClasses(
 					clsIndex, 
 					getIntegersForClassSet(owlReasoner.getSuperClasses(c, true)));
-			ontoEWAHStore.setDirectSubClasses(
-					clsIndex, 
-					getIntegersForClassSet(owlReasoner.getSubClasses(c, true)));
 			ontoEWAHStore.setSuperClasses(
 					clsIndex, 
 					sups);
+			ontoEWAHStore.setDirectSubClasses(
+					clsIndex, 
+					getIntegersForClassSet(owlReasoner.getSubClasses(c, true)));
+			ontoEWAHStore.setSubClasses(
+					clsIndex, 
+					subs);
 		}
 		for (OWLNamedIndividual i : individualsInSignature) {
 			int individualIndex = 	getIndex(i);
@@ -459,6 +465,10 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSuperClassesBM(int classIndex) {
 		return ontoEWAHStore.getDirectSuperClasses(classIndex);
 	}
+	
+	public EWAHCompressedBitmap getSubClasses(int classIndex) {
+		return ontoEWAHStore.getSubClasses(classIndex);
+	}
 
 	/**
 	 * @param clsIds
@@ -607,6 +617,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public int getRootIndex() {
 		return getIndex(getOWLThing());
 	}
+
+
 
 
 

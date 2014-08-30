@@ -80,12 +80,14 @@ public class GMProfileMatcherSpeciesTest {
 
 	private void setQueries() throws NonUniqueLabelException {
 		
-		//addQuery(getQuery("spider"), "ProtoSpider");
-		addQuery(getQuery("shark", "octopus"), "Sharktopus", 2);
+		//addQuery(getQuery("spider"), "ProtoSpider", 1);
+		//addQuery(getQuery("shark", "octopus"), "Sharktopus", 2);
 		
-		addQuery(getQuery("poriferan", "human"), "SpongeBob");
-		addQuery(getQuery("arthropod", "human"), "SpiderMan"); // more general
-		//addQuery(getQuery("tarantula", "human"), "SpiderMan"); // more specific
+		//addQuery(getQuery("poriferan", "human"), "SpongeBob");
+		//addQuery(getQuery("arthropod", "human"), "SpiderMan"); // more general
+		addQuery(getQuery("squid", "shark"), "SwimmingTrait", 4); // sib
+		addQuery(getQuery("squid", "shark"), "Sharktopus", 4); // sib
+		//addQuery(getQuery("tarantula", "human"), "SpiderMan", 2); // more specific
 		//addQuery(getQuery("spider", "mouse"), "SpiderMan", 2);
 
 		/*

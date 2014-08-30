@@ -35,13 +35,16 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 	private double[] pmatrix11;
 	private double[] prVector; // πT 
 	private double[] prUVector; // UT′
-	private double q = 0.05; // resample probability
+	private GMProfileMatcherConfig config;
 	
-	/**
-	 * @param kb
-	 */
-	public GMProfileMatcher(BMKnowledgeBase kb) {
+	public static class GMProfileMatcherConfig {
+		public double q = 0.2; // re-sample probability	
+	}
+	
+
+	public GMProfileMatcher(BMKnowledgeBase kb, GMProfileMatcherConfig config) {
 		super(kb);
+		this.config = config;
 		initializeProbabilityMatrix();
 	}
 	
@@ -50,9 +53,18 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 	 * @return new instance
 	 */
 	public static ProfileMatcher create(BMKnowledgeBase kb) {
-		return new GMProfileMatcher(kb);
+		return new GMProfileMatcher(kb, new GMProfileMatcherConfig());
+	}
+	public static ProfileMatcher create(BMKnowledgeBase kb, GMProfileMatcherConfig config) {
+		return new GMProfileMatcher(kb, config);
 	}
 	
+	
+	@Deprecated
+	public double getResampleProbability() {
+		return config.q;
+	}
+
 	private void initializeProbabilityMatrix() {
 		int n = knowledgeBase.getNumClassNodes();
 		EWAHCompressedBitmap[] parentChildMatrixBM = knowledgeBase.getStoredDirectSubClassIndex();
@@ -67,7 +79,7 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 		pmatrix11 = new double[n];
 		prVector = new double[n];
 		prUVector = new double[n];
-		
+		double q = config.q;
 		
 		GraphUtils u = new GraphUtils();
 		int[] indices = u.getTopologicalSort(knowledgeBase);
@@ -76,9 +88,10 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 			String label = knowledgeBase.getLabelMapper().getArbitraryLabel(cid);
 			
 			// TODO: hack - we want to avoid zero probability on leaves
-			//  assume that our corpus includes an additional unobserved individual
-			//  for every class
-			double pt = (freqIndex[i]+1) / (double) (rootFreq+1);
+			//  assume that every node has an additional unseen annotation
+			int numBelow = knowledgeBase.getSubClasses(i).cardinality();
+			LOG.info("Adding pseudocount of "+numBelow+" for "+cid);
+			double pt = (freqIndex[i]+numBelow) / (double) (rootFreq * 2);
 			prVector[i] = pt;
 			// TODO - use logs
 			pmatrix00[i] = (1-pt) * ((1-q) + q * (1-pt));
@@ -87,6 +100,7 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 			pmatrix11[i] = pt * ( (1-q) + q * pt);
 			
 			LOG.info("Class; "+cid+" "+label);
+			LOG.info("p="+pt+" q="+q);
 			LOG.info("M00 = "+pmatrix00[i]);
 			LOG.info("M01 = "+pmatrix01[i]);
 			LOG.info("M10 = "+pmatrix10[i]);
@@ -144,14 +158,18 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 		for (int i=0; i<indices.length; i++) {
 			lvector[i] = false;
 			sublvector[i] = false;
-			
+
+			String cid = knowledgeBase.getClassId(i); // for debugging only
+
 			//LOG.info("LUUK"+i+" "+knowledgeBase.getClassId(i));
 			if (parentChildMatrixBM[i].cardinality() == 0) {
 				// true leaf
+				LOG.info("True leaf:"+cid);
 				lvector[i] = true; 
 			}
 			else if (qbmDirect.getPositions().contains(i)) {
 				// fake leaf
+				LOG.info("Fake leaf:"+cid);
 				lvector[i] = true; 
 			}
 			else if (knowledgeBase.getSuperClassesBM(i).andCardinality(qbmDirect) > 0) {
@@ -162,7 +180,8 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 		for (int ti : indices) {
 			
 			String cid = knowledgeBase.getClassId(ti); // for debugging only
-					
+			LOG.info("Class:"+cid);
+				
 			if (lvector[ti]) {
 				// Leaf
 				// hack: we exclude all nodes beneath a query node,
@@ -175,13 +194,14 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 				D01[ti] = !a && b  ? pmatrix01[ti] : 0;
 				D10[ti] = a  && !b ? pmatrix10[ti] : 0;
 				D11[ti] = a  && b  ? pmatrix11[ti] : 0;
-				LOG.info("Class:"+cid);
 				LOG.info("Leaf D00="+D00[ti]);
 				LOG.info("Leaf D01="+D01[ti]);
 				LOG.info("Leaf D10="+D10[ti]);
 				LOG.info("Leaf D11="+D11[ti]);
 			}
 			else {
+				// non-leaf
+				
 				// first we initialize each element of D with the corresponding
 				// value in M. We will then multiply this for all child nodes
 				
@@ -190,10 +210,21 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 				D01[ti] = pmatrix01[ti];
 				D10[ti] = pmatrix10[ti];
 				D11[ti] = pmatrix11[ti];
+				LOG.info("  M00="+D00[ti]);
+				LOG.info("  M01="+D01[ti]);
+				LOG.info("  M10="+D10[ti]);
+				LOG.info("  M11="+D11[ti]);
 				
 				//LOG.info("i="+knowledgeBase.getClassId(ti));
 				for (int k : parentChildMatrixBM[ti].getPositions()) {
 					
+					// we dynamically filterout anything below an effective leaf,
+					// where effective leaf is either a true leaf or a member of the query
+					// TODO - revisit this when a better solution for non-leaf observables arrives
+					if (sublvector[k]) {
+						LOG.info("Skipping sub-leaf");
+						continue;
+					}
 					// this is guaranteed never to happen due to topological sort.
 					// TODO: remove post-testing.
 					if (!isIndexed[k]) {
@@ -203,8 +234,13 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 					D00[ti] *= D00[k];
 					D01[ti] *= ( D00[k] + D01[k] );
 					D10[ti] *= ( D00[k] + D10[k] );
-					D11[ti] *= ( D00[k] + D10[k] + D10[k] + D11[k]);
+					D11[ti] *= ( D00[k] + D01[k] + D10[k] + D11[k]);
 				}
+				LOG.info("NODE D00="+D00[ti]);
+				LOG.info("NODE D01="+D01[ti]);
+				LOG.info("NODE D10="+D10[ti]);
+				LOG.info("NODE D11="+D11[ti]);
+				
 				
 			}
 			isIndexed[ti] = true;
@@ -248,8 +284,7 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 				p *= prUVector[i];
 		}
 	
-		return p;
-		
+		return p;	
 	}
 
 	/**

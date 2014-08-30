@@ -87,6 +87,9 @@ public interface BMKnowledgeBase {
 	 * @return direct superclasses of classId as bitmap
 	 */
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String classId);
+	
+	public EWAHCompressedBitmap getSubClasses(int classIndex);
+
 
 	/**
 	 * @param classIndex
@@ -188,6 +191,7 @@ public interface BMKnowledgeBase {
 	 * @return root class Id
 	 */
 	public int getRootIndex();
+
 
 
 

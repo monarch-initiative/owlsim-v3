@@ -21,6 +21,7 @@ import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
 
+import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
@@ -77,7 +78,10 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	protected EWAHCompressedBitmap[] getProfileSetBM(String[] qcids) {
 		EWAHCompressedBitmap[] bms = new EWAHCompressedBitmap[qcids.length];
 		for (int i=0; i<qcids.length; i++) {
-			bms[i] = knowledgeBase.getSuperClassesBM(qcids[i]);
+			String qc = qcids[i];
+			Preconditions.checkNotNull(qc);
+			Preconditions.checkNotNull(knowledgeBase.getClassIndex(qc));
+			bms[i] = knowledgeBase.getSuperClassesBM(qc);
 		}
 		return bms;
 	}

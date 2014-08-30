@@ -183,7 +183,7 @@ Class: animal
  Individual: TranslucentTrait Types: jelly, salp
  Individual: CuteTrait Types: cat, dolphin, koala
  Individual: WeirdTrait Types: platypus, cephalopod, hammerhead
- Individual: ScaryTrait Types: spider, octopus, shark
+ Individual: ScaryTrait Types: tarantula, octopus, shark
  Individual: BigTrait Types: blueWhale, greatWhiteShark
  Individual: SmallTrait Types: rat, mouse, insect, xenopus
  Individual: SwimmingTrait Types: shark, cetacean, teleost
