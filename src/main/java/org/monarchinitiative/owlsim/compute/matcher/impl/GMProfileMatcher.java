@@ -125,7 +125,9 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 	}
 	
 	private double calculateLogOddsRatio(EWAHCompressedBitmap qbmDirect,
-			EWAHCompressedBitmap qbm, EWAHCompressedBitmap tbm) {
+			EWAHCompressedBitmap qbm,
+			EWAHCompressedBitmap tbmDirect, 
+			EWAHCompressedBitmap tbm) {
 		List<Integer> qon = qbm.getPositions(); // switches that are on in G (query)
 		List<Integer> ton = tbm.getPositions(); // switches that are on in G' (target)
 		
@@ -169,10 +171,18 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 			}
 			else if (qbmDirect.getPositions().contains(i)) {
 				// fake leaf
-				LOG.info("Fake leaf:"+cid);
+				LOG.info("Fake leaf (Q):"+cid);
+				lvector[i] = true; 
+			}
+			else if (tbmDirect.getPositions().contains(i)) {
+				// fake leaf
+				LOG.info("Fake leaf (T):"+cid);
 				lvector[i] = true; 
 			}
 			else if (knowledgeBase.getSuperClassesBM(i).andCardinality(qbmDirect) > 0) {
+				sublvector[i] = true; 
+			}
+			else if (knowledgeBase.getSuperClassesBM(i).andCardinality(tbmDirect) > 0) {
 				sublvector[i] = true; 
 			}
 		}
@@ -307,8 +317,10 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
+			EWAHCompressedBitmap targetProfileDirect = knowledgeBase.getDirectTypesBM(itemId);
 			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
-			double p = calculateLogOddsRatio(queryProfileDirect, queryProfile, targetProfileBM);
+			double p = calculateLogOddsRatio(queryProfileDirect, queryProfile,
+					targetProfileDirect, targetProfileBM);
 
 			String label = knowledgeBase.getLabelMapper().getArbitraryLabel(itemId);
 			Match m = MatchImpl.create(itemId, label, p);

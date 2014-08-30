@@ -80,43 +80,41 @@ public class GMProfileMatcherSpeciesTest {
 
 	private void setQueries() throws NonUniqueLabelException {
 		
-		//addQuery(getQuery("spider"), "ProtoSpider", 1);
-		//addQuery(getQuery("shark", "octopus"), "Sharktopus", 2);
+//		addQuery(getQuery("spider"), "ProtoSpider", 1);
+		//addQuery(getQuery("shark", "octopus"), "Sharktopus", 1);
 		
 		//addQuery(getQuery("poriferan", "human"), "SpongeBob");
 		//addQuery(getQuery("arthropod", "human"), "SpiderMan"); // more general
-		addQuery(getQuery("squid", "shark"), "SwimmingTrait", 4); // sib
-		addQuery(getQuery("squid", "shark"), "Sharktopus", 4); // sib
-		//addQuery(getQuery("tarantula", "human"), "SpiderMan", 2); // more specific
-		//addQuery(getQuery("spider", "mouse"), "SpiderMan", 2);
+		//addQuery(getQuery("fruitfly", "human"), "SpiderMan", 2); // sib. 
+		//addQuery(getQuery("squid", "shark"), "Sharktopus", 3); // sib
 
-		/*
+		//addQuery(getQuery("tarantula", "human"), "SpiderMan", 1); // more specific
+		//addQuery(getQuery("spider", "mouse"), "SpiderMan", 3); // proto-mammal and proto-spider are better
+
 		// cephalopod-human hybrids
-		addQuery(getQuery("xenopus", "human", "cuttlefish"), "GreatOldOne", 2); // MaxIC ranks smallTrait as best
-		addQuery(getQuery("amphibian", "human", "cuttlefish"), "GreatOldOne", 1);
-		addQuery(getQuery("xenopus", "human"), "GreatOldOne", 2);
-		addQuery(getQuery("octopus", "human"), "GreatOldOne", 3);
-		addQuery(getQuery("octopus", "human"), "SquidMan", 2);
-	
-		// the query insect+human intuitively seems close to SpiderMan,
-		// but it may also score close to other items
-		addQuery(getQuery("insect", "human"), "SpiderMan", 3);
-		//addQuery(getQuery("insect", "human"), "PorpoiseMarmosetFly", 3);
-		//addQuery(getQuery("insect", "human"), "SmallTrait", 3);  // expected, as human close to mouse
+		//addQuery(getQuery("xenopus", "human", "cuttlefish"), "GreatOldOne", 1); // MaxIC ranks smallTrait as best
+		//addQuery(getQuery("amphibian", "human", "cuttlefish"), "GreatOldOne", 1);
+		//addQuery(getQuery("xenopus", "human"), "GreatOldOne", 2); // leave one out
+		//addQuery(getQuery("octopus", "human"), "GreatOldOne", 1);
+		//addQuery(getQuery("octopus", "human"), "SquidMan", 4);
+//	
+		//addQuery(getQuery("insect", "human"), "SpiderMan", 3);
+		//addQuery(getQuery("fruitfly", "rat"), "SmallTrait", 1);  // expected, as human close to mouse
 
-		addQuery(getQuery("shark"), "ProtoShark", 1);
-		addQuery(getQuery("dolphin"), "ProtoCetacean", 1);
-		addQuery(getQuery("cat", "dog", "mouse", "human"), "DogMouse", 2);
-		addQuery(getQuery("cat", "dog", "mouse", "human"), "SuperMammal", 3);
-		
-		// we get a low rank here as 'swimming trait' is specified using generic taxa
-		addQuery(getQuery("dolphin", "blueWhale", "zebrafish"), "SwimmingTrait", 4);
-		addQuery(getQuery("cetacean", "shark"), "BigTrait", 3);
-		
-		// note that it's necessary to 'hold all the cards' to maximize cute trait
-		// for scores that test all features of matched entity, e.g. SimJ
-		addQuery(getQuery("koala"), "CuteTrait", 3);
-		*/
+		//addQuery(getQuery("shark"), "ProtoShark", 1);
+		//addQuery(getQuery("dolphin"), "ProtoMammal", 1);
+		//addQuery(getQuery("dolphin"), "ProtoWhale", 2);
+		//addQuery(getQuery("cat", "dog", "mouse", "human"), "DogMouse", 2);
+		//addQuery(getQuery("cat", "dog", "mouse", "human"), "SuperMammal", 3);
+		//addQuery(getQuery("cat", "dog", "mouse", "human"), "ProtoMammal", 1);
+//		
+//		// we get a low rank here as 'swimming trait' is specified using generic taxa
+		//addQuery(getQuery("dolphin", "blueWhale", "zebrafish"), "SwimmingTrait", 1);
+		//addQuery(getQuery("cetacean", "shark"), "BigTrait", 1);
+//		
+//		// note that it's necessary to 'hold all the cards' to maximize cute trait
+//		// for scores that test all features of matched entity, e.g. SimJ
+		addQuery(getQuery("koala"), "CuteTrait", 10);
 		
 		
 	}
