@@ -15,6 +15,7 @@ import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
+import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
@@ -90,8 +91,11 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 			// TODO: hack - we want to avoid zero probability on leaves
 			//  assume that every node has an additional unseen annotation
 			int numBelow = knowledgeBase.getSubClasses(i).cardinality();
+			int numBelowRoot = knowledgeBase.getSubClasses(knowledgeBase.getRootIndex()).cardinality();
 			LOG.info("Adding pseudocount of "+numBelow+" for "+cid);
-			double pt = (freqIndex[i]+numBelow) / (double) (rootFreq * 2);
+			double pt = (freqIndex[i]+numBelow) / (double) (rootFreq + numBelowRoot);
+			Preconditions.checkState(pt <= 1.0);
+			Preconditions.checkState(pt >= 0.0);
 			prVector[i] = pt;
 			// TODO - use logs
 			pmatrix00[i] = (1-pt) * ((1-q) + q * (1-pt));
@@ -326,7 +330,9 @@ public class GMProfileMatcher extends AbstractSemanticSimilarityProfileMatcher i
 			Match m = MatchImpl.create(itemId, label, p);
 			mp.add(m);
 		}
+		//LOG.info("Sorting matches.... top="+mp.getMatches().get(0));
 		mp.sortMatches();
+		LOG.info("Sorted matches.... top="+mp.getMatchesWithRank(1));
 		return mp;
 	}
 

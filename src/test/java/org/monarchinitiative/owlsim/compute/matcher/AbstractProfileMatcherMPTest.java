@@ -136,6 +136,8 @@ public abstract class AbstractProfileMatcherMPTest {
 	protected void testEpDiseaseFuzzy(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
 		testQuery(Sets.newHashSet(
 				"reproductive system phenotype",  // not in disease profile
+				"abnormal behavior",
+				"abnormal nervous system physiology",
 				"abnormal synaptic transmission"  // more general
 				),
 				d,
