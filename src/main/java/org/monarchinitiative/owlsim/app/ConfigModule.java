@@ -1,9 +1,6 @@
 package org.monarchinitiative.owlsim.app;
 
 
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
-
 import com.google.inject.AbstractModule;
 
 /**
@@ -14,6 +11,7 @@ import com.google.inject.AbstractModule;
  * @author cjm
  *
  */
+@Deprecated
 public class ConfigModule extends AbstractModule {
 
 	@Override 

@@ -1,0 +1,196 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org>
+
+Class: organism
+Class: animal
+  SubClassOf: organism
+ Class: bilaterian
+   SubClassOf: animal
+ 
+  Class: protostome
+    SubClassOf: bilaterian
+   Class: arthropod
+     SubClassOf: protostome
+    Class: spider
+      SubClassOf: arthropod
+     Class: tarantula
+       SubClassOf: spider
+       
+    Class: insect
+      SubClassOf: arthropod
+     Class: dipteran
+       SubClassOf: insect
+      Class: fruitfly
+        SubClassOf: dipteran
+     Class: hymenopteran
+       SubClassOf: insect
+      Class: bee
+        SubClassOf: hymenopteran
+      Class: ant
+        SubClassOf: hymenopteran
+      
+   Class: cephalopod
+     SubClassOf: protostome
+    Class: squid
+      SubClassOf: cephalopod
+    Class: octopus
+      SubClassOf: cephalopod
+    Class: nautilus
+      SubClassOf: cephalopod
+    Class: cuttlefish
+      SubClassOf: cephalopod
+  
+  Class: deuterostome
+    SubClassOf: bilaterian
+   Class: echinoderm
+     SubClassOf: deuterostome
+    Class: starfish
+      SubClassOf: echinoderm
+   Class: urchin
+      SubClassOf: echinoderm
+   Class: chordate
+     SubClassOf: deuterostome
+    Class: vertebrate
+      SubClassOf: chordate
+     Class: cartilaginousFish
+       SubClassOf: vertebrate
+      Class: shark
+        SubClassOf: cartilaginousFish
+       Class: hammerhead
+         SubClassOf: shark
+       Class: greatWhiteShark
+         SubClassOf: shark
+     Class: ray
+        SubClassOf: cartilaginousFish
+     Class: teleost
+       SubClassOf: vertebrate
+      Class: zebrafish
+        SubClassOf: teleost
+     Class: tetrapod
+       SubClassOf: vertebrate
+      Class: anamniote
+        SubClassOf: tetrapod
+       Class: amphibian
+         SubClassOf: anamniote
+        Class: xenopus
+          SubClassOf: amphibian
+      Class: amniote
+        SubClassOf: tetrapod
+       Class: reptile
+        SubClassOf: amniote
+      Class: bird
+        SubClassOf: amniote
+       Class: chicken
+         SubClassOf: bird
+       Class: pigeon
+         SubClassOf: bird
+       Class: parrot
+         SubClassOf: bird
+      Class: mammal
+        SubClassOf: amniote
+       Class: monotreme
+         SubClassOf: mammal
+        Class: platypus
+          SubClassOf: monotreme
+       Class: therian
+         SubClassOf: mammal
+        Class: metatherian
+          SubClassOf: therian
+         Class: kangaroo
+           SubClassOf: metatherian
+         Class: koala
+           SubClassOf: metatherian
+        Class: eutherian
+          SubClassOf: therian
+         Class: carnivore
+           SubClassOf: eutherian
+          Class: cat
+            SubClassOf: carnivore
+          Class: dog
+            SubClassOf: carnivore
+         Class: euarchontoglires
+           SubClassOf: eutherian
+          Class: rodent
+            SubClassOf:  euarchontoglires
+           Class: rat
+             SubClassOf: rodent
+           Class: mouse
+             SubClassOf: rodent
+          Class: primate
+            SubClassOf:  euarchontoglires
+           Class: ape
+             SubClassOf: primate
+            Class: human
+              SubClassOf: ape
+            Class: chimp
+              SubClassOf: ape
+            Class: orangutan
+              SubClassOf: ape
+           Class: platyrrhine
+             SubClassOf: primate
+            Class: marmoset
+              SubClassOf: platyrrhine
+           Class: howler
+              SubClassOf: platyrrhine
+               
+         Class: cetacean
+           SubClassOf: eutherian
+          Class: baleenWhale
+            SubClassOf: cetacean
+           Class: blueWhale
+             SubClassOf: baleenWhale
+          Class: toothedWhale
+            SubClassOf: cetacean
+           Class: dolphin
+             SubClassOf: toothedWhale
+           Class: porpoise
+             SubClassOf: toothedWhale
+            SubClassOf: cetacean
+        
+   Class: tunicate
+      SubClassOf: chordate
+     Class: squirt
+       SubClassOf: tunicate
+     Class: salp
+       SubClassOf: tunicate
+ 
+ Class: cnidarian
+   SubClassOf: animal 
+  Class: jelly
+    SubClassOf: cnidarian
+  Class: coral
+    SubClassOf: cnidarian
+ Class: poriferan
+   SubClassOf: animal 
+  
+ Individual: Sharktopus Types: shark, octopus
+ Individual: SquidMan Types: squid, human
+ Individual: SpiderMan Types: spider, human
+ Individual: DolphinCat Types: dolphin, cat
+ Individual: DogMouse Types: dog, mouse
+ Individual: SpongeBob Types: poriferan, human
+ Individual: JellyChimp Types: jelly, chimp
+ Individual: GreatOldOne Types: amphibian, cephalopod, human
+ Individual: PorpoiseMarmosetFly Types: porpoise, marmoset, fruitfly
+ Individual: SuperMammal Types: human, dolphin, chimp, dog, cat, rat, mouse
+ Individual: ProtoSpider Types: spider
+ Individual: ProtoHuman Types: human
+ Individual: ProtoChimp Types: chimp
+ Individual: ProtoWhale Types: cetacean
+ Individual: ProtoMammal Types: mammal
+ Individual: ProtoShark Types: shark
+ Individual: TranslucentTrait Types: jelly, salp
+ Individual: CuteTrait Types: cat, dolphin, koala
+ Individual: WeirdTrait Types: platypus, cephalopod, hammerhead
+ Individual: ScaryTrait Types: tarantula, octopus, shark
+ Individual: BigTrait Types: blueWhale, greatWhiteShark
+ Individual: SmallTrait Types: rat, mouse, insect, xenopus
+ Individual: SwimmingTrait Types: shark, cetacean, teleost
+ Individual: StupidTrait Types: poriferan, tunicate, jelly
+ 
+ Individual: OnlyHuman Types: human, not chimp, not rodent, not bird, not anamniote, not teleost, not tunicate, not cetacean
+ Individual: Invertebrate Types: animal, not vertebrate
+ Individual: NotAnimal Types: organism, not animal
+ Individual: OnlyInsect Types: insect, not spider, not cephalopod, not deuterostome, not cnidarian, not poriferan
+ 

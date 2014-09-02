@@ -2,6 +2,8 @@ package org.monarchinitiative.owlsim.kb.ewah;
 
 import java.util.Set;
 
+import org.apache.jena.atlas.logging.Log;
+
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
@@ -31,6 +33,7 @@ public class EWAHKnowledgeBaseStore {
 	private EWAHCompressedBitmap[] storedDirectSubClasses;
 	private EWAHCompressedBitmap[] storedTypes;
 	private EWAHCompressedBitmap[] storedDirectTypes;
+	private EWAHCompressedBitmap[] storedNegatedTypes;
 	
 	/**
 	 * @param numberOfClasses
@@ -47,6 +50,7 @@ public class EWAHKnowledgeBaseStore {
 		storedDirectSubClasses = new EWAHCompressedBitmap[numberOfClasses];
 		storedTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedDirectTypes = new EWAHCompressedBitmap[numberOfIndividuals];
+		storedNegatedTypes =  new EWAHCompressedBitmap[numberOfIndividuals];
 	}
 
 	/**
@@ -115,7 +119,15 @@ public class EWAHKnowledgeBaseStore {
 	public EWAHCompressedBitmap getDirectTypes(int individualIndex) {
 		return storedDirectTypes[individualIndex];
 	}
-	
+
+	/**
+	 * @param individualIndex
+	 * @return all classes negatively associated with individual
+	 */
+	public EWAHCompressedBitmap getNegatedTypes(int individualIndex) {
+		return storedNegatedTypes[individualIndex];
+	}
+
 	/**
 	 * @param individualIndex
 	 * @param isDirect 
@@ -209,6 +221,14 @@ public class EWAHKnowledgeBaseStore {
 	 */
 	public void setDirectTypes(int individualIndex, Set<Integer> types) {
 		 storedDirectTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+	}
+
+	/**
+	 * @param individualIndex
+	 * @param types
+	 */
+	public void setNegatedTypes(int individualIndex, Set<Integer> types) {
+		 storedNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
 	}
 
 	@Override

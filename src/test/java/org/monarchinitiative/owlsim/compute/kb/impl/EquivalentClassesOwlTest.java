@@ -79,7 +79,7 @@ public  class EquivalentClassesOwlTest extends AbstractOwlTest {
 		checkContains(kb.getTypesBM(i1), y1);
 
 		// NOTE: class indexes are guaranteed to be ordered with most frequent last
-		int[] freqs = kb.getClassFrequencyArray();
+		int[] freqs = kb.getIndividualCountPerClassArray();
 		Assert.assertEquals(2, freqs.length);
 		if (isReasonerSupportsSameAs) {
 			// i1=i2 is treated a SINGLE node

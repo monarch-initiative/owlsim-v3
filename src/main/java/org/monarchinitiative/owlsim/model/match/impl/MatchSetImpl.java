@@ -135,7 +135,7 @@ public class MatchSetImpl implements MatchSet {
 			sb.append(matches.get(i).toString());
 			sb.append("\n");
 			i++;
-			if (i > 8) {
+			if (i > 16) {
 				sb.append("...truncating "+matches.size()+" results\n");
 				break;
 			}

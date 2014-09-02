@@ -88,6 +88,10 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String classId);
 	
+	/**
+	 * @param classIndex
+	 * @return subclasses (direct and direct and equivalent)
+	 */
 	public EWAHCompressedBitmap getSubClasses(int classIndex);
 
 
@@ -111,7 +115,7 @@ public interface BMKnowledgeBase {
 	
 	/**
 	 * @param classIndex
-	 * @return  superclasses (direct and indirect) of classId as bitmap
+	 * @return  superclasses (direct and indirect and equivalent) of classId as bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex);
 
@@ -127,6 +131,9 @@ public interface BMKnowledgeBase {
 	 * @return direct types as bitmap
 	 */
 	public EWAHCompressedBitmap getDirectTypesBM(String id);
+	
+	public EWAHCompressedBitmap getNegatedTypesBM(String itemId);
+
 
 	
 	/**
@@ -163,7 +170,7 @@ public interface BMKnowledgeBase {
 	/**
 	 * @return array indexed by classIndex yielding the number of individuals per class
 	 */
-	public int[] getClassFrequencyArray();
+	public int[] getIndividualCountPerClassArray();
 
 	/**
 	 * @param individualId
@@ -191,6 +198,7 @@ public interface BMKnowledgeBase {
 	 * @return root class Id
 	 */
 	public int getRootIndex();
+
 
 
 

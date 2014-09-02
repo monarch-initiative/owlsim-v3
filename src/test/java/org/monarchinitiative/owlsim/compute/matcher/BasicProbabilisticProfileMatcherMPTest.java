@@ -3,7 +3,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 import java.io.FileNotFoundException;
 
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherMPTest.DISEASE;
-import org.monarchinitiative.owlsim.compute.matcher.impl.BasicProbabilisticProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaivesBayesFixedWeightProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 public class BasicProbabilisticProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return BasicProbabilisticProfileMatcher.create(kb);
+		return NaivesBayesFixedWeightProfileMatcher.create(kb);
 	}
 
 	@Override

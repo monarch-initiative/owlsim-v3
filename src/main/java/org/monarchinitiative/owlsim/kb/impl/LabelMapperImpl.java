@@ -5,12 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.google.common.base.Preconditions;
@@ -22,6 +24,8 @@ import com.google.common.base.Preconditions;
  *
  */
 public class LabelMapperImpl implements LabelMapper {
+
+	private Logger LOG = Logger.getLogger(LabelMapperImpl.class);
 
 	Map<String,Set<String>> labelToIdMap;
 	Map<String,Set<String>> idToLabelMap;
@@ -126,16 +130,32 @@ public class LabelMapperImpl implements LabelMapper {
 	 * 
 	 * @param ontology
 	 */
-	public void initialize(OWLOntology ontology) {
+	public void populateFromOntology(OWLOntology ontology) {
+		LOG.info("Populating labels from "+ontology);
+		int n=0;
 		for (OWLAnnotationAssertionAxiom aaa : ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION)) {
 			if (aaa.getProperty().isLabel()) {
 				if (aaa.getSubject() instanceof IRI &&
 					aaa.getValue() instanceof OWLLiteral) {
 					add((IRI) aaa.getSubject(), (OWLLiteral) aaa.getValue());
+					n++;
 				}
 			}
 		}
-		
+		if (n==0) {
+			LOG.info("Setting labels from fragments");
+			Set<OWLNamedObject> objs = new HashSet<OWLNamedObject>();
+			objs.addAll(ontology.getClassesInSignature());
+			objs.addAll(ontology.getIndividualsInSignature());
+			for (OWLNamedObject obj : objs) {
+				add(obj.getIRI(), obj.getIRI().getFragment());
+			}
+		}
+		LOG.info("Label axioms mapped: "+n);
+	}
+
+	private void add(IRI subject, String value) {
+		add(curieMapper.getShortForm(subject), value);
 	}
 
 	private void add(IRI subject, OWLLiteral value) {

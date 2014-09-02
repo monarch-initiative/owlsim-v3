@@ -47,7 +47,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	protected ProfileMatcher profileMatcher;
 	private Logger LOG = Logger.getLogger(AbstractProfileMatcherMPTest.class);
 	protected boolean writeToStdout = true;
-
+	
 	protected enum DISEASE {
 		sg,
 		foo,

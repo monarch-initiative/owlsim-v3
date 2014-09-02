@@ -26,6 +26,7 @@ public class MatchImpl implements Match {
 		this.matchId = matchId;
 		this.matchLabel = matchLabel;
 		this.probability = probability;
+		rank = null;
 	}
 	
 	public static Match create(String matchId, String matchLabel, double probability) {
@@ -67,7 +68,7 @@ public class MatchImpl implements Match {
 
 
 	public int getRank() {
-		return rank;
+		return rank == null ? -1 :  rank;
 	}
 
 	public void setRank(int rank) {

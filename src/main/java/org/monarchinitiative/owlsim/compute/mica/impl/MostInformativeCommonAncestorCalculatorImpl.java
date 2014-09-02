@@ -36,7 +36,7 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 			BMKnowledgeBase knowledgeBase) {
 		super();
 		this.knowledgeBase = knowledgeBase;
-		frequencyByClassIndex = knowledgeBase.getClassFrequencyArray();
+		frequencyByClassIndex = knowledgeBase.getIndividualCountPerClassArray();
 		int numInds = knowledgeBase.getIndividualIdsInSignature().size();
 		informationContentByClassIndex = new Double[frequencyByClassIndex.length];
 		for (int i=0; i<frequencyByClassIndex.length; i++) {

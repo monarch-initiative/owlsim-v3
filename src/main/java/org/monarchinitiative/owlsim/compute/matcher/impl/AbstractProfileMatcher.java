@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.jena.atlas.logging.Log;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -14,8 +13,8 @@ import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
@@ -86,11 +85,17 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return bms;
 	}
 
+	// a negated profile implicitly includes subclasses
 	protected EWAHCompressedBitmap getNegatedProfileBM(QueryWithNegation q) {
-		return knowledgeBase.getSuperClassesBM(q.getQueryNegatedClassIds());
+		Set<Integer> bits = new HashSet<Integer>();
+		for (String id : q.getQueryNegatedClassIds()) {
+			int ci = knowledgeBase.getClassIndex(id);
+			bits.addAll( knowledgeBase.getSubClasses(ci).getPositions() );
+		}
+		return EWAHUtils.converIndexSetToBitmap(bits);
 	}
 
-	public Match createMatch(String matchId, String matchLabel, double s) {
+	protected Match createMatch(String matchId, String matchLabel, double s) {
 		return MatchImpl.create(matchId, matchLabel, s);
 	}
 
@@ -103,6 +108,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		MatchSet ms = findMatchProfileImpl(q);
 		long t2 = System.currentTimeMillis();
 		ms.setExecutionMetadata(ExecutionMetadataImpl.create(t1, t2));
+		LOG.info("t(ms)="+ms.getExecutionMetadata().getDuration());
 		return ms;
 	}
 

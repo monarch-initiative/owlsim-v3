@@ -23,9 +23,9 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * @author cjm
  *
  */
-public class NaiveBayesianProfileMatcher extends AbstractProfileMatcher implements ProfileMatcher {
+public class NaiveBayesVariableWeightProfileMatcher extends AbstractProfileMatcher implements ProfileMatcher {
 
-	private Logger LOG = Logger.getLogger(NaiveBayesianProfileMatcher.class);
+	private Logger LOG = Logger.getLogger(NaiveBayesVariableWeightProfileMatcher.class);
 
 	private double[][] likelihoods; // [label_j][feature_i] p( feature_i | label_j )
 	private double[] priors; // p(label_j)
@@ -33,7 +33,7 @@ public class NaiveBayesianProfileMatcher extends AbstractProfileMatcher implemen
 	/**
 	 * @param kb
 	 */
-	public NaiveBayesianProfileMatcher(BMKnowledgeBase kb) {
+	public NaiveBayesVariableWeightProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
 

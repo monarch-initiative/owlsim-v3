@@ -24,11 +24,18 @@ import org.monarchinitiative.owlsim.model.kb.Entity;
 import org.monarchinitiative.owlsim.model.kb.impl.AttributeImpl;
 import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.semanticweb.owlapi.OWLCompositeOntologyChange;
+import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLNamedObject;
+import org.semanticweb.owlapi.model.OWLObjectComplementOf;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -58,6 +65,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	private EWAHKnowledgeBaseStore ontoEWAHStore;
 	private OWLOntology owlOntology;
+	private OWLOntology owlDataOntology;
 	private OWLReasoner owlReasoner;
 
 	private Map<Node<OWLClass>, Integer> classNodeToIntegerMap;
@@ -74,30 +82,49 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	private Set<OWLNamedIndividual> individualsInSignature;
 	private Map<String,Map<String,Set<Object>>> propertyValueMapMap;
 
-	private int[] classFrequencyArray;
+	private int[] individualCountPerClassArray;
 
 	CURIEMapperImpl curieMapper;
 	LabelMapperImpl labelMapper;
 
 	/**
 	 * @param owlOntology
-	 * @param owlReasoner
+	 * @param owlDataOntology2 
+	 * @param rf.createReasoner(owlOntology)
 	 */
-	public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology, OWLReasoner owlReasoner) {
+	public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
+			OWLOntology owlDataOntology, OWLReasonerFactory rf) {
 		super();
 		this.owlOntology = owlOntology;
-		this.owlReasoner = owlReasoner;		
+		this.owlDataOntology = owlDataOntology;
+		if (owlDataOntology != null) {
+			translateFromDataOntology();
+		}
+		this.owlReasoner = rf.createReasoner(owlOntology);		
 		createMap();
 		ontoEWAHStore = new EWAHKnowledgeBaseStore(classNodes.size(), individualNodes.size());
 		storeInferences();
 		curieMapper = new CURIEMapperImpl();
 		labelMapper = new LabelMapperImpl(curieMapper);
-		labelMapper.initialize(owlOntology);
+		labelMapper.populateFromOntology(owlOntology);
+		if (owlDataOntology != null) {
+			LOG.info("Fetching labels from "+owlDataOntology);
+			// the data ontology may contain labels of data items
+			labelMapper.populateFromOntology(owlDataOntology);
+		}
 	}
 
+
 	public static BMKnowledgeBase create(OWLOntology owlOntology, OWLReasonerFactory rf) {
-		return new BMKnowledgeBaseOWLAPIImpl(owlOntology, rf.createReasoner(owlOntology));
+		return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf);
 	}
+
+	public static BMKnowledgeBase create(OWLOntology owlOntology, 
+			OWLOntology owlDataOntology,
+			OWLReasonerFactory rf) {
+		return new BMKnowledgeBaseOWLAPIImpl(owlOntology,owlDataOntology, rf);
+	}
+
 
 
 	/**
@@ -127,7 +154,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 		return ids;
 	}
-	
+
 	public int getNumClassNodes() {
 		return classNodeArray.length;
 	}
@@ -157,6 +184,22 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 */
 	protected OWLOntology getOwlOntology() {
 		return owlOntology;
+	}
+
+	// Assumption: data ontology includes ObjectPropertyAssertions
+	// TODO: make flexible
+	// TODO: extract associations
+	private void translateFromDataOntology() {
+		// TODO: allow other axiom types
+		for (OWLObjectPropertyAssertionAxiom opa : owlDataOntology.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION)) {
+			OWLIndividual obj = opa.getObject();
+			if (obj instanceof OWLNamedIndividual) {
+				OWLClass type = 
+						getOWLDataFactory().getOWLClass(((OWLNamedIndividual) obj).getIRI());
+				OWLClassAssertionAxiom ca = getOWLDataFactory().getOWLClassAssertionAxiom(type, opa.getSubject());
+				owlOntology.getOWLOntologyManager().addAxiom(owlOntology, ca);
+			}
+		}
 	}
 
 
@@ -211,12 +254,12 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			}});
 		int numClassNodes = classNodesSorted.size();
 		classNodeArray = classNodesSorted.toArray(new Node[numClassNodes]);
-		classFrequencyArray = new int[numClassNodes];
+		individualCountPerClassArray = new int[numClassNodes];
 		for (int i=0; i<numClassNodes; i++) {
 			classNodeToIntegerMap.put(classNodeArray[i], i);
 			//LOG.info(classNodeArray[i] + " ix="+i + " FREQ="+classNodeToFrequencyMap.get(classNodeArray[i]));
 			//LOG.info(classNodeArray[i] + " ix="+i + " IX_REV="+classNodeToIntegerMap.get(classNodeArray[i]));
-			classFrequencyArray[i] = classNodeToFrequencyMap.get(classNodeArray[i]);
+			individualCountPerClassArray[i] = classNodeToFrequencyMap.get(classNodeArray[i]);
 		}
 		individualNodeArray = individualNodes.toArray(new Node[individualNodes.size()]);
 		for (int i=0; i<individualNodes.size(); i++) {
@@ -252,6 +295,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ontoEWAHStore.setSubClasses(
 					clsIndex, 
 					subs);
+			
 		}
 		for (OWLNamedIndividual i : individualsInSignature) {
 			int individualIndex = 	getIndex(i);
@@ -262,6 +306,19 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ontoEWAHStore.setTypes(
 					individualIndex, 
 					getIntegersForClassSet(owlReasoner.getTypes(i, false)));
+		
+			// Treat CLassAssertion( ComplementOf(c) i) as a negative assertion
+			Set<Integer> ncs = new HashSet<Integer>();
+			for (OWLClassAssertionAxiom cx : owlOntology.getClassAssertionAxioms(i)) {
+				// TODO: investigate efficiency - number of items set may be high
+				if (cx.getClassExpression() instanceof OWLObjectComplementOf) {
+					OWLObjectComplementOf nx = (OWLObjectComplementOf)(cx.getClassExpression());
+					OWLClassExpression nc = nx.getOperand();
+					ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(nc, false)));
+					ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(nc, false)));
+				}
+			}
+			ontoEWAHStore.setNegatedTypes(individualIndex, ncs);
 		}
 
 	}
@@ -457,15 +514,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String cid) {
 		return ontoEWAHStore.getDirectSuperClasses(getClassIndex(cid));
 	}
-	
+
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex) {
 		return ontoEWAHStore.getSuperClasses(classIndex);
 	}
-	
+
 	public EWAHCompressedBitmap getDirectSuperClassesBM(int classIndex) {
 		return ontoEWAHStore.getDirectSuperClasses(classIndex);
 	}
-	
+
 	public EWAHCompressedBitmap getSubClasses(int classIndex) {
 		return ontoEWAHStore.getSubClasses(classIndex);
 	}
@@ -519,6 +576,16 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	/**
 	 * @param id
+	 * @return bitmap representation of all (direct and indirect) classes known to be not instantiated
+	 */
+	public EWAHCompressedBitmap getNegatedTypesBM(String id) {
+		Preconditions.checkNotNull(id);
+		return ontoEWAHStore.getNegatedTypes(getIndividualIndex(id));
+	}
+
+	
+	/**
+	 * @param id
 	 * @return bitmap representation of all (direct and indirect) instantiated classes
 	 */
 	public EWAHCompressedBitmap getDirectTypesBM(String id) {
@@ -528,10 +595,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 
 	private OWLClass getOWLThing() {
-		return owlOntology.getOWLOntologyManager().getOWLDataFactory().getOWLThing();
+		return getOWLDataFactory().getOWLThing();
 	}
 	private OWLClass getOWLNothing() {
-		return owlOntology.getOWLOntologyManager().getOWLDataFactory().getOWLNothing();
+		return getOWLDataFactory().getOWLNothing();
+	}
+
+	private OWLDataFactory getOWLDataFactory() {
+		return owlOntology.getOWLOntologyManager().getOWLDataFactory();
 	}
 
 
@@ -591,8 +662,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 
 
-	public int[] getClassFrequencyArray() {
-		return classFrequencyArray;
+	public int[] getIndividualCountPerClassArray() {
+		return individualCountPerClassArray;
 	}
 
 	@Override

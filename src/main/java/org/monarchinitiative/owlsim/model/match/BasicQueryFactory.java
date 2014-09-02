@@ -23,7 +23,7 @@ public class BasicQueryFactory {
 	public static BasicQuery createQueryWithNegation(Set<String> labels, Set<String> negatedLabels, LabelMapper labelMapper) throws NonUniqueLabelException {
 		Set<String> qids = labelMapper.lookupByUniqueLabels(labels);
 		Set<String> nqids = labelMapper.lookupByUniqueLabels(negatedLabels);
-		QueryWithNegation q = new QueryWithNegationImpl(qids, nqids);
+		QueryWithNegation q = QueryWithNegationImpl.create(qids, nqids);
 		return q;
 	}
 

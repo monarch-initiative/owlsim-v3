@@ -13,10 +13,16 @@ public class QueryWithNegationImpl extends BasicQueryImpl implements QueryWithNe
 	private Set<String> queryNegatedClassIds;
 	
 
-	public QueryWithNegationImpl(Set<String> queryClassIds,
+	private QueryWithNegationImpl(Set<String> queryClassIds,
 			Set<String> queryNegatedClassIds) {
 		super(queryClassIds);
 		this.queryNegatedClassIds = queryNegatedClassIds;
+	}
+	
+	public static QueryWithNegation create(
+		Set<String> queryClassIds,
+		Set<String> queryNegatedClassIds) {
+		return new QueryWithNegationImpl(queryClassIds, queryNegatedClassIds);
 	}
 
 	public Set<String> getQueryNegatedClassIds() {
@@ -27,6 +33,11 @@ public class QueryWithNegationImpl extends BasicQueryImpl implements QueryWithNe
 		this.queryNegatedClassIds = queryNegatedClassIds;
 	}
 	
+	@Override
+	public String toString() {
+		return "POS="+getQueryClassIds() + " NEG="+getQueryNegatedClassIds(); 
+	}
+
 
 	
 }
