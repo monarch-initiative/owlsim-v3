@@ -2,7 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
 
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaivesBayesFixedWeightProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GMProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;

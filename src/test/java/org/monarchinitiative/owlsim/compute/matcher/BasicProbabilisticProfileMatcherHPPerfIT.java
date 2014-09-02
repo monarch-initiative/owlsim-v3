@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaivesBayesFixedWeightProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -20,7 +20,7 @@ public class BasicProbabilisticProfileMatcherHPPerfIT extends AbstractProfileMat
 	private Logger LOG = Logger.getLogger(BasicProbabilisticProfileMatcherHPPerfIT.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return NaivesBayesFixedWeightProfileMatcher.create(kb);
+		return NaiveBayesFixedWeightProfileMatcher.create(kb);
 	}
 
 	@Test

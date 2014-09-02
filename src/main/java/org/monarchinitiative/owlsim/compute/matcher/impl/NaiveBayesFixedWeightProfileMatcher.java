@@ -30,9 +30,9 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * @author cjm
  *
  */
-public class NaivesBayesFixedWeightProfileMatcher extends AbstractProfileMatcher implements NegationAwareProfileMatcher {
+public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher implements NegationAwareProfileMatcher {
 
-	private Logger LOG = Logger.getLogger(NaivesBayesFixedWeightProfileMatcher.class);
+	private Logger LOG = Logger.getLogger(NaiveBayesFixedWeightProfileMatcher.class);
 
 	@Deprecated
 	private double defaultFalsePositiveRate = 0.002; // alpha
@@ -46,7 +46,7 @@ public class NaivesBayesFixedWeightProfileMatcher extends AbstractProfileMatcher
 	private double[] defaultFalsePositiveRateArr =  new double[]{1e-10,0.0005,0.001,0.005,0.01};
 	private double[] defaultFalseNegativeRateArr = new double[] {1e-10,0.005,0.01,0.05,0.1,0.2,0.4,0.8,0.9};
 
-	private NaivesBayesFixedWeightProfileMatcher(BMKnowledgeBase kb) {
+	private NaiveBayesFixedWeightProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
 
@@ -54,8 +54,8 @@ public class NaivesBayesFixedWeightProfileMatcher extends AbstractProfileMatcher
 	 * @param kb
 	 * @return new instance
 	 */
-	public static NaivesBayesFixedWeightProfileMatcher create(BMKnowledgeBase kb) {
-		return new NaivesBayesFixedWeightProfileMatcher(kb);
+	public static NaiveBayesFixedWeightProfileMatcher create(BMKnowledgeBase kb) {
+		return new NaiveBayesFixedWeightProfileMatcher(kb);
 	}
 
 
