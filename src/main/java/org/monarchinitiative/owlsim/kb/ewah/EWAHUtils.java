@@ -8,7 +8,7 @@ import java.util.Set;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
- * Utilities for forwing with {@link EWAHCompressedBitmap}s
+ * Utilities for forwing with {@link EWAHCompressedBitmap}s.
  * 
  * @author cjm
  *

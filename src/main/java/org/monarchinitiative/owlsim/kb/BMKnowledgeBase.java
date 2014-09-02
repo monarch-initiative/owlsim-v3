@@ -13,24 +13,43 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
 /**
  * An interface to an ontology in which the fundamental unit of representation of 
  * a set of classes or a set of individuals (elements, items) is a Bitmap vector.
+ * 
+ * <h4>KB formalism</h4>
+ * <ul>
+ * <li>A KB is a collection of classes (features) and individuals (entities)
+ * <li>Features are connected in a Directed Acyclic Graph (DAG)
+ * <li>Each DAG has a single root, called owl:Thing - this is always included
+ * <li>Individuals can be described with one or more features. If an individual I is described using C, it is implicitly described by ancestors of C
+ * <li>Individuals can be also be described by negating one or more features, i.e. I not(C). If an individual is described using not(C), the this propagates to descendants of C
+ * <li>TODO: individuals can have one or more features associated by frequency
+ * </ul>
+ * 
+ * Note that OWLAPI terminology is used (e.g. superclasses), but this may be refactored in future to use neutral DAG terminology (e.g. ancestors)
+ * 
+ * <h4>Mapping to Bitmap positions</h4>
  * Bitmap vectors are used for fast set-wise operations.
  * 
  * Each class or individual is identified by a String identifier, but behind the scenes,
  * this is mapped to an integer denoting a position in the bitmap. A set of classes or
  * a set of individuals can then be represented by a bitmap.
  * 
+ * Note that classes and individuals are mutually exclusive, so the ID to Index mapping
+ * is dependent on the datatype
+ * 
  * Note: the ordering of bits in the class bitmap is guaranteed to be descending according to
  * frequency of individuals for that term. This means that an iterator starts with classes
  * with the lowest probability (and highest information content).
  *  
- * 
  * The JavaEWAH library is used for fast bitmap operations.
- * 
+ * <h4>Usage notes</h4>
  * Note that it is assumed that the ontology is static - most information is
- * cached in-memory
+ * cached in-memory. If the underlying ontology changes, it is currently necessary to
+ * create a new KB object - there is no incremental change model
+ * 
+ * <h4>Implementations</h4>
  * 
  * In the future there may be multiple implementations: Neo4j, JENA. Currently
- * there is only one, a bridge to the OWLAPI
+ * there is only one, a bridge to the OWLAPI, {@link BMKnowledgeBaseOWLAPIImpl}
  * 
  * @author cjm
  */

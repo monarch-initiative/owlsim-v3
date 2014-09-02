@@ -8,8 +8,7 @@ import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 import com.google.inject.ImplementedBy;
 
 /**
- * Represents a profile query which is a set of classes used to interrogate a knowledge base for the most
- * likely item
+ * The most basic type of query, a positive conjunction of features to be matched.  
  * 
  * 
  * @author cjm

@@ -38,6 +38,10 @@ import com.google.common.collect.Sets;
  *   ## 'abnormal cerebellum external granule cell layer morphology'
  *   ## 'abnormal long term depression'
  *   ## 'impaired coordination'
+ *   
+ * This test is subclasses by specific tests for different profileMatchers,
+ * but we may refactor this in future
+ *   
  * @author cjm
  *
  */

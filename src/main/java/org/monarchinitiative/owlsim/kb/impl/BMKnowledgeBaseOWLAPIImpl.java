@@ -1,13 +1,6 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
 import java.util.ArrayList;
-
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,14 +10,13 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 import org.monarchinitiative.owlsim.model.kb.impl.AttributeImpl;
 import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.semanticweb.owlapi.OWLCompositeOntologyChange;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -46,12 +38,24 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
- * Bridge between OWL and OntoEWAH
+ * Implementation of {@link BMKnowledgeBase} that uses the OWLAPI.
  * 
- * OntoEWAH references classes and individuals using integer indices for speed.
- * The class provides a mapping between these individuals and OWLNamedObjects
+ * An OWL reasoner is used. This guarantees the graphs is a DAG.
+ * (equivalence sets are mapped to the same node. subclass is mapped to DAG edges).
+ * 
+ * See also: {@link OWLLoader}
  * 
  * TODO - elininate unused methods
  * 

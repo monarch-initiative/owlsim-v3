@@ -2,6 +2,12 @@ package org.monarchinitiative.owlsim.kb.filter;
 
 import java.util.List;
 
+/**
+ * A conjunctions of filters.
+ * 
+ * @author cjm
+ *
+ */
 public class FilterSet implements Filter {
 	List<Filter> filters;
 

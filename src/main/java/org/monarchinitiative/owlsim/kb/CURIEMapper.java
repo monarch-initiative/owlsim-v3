@@ -3,7 +3,7 @@ package org.monarchinitiative.owlsim.kb;
 import org.semanticweb.owlapi.model.IRI;
 
 /**
- * Maps URIs/IRIs onto shortform IDs
+ * Maps URIs/IRIs onto shortform IDs.
  * 
  * @author cjm
  *

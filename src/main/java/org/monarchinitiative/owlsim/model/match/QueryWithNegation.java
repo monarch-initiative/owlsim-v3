@@ -4,7 +4,7 @@ import java.util.Set;
 
 /**
  * A query that contains at least a set of positive classes (features) and
- * negative/NOT classes
+ * negative/NOT classes.
  * 
  * @author cjm
  *

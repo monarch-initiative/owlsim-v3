@@ -1,14 +1,14 @@
 /**
- * Compute engines for matching query profiles (for example, a list of phenotypes) to
- * entities (for example, diseases) making use of a knowledge base (i.e. an ontoligy of
- * phenotypes and disease-phenotype associations).
+ * Framework for computing matches between a query profile and a knowledge base.
  * 
- * This package is broken into the following layers:
+ * 
+ * 
+ * The following are some key classes
  * <ul>
- *  <li> kb - representation of background knowledge
- *  <li> compute - engines for performing computations
- *  <li> io - input/output
- *  <li> model - data access objects
+ *  <li> {@link org.monarchinitiative.owlsim.kb.BMKnowledgeBase} - representation of background knowledge
+ *  <li> {@link org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher} - matches query profile against target profiles in KB
+ *  <li> {@link org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator} - engine for evaluating ProfileMatchers
+ *
  * </ul>
  * 
  */

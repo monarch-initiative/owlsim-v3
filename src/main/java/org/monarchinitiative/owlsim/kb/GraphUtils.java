@@ -8,14 +8,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.jena.atlas.logging.Log;
 import org.apache.log4j.Logger;
 
+/**
+ * Utilities for {@link BMKnowledgeBase}.
+ * 
+ * Currently minimal, provides topological sort.
+ * 
+ * @author cjm
+ *
+ */
 public class GraphUtils {
 	
 	private Logger LOG = Logger.getLogger(GraphUtils.class);
 
 
+	/**
+	 * Returns a sorted list of class indices such that if x precedes y in the list, then x is not a descendant of y.
+	 * 
+	 * @param kb
+	 * @return sorted list of indices
+	 */
 	public int[] getTopologicalSort(BMKnowledgeBase kb) {
 		Set<Integer> S = new HashSet<Integer>();
 		List<Integer> L = new ArrayList<Integer>();

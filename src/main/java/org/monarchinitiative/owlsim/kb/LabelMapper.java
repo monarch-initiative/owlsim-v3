@@ -3,7 +3,7 @@ package org.monarchinitiative.owlsim.kb;
 import java.util.Set;
 
 /**
- * Maps CURIE strings to labels and vice versa
+ * Maps CURIE strings to labels and vice versa.
  * 
  * @author cjm
  *

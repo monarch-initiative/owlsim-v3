@@ -1,7 +1,7 @@
+
 /**
+ * Minimal KB statistics calculation
  * 
- */
-/**
  * @author cjm
  *
  */

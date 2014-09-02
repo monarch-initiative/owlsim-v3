@@ -2,7 +2,14 @@ package org.monarchinitiative.owlsim.compute.stats;
 
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
-// TODO - use apache SummaryStatistics
+/**
+ * Minimal implementation of KB statistics
+ * 
+ * TODO - use apache SummaryStatistics
+ * 
+ * @author cjm
+ *
+ */
 public class KBStatsCalculator {
 
 	private BMKnowledgeBase knowledgeBase;

@@ -3,7 +3,7 @@ package org.monarchinitiative.owlsim.kb.impl;
 import java.util.Map;
 
 /**
- * A store for looking up the number of individuals per class
+ * A store for looking up the number of individuals per class.
  * 
  * @author cjm
  *

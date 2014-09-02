@@ -15,6 +15,7 @@ import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.BasicQuery;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -25,14 +26,16 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * @author cjm
  *
  */
-public class Evaluator {
+public class ProfileMatchEvaluator {
 	
-	private Logger LOG = Logger.getLogger(Evaluator.class);
+	private Logger LOG = Logger.getLogger(ProfileMatchEvaluator.class);
 	private boolean writeToStdout = true;
 
 	/**
 	 * given a test query (a query plus expected results) and a matcher,
-	 * run the matcher with the query and evaluate results
+	 * run the matcher with the query and evaluate results.
+	 * 
+	 * Use {@link #constructTestQuery(LabelMapper, String, int, String...)} to construct a TestQuery object
 	 *
 	 * @param profileMatcher
 	 * @param tq
@@ -69,6 +72,11 @@ public class Evaluator {
 	}
 
 	/**
+	 * Constructs a test query using a set of URIs as input.
+	 * 
+	 * if a URI follows the pattern "not X" then X is used as the label, and is added
+	 * to the set of negated queries - the object returned will be a {@link QueryWithNegation} object.
+	 * 
 	 * @param expectedId
 	 * @param maxRank
 	 * @param qidArr
@@ -78,19 +86,37 @@ public class Evaluator {
 			int maxRank,
 			String... qidArr) {
 		Set<String> qids = new HashSet<String>();
+		Set<String> nqids = new HashSet<String>();
 		for (String qid: qidArr) {
-			qids.add(qid);
+			if (qid.startsWith("not ")) {
+				nqids.add(qid.replaceFirst("not ", ""));
+			}
+			else {
+				qids.add(qid);
+			}
 		}
-		BasicQuery q = BasicQueryImpl.create(qids);
+		BasicQuery q;
+		if (nqids.size() == 0)
+			q = BasicQueryImpl.create(qids);
+		else {
+			LOG.info("NQIDS="+nqids);
+			q = QueryWithNegationImpl.create(qids, nqids);
+		}
 		TestQuery tq = new TestQuery(q, expectedId, maxRank);
 		return tq;
 	}
 	
 	/**
+	 * Constructs a test query using labels as inputs.
+	 * 
+	 * if a label follows the pattern "not X" then X is used as the label, and is added
+	 * to the set of negated queries - the object returned will be a {@link QueryWithNegation} object.
+	 * 
+	 * 
 	 * @param labelMapper
 	 * @param expectedId
 	 * @param maxRank
-	 * @param labels
+	 * @param labels - should match the rdfs:label field in the ontology
 	 * @return testQuery
 	 * @throws NonUniqueLabelException
 	 */

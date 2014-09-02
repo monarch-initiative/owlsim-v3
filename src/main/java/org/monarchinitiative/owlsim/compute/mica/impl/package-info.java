@@ -1,5 +1,5 @@
 /**
- * Most recent Common Anctesor engines
+ * Implementations of {@link org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator}
  *
  * @author cjm
  *

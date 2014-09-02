@@ -1,5 +1,6 @@
 /**
- * Computation of Most Informative Comman Ancestirs
+ * Computation of Most Informative Common Ancestors (MICAs)
+ * 
  * 
  * @author cjm
  *

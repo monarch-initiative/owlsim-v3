@@ -1,6 +1,12 @@
 package org.monarchinitiative.owlsim.kb.filter;
 
 
+/**
+ * A filter that picks out individuals that have a particular property set to a particular value.
+ * 
+ * @author cjm
+ *
+ */
 public class PropertyValueFilter implements Filter  {
 
 	private String propertySymbol;

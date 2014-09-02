@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.monarchinitiative.owlsim.eval.Evaluator;
+import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -25,7 +25,7 @@ public class AbstractProfileMatcherTest {
 	protected BMKnowledgeBase kb;
 	private Logger LOG = Logger.getLogger(AbstractProfileMatcherTest.class);
 	protected boolean writeToStdout = true;
-	protected Evaluator eval = new Evaluator();
+	protected ProfileMatchEvaluator eval = new ProfileMatchEvaluator();
 
 
 	protected boolean isUseLabels() {

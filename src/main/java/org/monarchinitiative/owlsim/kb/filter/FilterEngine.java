@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
-import com.googlecode.javaewah.EWAHCompressedBitmap;
-
 /**
- * Applies a filter on a set of individuals
+ * Applies a {@link Filter} on a set of individuals.
  * 
  * @author cjm
  *
@@ -18,7 +15,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
 public class FilterEngine {
 	
 	BMKnowledgeBase knowledgeBase;
-	private Logger LOG = Logger.getLogger(FilterEngine.class);
+	//private Logger LOG = Logger.getLogger(FilterEngine.class);
 	
 
 	
