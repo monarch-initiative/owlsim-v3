@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -29,12 +30,12 @@ public class LabelMapperImpl implements LabelMapper {
 
 	Map<String,Set<String>> labelToIdMap;
 	Map<String,Set<String>> idToLabelMap;
-	CURIEMapperImpl curieMapper;
+	CURIEMapper curieMapper;
 	
 	/**
 	 * @param curieMapper
 	 */
-	public LabelMapperImpl(CURIEMapperImpl curieMapper) {
+	public LabelMapperImpl(CURIEMapper curieMapper) {
 		super();
 		this.curieMapper = curieMapper;
 		initializeMaps();
@@ -130,6 +131,7 @@ public class LabelMapperImpl implements LabelMapper {
 	 * 
 	 * @param ontology
 	 */
+	@Deprecated
 	public void populateFromOntology(OWLOntology ontology) {
 		LOG.info("Populating labels from "+ontology);
 		int n=0;
@@ -154,15 +156,17 @@ public class LabelMapperImpl implements LabelMapper {
 		LOG.info("Label axioms mapped: "+n);
 	}
 
+	@Deprecated
 	private void add(IRI subject, String value) {
 		add(curieMapper.getShortForm(subject), value);
 	}
 
+	@Deprecated
 	private void add(IRI subject, OWLLiteral value) {
 		add(curieMapper.getShortForm(subject), value.getLiteral());
 	}
 
-	private void add(String id, String label) {
+	public void add(String id, String label) {
 		if (!labelToIdMap.containsKey(label))
 			labelToIdMap.put(label, new HashSet<String>());
 		labelToIdMap.get(label).add(id);

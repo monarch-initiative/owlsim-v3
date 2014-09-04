@@ -1,0 +1,14 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org/filter-test.owl>
+
+Class: a
+Class: b
+ObjectProperty: op
+DataProperty: dp
+AnnotationProperty: ap
+
+Individual: ia Types: a Facts: op ib
+Individual: ib Types: b Facts: dp "foo"
+Individual: iabc Types: a, b Annotations: ap "foo"
+

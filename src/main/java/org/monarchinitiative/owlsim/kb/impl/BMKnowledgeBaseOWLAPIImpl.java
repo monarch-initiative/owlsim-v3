@@ -12,6 +12,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.CURIEMapper;
+import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
@@ -19,12 +21,14 @@ import org.monarchinitiative.owlsim.model.kb.impl.AttributeImpl;
 import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectComplementOf;
@@ -88,13 +92,13 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	private int[] individualCountPerClassArray;
 
-	CURIEMapperImpl curieMapper;
-	LabelMapperImpl labelMapper;
+	CURIEMapper curieMapper;
+	LabelMapper labelMapper;
 
 	/**
 	 * @param owlOntology
-	 * @param owlDataOntology2 
-	 * @param rf.createReasoner(owlOntology)
+	 * @param owlDataOntology
+	 * @param rf
 	 */
 	public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
 			OWLOntology owlDataOntology, OWLReasonerFactory rf) {
@@ -110,11 +114,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		storeInferences();
 		curieMapper = new CURIEMapperImpl();
 		labelMapper = new LabelMapperImpl(curieMapper);
-		labelMapper.populateFromOntology(owlOntology);
+		populateLabeksFromOntology(labelMapper, owlOntology);
 		if (owlDataOntology != null) {
 			LOG.info("Fetching labels from "+owlDataOntology);
 			// the data ontology may contain labels of data items
-			labelMapper.populateFromOntology(owlDataOntology);
+			populateLabeksFromOntology(labelMapper, owlDataOntology);
 		}
 	}
 
@@ -129,17 +133,42 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology,owlDataOntology, rf);
 	}
 
-
+	private String getShortForm(IRI iri) {
+		return curieMapper.getShortForm(iri);
+	}
+	private void populateLabeksFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
+		LOG.info("Populating labels from "+ontology);
+		int n=0;
+		for (OWLAnnotationAssertionAxiom aaa : ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION)) {
+			if (aaa.getProperty().isLabel()) {
+				if (aaa.getSubject() instanceof IRI &&
+					aaa.getValue() instanceof OWLLiteral) {
+					labelMapper.add(getShortForm((IRI) aaa.getSubject()), 
+							((OWLLiteral) aaa.getValue()).getLiteral());
+					n++;
+				}
+			}
+		}
+		if (n==0) {
+			LOG.info("Setting labels from fragments");
+			Set<OWLNamedObject> objs = new HashSet<OWLNamedObject>();
+			objs.addAll(ontology.getClassesInSignature());
+			objs.addAll(ontology.getIndividualsInSignature());
+			for (OWLNamedObject obj : objs) {
+				labelMapper.add(getShortForm(obj.getIRI()), 
+						obj.getIRI().getFragment());
+				n++;
+			}
+		}
+		LOG.info("Label axioms mapped: "+n);
+	}
 
 	/**
 	 * @return utility object to map labels to ids
 	 */
-	public LabelMapperImpl getLabelMapper() {
+	public LabelMapper getLabelMapper() {
 		return labelMapper;
 	}
-
-
-
 
 	/**
 	 * @return set of all classes

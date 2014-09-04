@@ -48,4 +48,6 @@ public interface LabelMapper {
 	 * @return label for this id. if label is not unique, an arbitrary one is selected
 	 */
 	public String  getArbitraryLabel(String id);
+
+	public void add(String shortForm, String literal);
 }

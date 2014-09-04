@@ -28,7 +28,7 @@ public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest
 
 	@Test
 	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
-		loadSpecies();
+		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
@@ -47,7 +47,7 @@ public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest
 		
 	}
 
-	private void loadSpecies() throws OWLOntologyCreationException {
+	private void load() throws OWLOntologyCreationException {
 		load("/mp-subset.ttl");
 		
 	}

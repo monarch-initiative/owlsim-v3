@@ -74,6 +74,9 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return EWAHUtils.converIndexSetToBitmap(positions);
 	}
 
+	// given an array of class IDs c1...cn, return an array S1...Sn,
+	// where Si is the set of superclasses (direct and indirect) of ci,
+	// stored as a bitmap
 	protected EWAHCompressedBitmap[] getProfileSetBM(String[] qcids) {
 		EWAHCompressedBitmap[] bms = new EWAHCompressedBitmap[qcids.length];
 		for (int i=0; i<qcids.length; i++) {
