@@ -67,7 +67,7 @@ public class ProfileMatchEvaluator {
 		}
 		LOG.info("Rank of "+tq.expectedId+" == "+actualRank+" when using "+profileMatcher);
 
-		return actualRank <= tq.maxRank;
+		return actualRank <= tq.maxRank && actualRank > 0;
 
 	}
 

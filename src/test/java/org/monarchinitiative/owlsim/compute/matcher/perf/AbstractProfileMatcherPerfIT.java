@@ -1,4 +1,4 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.perf;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;

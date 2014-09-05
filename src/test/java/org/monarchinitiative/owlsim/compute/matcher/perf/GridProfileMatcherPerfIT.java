@@ -1,5 +1,6 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.perf;
 
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
