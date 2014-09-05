@@ -51,6 +51,15 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * In the future there may be multiple implementations: Neo4j, JENA. Currently
  * there is only one, a bridge to the OWLAPI, {@link BMKnowledgeBaseOWLAPIImpl}
  * 
+ * <h4>Labels and IDs</h4>
+ * 
+ * A KB uses an internal integer to refer to all objects. For convenience, these can also
+ * be referred to by an optional String id, which follows whatever form the input source provides.
+ * 
+ * A separate {@link LabelMapper} is used to retrieve labels given an ID, or conversely to look
+ * up an ID given a label.
+ * 
+ * 
  * @author cjm
  */
 @ImplementedBy(BMKnowledgeBaseOWLAPIImpl.class)

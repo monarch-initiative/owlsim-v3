@@ -6,6 +6,8 @@ import org.semanticweb.owlapi.model.IRI;
 /**
  * Partially implemented method for making shortform (CURIEs) from URIs
  * 
+ * TODO: complete this
+ * 
  * @author cjm
  *
  */

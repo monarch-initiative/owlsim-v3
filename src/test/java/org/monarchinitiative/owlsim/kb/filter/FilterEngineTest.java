@@ -12,8 +12,12 @@ public class FilterEngineTest extends AbstractFilterEngineTest {
 	public void testFilterEngine() throws OWLOntologyCreationException, URISyntaxException, NoRootException {
 		load("filter-test-ontology.owl");
 		
-		PropertyValueFilter pvf = new PropertyValueFilter();
-		// TODO
+		
+		// TODO - allow shortForms in properties
+		PropertyValueFilter pvf = PropertyValueFilter.create("http://x.org/op", "http://x.org/ib", false);
+		testFilter(pvf, "http://x.org/ia");
+		
+		// TODO - test other owl property assertion types
 	}
 
 }

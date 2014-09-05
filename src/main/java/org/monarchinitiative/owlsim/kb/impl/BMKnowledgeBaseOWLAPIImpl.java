@@ -32,9 +32,13 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectComplementOf;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLPropertyAssertionObject;
+import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
@@ -103,6 +107,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
 			OWLOntology owlDataOntology, OWLReasonerFactory rf) {
 		super();
+		curieMapper = new CURIEMapperImpl();
+		labelMapper = new LabelMapperImpl(curieMapper);
+
 		this.owlOntology = owlOntology;
 		this.owlDataOntology = owlDataOntology;
 		if (owlDataOntology != null) {
@@ -112,13 +119,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		createMap();
 		ontoEWAHStore = new EWAHKnowledgeBaseStore(classNodes.size(), individualNodes.size());
 		storeInferences();
-		curieMapper = new CURIEMapperImpl();
-		labelMapper = new LabelMapperImpl(curieMapper);
-		populateLabeksFromOntology(labelMapper, owlOntology);
+		populateLabelsFromOntology(labelMapper, owlOntology);
 		if (owlDataOntology != null) {
 			LOG.info("Fetching labels from "+owlDataOntology);
 			// the data ontology may contain labels of data items
-			populateLabeksFromOntology(labelMapper, owlDataOntology);
+			populateLabelsFromOntology(labelMapper, owlDataOntology);
 		}
 	}
 
@@ -136,7 +141,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	private String getShortForm(IRI iri) {
 		return curieMapper.getShortForm(iri);
 	}
-	private void populateLabeksFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
+	private void populateLabelsFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
 		LOG.info("Populating labels from "+ontology);
 		int n=0;
 		for (OWLAnnotationAssertionAxiom aaa : ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION)) {
@@ -250,6 +255,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		individualToNodeMap = new HashMap<OWLNamedIndividual,Node<OWLNamedIndividual>>();
 		classNodeToIntegerMap = new HashMap<Node<OWLClass>, Integer>();
 		individualNodeToIntegerMap = new HashMap<Node<OWLNamedIndividual>, Integer>();
+		propertyValueMapMap = new HashMap<String,Map<String,Set<Object>>>();
 		final HashMap<Node<OWLClass>, Integer> classNodeToFrequencyMap = new HashMap<Node<OWLClass>, Integer>();
 		for (OWLClass c : classesInSignature) {
 			if (owlReasoner.getInstances(c, false).isEmpty()) {
@@ -271,6 +277,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			Node<OWLNamedIndividual> node = owlReasoner.getSameIndividuals(i);
 			individualNodes.add(node);
 			individualToNodeMap.put(i, node);
+			setPropertyValues(owlOntology,i);
+			if (owlDataOntology != null)
+				setPropertyValues(owlDataOntology,i);
 		}
 		// TODO - for bitmap operation optimization,
 		//        consider ordering nodes such that most common ones have low indices; OR
@@ -299,6 +308,42 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			individualNodeToIntegerMap.put(individualNodeArray[i], i);
 		}
 
+	}
+
+
+	private void setPropertyValues(OWLOntology ont, OWLNamedIndividual i) {
+		Preconditions.checkNotNull(i);
+		Map<String, Set<Object>> pvm = new HashMap<String, Set<Object>>();
+		String id = curieMapper.getShortForm(i.getIRI());
+		propertyValueMapMap.put(id, pvm);
+		for (OWLIndividualAxiom ax : ont.getAxioms(i)) {
+			if (ax instanceof OWLPropertyAssertionAxiom) {
+				OWLPropertyAssertionAxiom paa = (OWLPropertyAssertionAxiom)ax;
+				OWLPropertyExpression p = paa.getProperty();
+				if (p instanceof OWLObjectProperty) {
+					String pid = curieMapper.getShortForm(((OWLObjectProperty) p).getIRI());
+					OWLPropertyAssertionObject obj = paa.getObject();
+					if (obj instanceof OWLLiteral) {
+						addPropertyValue(pvm,pid, ((OWLLiteral)obj).getLiteral());
+					}
+					else if (obj instanceof OWLNamedIndividual) {
+						addPropertyValue(pvm,pid,
+								curieMapper.getShortForm(((OWLNamedIndividual) obj).getIRI()));
+						
+					}
+					
+				}
+			}
+		}
+		
+	}
+
+
+	private void addPropertyValue(Map<String, Set<Object>> pvm, String pid, String v) {
+		LOG.info("PV="+pid+"="+v);
+		if (!pvm.containsKey(pid))
+			pvm.put(pid, new HashSet<Object>());
+		pvm.get(pid).add(v);
 	}
 
 

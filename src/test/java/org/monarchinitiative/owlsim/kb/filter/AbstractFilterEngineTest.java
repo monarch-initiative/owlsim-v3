@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.kb.filter;
 
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,8 +42,18 @@ public abstract class AbstractFilterEngineTest {
 		filterEngine = FilterEngine.create(kb);
 	}
 	
+	protected void testFilter(Filter filter,String... expectedIds) {
+		HashSet<String> ids = new HashSet<String>();
+		for (String id : expectedIds) {
+			ids.add(id);
+		}
+		testFilter(filter, ids);
+	}
+
+	
 	protected void testFilter(Filter filter, Set<String> expectedIds) {
 		List<String> inds = filterEngine.applyFilter(filter);
+		LOG.info("RESULTS:"+inds);
 		Assert.assertEquals(expectedIds.size(), inds.size());
 		for (String ind : inds) {
 			Assert.assertTrue(expectedIds.contains(ind));
