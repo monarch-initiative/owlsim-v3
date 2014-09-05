@@ -12,4 +12,13 @@ For now you must do this:
 
 And then open target/site/apidocs/index.html in a browser
 
+## Running it
+
+Currently there is no command line app, and no service layer.
+
+For now, run junit tests in eclipse.
+
+Also try the performance/integration tests in owlsim.compute.perf - these will need extra files downloaded
+see the Makefile for details. 
+
 
