@@ -13,7 +13,7 @@ public class MatchImpl implements Match {
 	
 	private String matchId;
 	private String matchLabel;
-	private double probability;
+	private double rawScore;
 	private Integer rank;
 	
 	/**
@@ -25,7 +25,7 @@ public class MatchImpl implements Match {
 		super();
 		this.matchId = matchId;
 		this.matchLabel = matchLabel;
-		this.probability = probability;
+		this.rawScore = probability;
 		rank = null;
 	}
 	
@@ -49,20 +49,20 @@ public class MatchImpl implements Match {
 		this.matchLabel = matchLabel;
 	}
 
-	public double getProbability() {
-		return probability;
+	public double getRawScore() {
+		return rawScore;
 	}
 
-	public void setProbability(double probability) {
-		this.probability = probability;
+	public void setRawScore(double probability) {
+		this.rawScore = probability;
 	}
 	
 	public int getPercentageScore() {
-		return (int) (Math.round(probability * 100));
+		return (int) (Math.round(rawScore * 100));
 	}
 	
 	public double getScore() {
-		return probability * 100;
+		return rawScore * 100;
 	}
 	
 
@@ -78,6 +78,6 @@ public class MatchImpl implements Match {
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " sc="+getPercentageScore()+" p="+probability;
+		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " sc="+getPercentageScore()+" p="+rawScore;
 	}
 }

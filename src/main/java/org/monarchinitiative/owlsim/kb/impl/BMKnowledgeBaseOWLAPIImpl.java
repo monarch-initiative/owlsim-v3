@@ -17,8 +17,7 @@ import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
-import org.monarchinitiative.owlsim.model.kb.impl.AttributeImpl;
-import org.monarchinitiative.owlsim.model.kb.impl.EntityImpl;
+import org.monarchinitiative.owlsim.model.kb.KBMetadata;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -74,6 +73,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	private Logger LOG = Logger.getLogger(BMKnowledgeBaseOWLAPIImpl.class);
 
+	private KBMetadata kbMetdata;
 
 	private EWAHKnowledgeBaseStore ontoEWAHStore;
 	private OWLOntology owlOntology;
@@ -127,6 +127,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 	}
 
+	
 
 	public static BMKnowledgeBase create(OWLOntology owlOntology, OWLReasonerFactory rf) {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf);
@@ -137,6 +138,20 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			OWLReasonerFactory rf) {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology,owlDataOntology, rf);
 	}
+	
+	
+
+	public KBMetadata getKbMetdata() {
+		return kbMetdata;
+	}
+
+
+
+	public void setKbMetdata(KBMetadata kbMetdata) {
+		this.kbMetdata = kbMetdata;
+	}
+
+
 
 	private String getShortForm(IRI iri) {
 		return curieMapper.getShortForm(iri);
@@ -729,16 +744,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Attribute getAttribute(String id) {
 		Preconditions.checkNotNull(id);
 		String label = labelMapper.getArbitraryLabel(id);
-		return new AttributeImpl(id, label);
+		return new Attribute(id, label);
 	}
 
 	public Entity getEntity(String id) {
 		Preconditions.checkNotNull(id);
 		String label = labelMapper.getArbitraryLabel(id);
-		return new EntityImpl(id, label);
+		return new Entity(id, label);
 	}
-
-
 
 	public int[] getIndividualCountPerClassArray() {
 		return individualCountPerClassArray;

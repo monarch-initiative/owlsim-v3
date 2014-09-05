@@ -30,6 +30,11 @@ public class ProfileMatchEvaluator {
 	
 	private Logger LOG = Logger.getLogger(ProfileMatchEvaluator.class);
 	private boolean writeToStdout = true;
+	private JSONWriter jsonWriter;
+	
+	public void writeJsonTo(String fileName) throws FileNotFoundException {
+		jsonWriter = new JSONWriter(fileName);
+	}
 
 	/**
 	 * given a test query (a query plus expected results) and a matcher,
@@ -42,17 +47,16 @@ public class ProfileMatchEvaluator {
 	 * @return true if succeeds
 	 * @throws OWLOntologyCreationException
 	 * @throws NonUniqueLabelException
-	 * @throws FileNotFoundException
 	 * @throws UnknownFilterException
 	 */
-	public boolean evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public boolean evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, UnknownFilterException {
 
 		BasicQuery q = tq.query;
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 
-		JSONWriter w = new JSONWriter("target/gm-match-results.json");
-		w.write(mp);
+		if (jsonWriter != null)
+			jsonWriter.write(mp);
 
 		if (writeToStdout) {
 			//Gson gson = new GsonBuilder().setPrettyPrinting().create();
