@@ -12,9 +12,9 @@ import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
@@ -44,11 +44,11 @@ public class AbstractProfileMatcherTest {
 		return "http://x.org/"+label;
 	}
 
-	protected TestQuery getTestQuery(BasicQuery q, String expectedId, int maxRank) {
+	protected TestQuery getTestQuery(ProfileQuery q, String expectedId, int maxRank) {
 		return new TestQuery(q, getId(expectedId), maxRank);
 	}
 
-	protected void getTestQuery(BasicQuery q, String expectedId) {
+	protected void getTestQuery(ProfileQuery q, String expectedId) {
 		getTestQuery(q, expectedId, 1);
 	}
 
@@ -91,9 +91,9 @@ public class AbstractProfileMatcherTest {
 			}
 		}
 		LOG.info("QIDS="+qids);
-		BasicQuery q;
+		ProfileQuery q;
 		if (nqids.size() == 0)
-			q = BasicQueryImpl.create(qids);
+			q = ProfileQueryImpl.create(qids);
 		else {
 			LOG.info("NQIDS="+nqids);
 			q = QueryWithNegationImpl.create(qids, nqids);

@@ -9,16 +9,21 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
+import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.ProfileQueryFactory;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+
+import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
  * For evaluating test queries against a knowledge base using a profileMatcher
@@ -51,7 +56,7 @@ public class ProfileMatchEvaluator {
 	 */
 	public boolean evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, UnknownFilterException {
 
-		BasicQuery q = tq.query;
+		ProfileQuery q = tq.query;
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 
@@ -99,9 +104,9 @@ public class ProfileMatchEvaluator {
 				qids.add(qid);
 			}
 		}
-		BasicQuery q;
+		ProfileQuery q;
 		if (nqids.size() == 0)
-			q = BasicQueryImpl.create(qids);
+			q = ProfileQueryImpl.create(qids);
 		else {
 			LOG.info("NQIDS="+nqids);
 			q = QueryWithNegationImpl.create(qids, nqids);
@@ -140,9 +145,9 @@ public class ProfileMatchEvaluator {
 			}
 		}
 		LOG.info("QIDS="+qids);
-		BasicQuery q;
+		ProfileQuery q;
 		if (nqids.size() == 0)
-			q = BasicQueryImpl.create(qids);
+			q = ProfileQueryImpl.create(qids);
 		else {
 			LOG.info("NQIDS="+nqids);
 			q = QueryWithNegationImpl.create(qids, nqids);
@@ -157,5 +162,48 @@ public class ProfileMatchEvaluator {
 		return tq;
 	}
 
+	public double compareMatchSets(MatchSet ms1, MatchSet ms2) {
+		int totalRankDiff = 0;
+		int n=0;
+		for (Match m1 : ms1.getMatches()) {
+			Match m2 = ms2.getMatchesWithId(m1.getMatchId());
+			totalRankDiff += m1.getRank() - m2.getRank();
+			n++;
+		}
+		double avgRankDiff = totalRankDiff / (double)n;
+		return avgRankDiff;
+	}
+	
+	/**
+	 * Compare two profile matchers using all individuals in a KB
+	 * 
+	 * TODO: replace or extend with Mann-Whitney U test
+	 * 
+	 * @param pm1
+	 * @param pm2
+	 * @return average average difference in ranking
+	 */
+	public Double compareMatchers(ProfileMatcher pm1, ProfileMatcher pm2) {
+		BMKnowledgeBase kb = pm1.getKnowledgeBase();
+		Set<String> inds = kb.getIndividualIdsInSignature();
+		double tdiff = 0;
+		int n = 0;
+		for (String ind : inds) {
+			EWAHCompressedBitmap typesBM = kb.getTypesBM(ind);
+			// TODO - add to utils
+			Set<String> qids = new HashSet<String>();
+			for (int ix : typesBM.getPositions()) {
+				qids.add(kb.getClassId(ix));
+			}
+			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
+			MatchSet ms1 = pm1.findMatchProfile(q);
+			MatchSet ms2 = pm2.findMatchProfile(q);
+			double diff = compareMatchSets(ms1, ms2);
+			tdiff += diff;
+			n++;
+		}
+		
+		return tdiff / (double)n;
+	}
 
 }

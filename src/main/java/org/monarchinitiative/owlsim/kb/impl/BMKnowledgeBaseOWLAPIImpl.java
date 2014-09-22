@@ -355,7 +355,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 
 	private void addPropertyValue(Map<String, Set<Object>> pvm, String pid, String v) {
-		LOG.info("PV="+pid+"="+v);
+		//LOG.debug("PV="+pid+"="+v);
 		if (!pvm.containsKey(pid))
 			pvm.put(pid, new HashSet<Object>());
 		pvm.get(pid).add(v);

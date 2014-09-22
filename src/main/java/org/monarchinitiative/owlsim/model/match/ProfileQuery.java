@@ -3,7 +3,7 @@ package org.monarchinitiative.owlsim.model.match;
 import java.util.Set;
 
 import org.monarchinitiative.owlsim.kb.filter.Filter;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 
 import com.google.inject.ImplementedBy;
 
@@ -14,8 +14,8 @@ import com.google.inject.ImplementedBy;
  * @author cjm
  *
  */
-@ImplementedBy(BasicQueryImpl.class)
-public interface BasicQuery {
+@ImplementedBy(ProfileQueryImpl.class)
+public interface ProfileQuery {
 	
 	/**
 	 * @return all (positive) class Ids in query
@@ -26,4 +26,8 @@ public interface BasicQuery {
 	 * @return query filter
 	 */
 	public Filter getFilter();
+	
+	public Integer getLimit();
+
+	public void setLimit(Integer limit);
 }

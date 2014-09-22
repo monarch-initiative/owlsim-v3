@@ -13,7 +13,7 @@ public interface MatchSet {
 	/**
 	 * @return query that produced the match set
 	 */
-	public BasicQuery getQuery();
+	public ProfileQuery getQuery();
 	
 	/**
 	 * @return all matches
@@ -24,8 +24,12 @@ public interface MatchSet {
 	 * @return all matches with rank
 	 */
 	public List<Match> getMatchesWithRank(int rank);
-
-	// TODO - iterator
+	
+	/**
+	 * @param matchId
+	 * @return Match with identical matchId
+	 */
+	public Match getMatchesWithId(String matchId);
 	
 	/**
 	 * @param createMatch
@@ -46,6 +50,8 @@ public interface MatchSet {
 	// TODO - record kb metadata
 	public ExecutionMetadata getExecutionMetadata();
 	public void setExecutionMetadata(ExecutionMetadata executionMetadata);
+
+	public void truncate(int limit);
 	
 
 	// TODO - filters

@@ -23,8 +23,8 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.google.common.collect.Sets;
@@ -58,7 +58,7 @@ public class AbstractGMProfileMatcherTest extends AbstractProfileMatcherTest {
 		}
 		LOG.info("QIDS="+qids);
 		LOG.info("Resample proabability q="+profileMatcher.getResampleProbability());
-		BasicQuery q = BasicQueryImpl.create(qids);
+		ProfileQuery q = ProfileQueryImpl.create(qids);
 		TestQuery tq = new TestQuery(q, getId(expectedId), maxRank);
 		evaluateTestQuery(profileMatcher, tq);
 	}	

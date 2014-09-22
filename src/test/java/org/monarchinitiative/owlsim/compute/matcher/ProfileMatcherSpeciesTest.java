@@ -21,8 +21,8 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.google.common.collect.Sets;
@@ -42,15 +42,15 @@ public class ProfileMatcherSpeciesTest {
 	List<TestQuery> testQueries = new ArrayList<TestQuery>();
 	
 	private class TestQuery {
-		BasicQuery query;
+		ProfileQuery query;
 		String expectedId;
 		int maxRank = 1;
-		public TestQuery(BasicQuery query, String expectedId) {
+		public TestQuery(ProfileQuery query, String expectedId) {
 			super();
 			this.query = query;
 			this.expectedId = expectedId;
 		}
-		public TestQuery(BasicQuery query, String expectedId, int maxRank) {
+		public TestQuery(ProfileQuery query, String expectedId, int maxRank) {
 			super();
 			this.query = query;
 			this.expectedId = expectedId;
@@ -61,10 +61,10 @@ public class ProfileMatcherSpeciesTest {
 		
 	}
 
-	private void addQuery(BasicQuery q, String expectedId, int maxRank) {
+	private void addQuery(ProfileQuery q, String expectedId, int maxRank) {
 		testQueries.add(new TestQuery(q, getId(expectedId), maxRank));
 	}
-	private void addQuery(BasicQuery q, String expectedId) {
+	private void addQuery(ProfileQuery q, String expectedId) {
 		addQuery(q, expectedId, 1);
 	}
 	
@@ -131,19 +131,19 @@ public class ProfileMatcherSpeciesTest {
 		return "http://x.org/"+label;
 	}
 	
-	private BasicQuery getQuery(String... labels) throws NonUniqueLabelException {
+	private ProfileQuery getQuery(String... labels) throws NonUniqueLabelException {
 		Set<String> qids = new HashSet<String>();
 		for (String label: labels) {
 			qids.add(getId(label));
 		}
 		LOG.info("QIDS="+qids);
-		return BasicQueryImpl.create(qids);
+		return ProfileQueryImpl.create(qids);
 	}
 	
 	private void testMatcher(ProfileMatcher profileMatcher) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 
 		for (TestQuery tq : testQueries) {
-			BasicQuery q = tq.query;
+			ProfileQuery q = tq.query;
 			LOG.info("Q="+q);
 			MatchSet mp = profileMatcher.findMatchProfile(q);
 			

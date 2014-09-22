@@ -4,23 +4,23 @@ import java.util.Set;
 
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 
-public class BasicQueryFactory {
+public class ProfileQueryFactory {
 	
-	public static BasicQuery createQuery(Set<String> labels, LabelMapper labelMapper) throws NonUniqueLabelException {
+	public static ProfileQuery createQuery(Set<String> labels, LabelMapper labelMapper) throws NonUniqueLabelException {
 		Set<String> qids = labelMapper.lookupByUniqueLabels(labels);
-		BasicQueryImpl q = new BasicQueryImpl(qids);
+		ProfileQueryImpl q = new ProfileQueryImpl(qids);
 		return q;
 	}
 	
-	public static BasicQuery createQuery(Set<String> ids) {
-		BasicQueryImpl q = new BasicQueryImpl(ids);
+	public static ProfileQuery createQuery(Set<String> ids) {
+		ProfileQueryImpl q = new ProfileQueryImpl(ids);
 		return q;
 	}
 
-	public static BasicQuery createQueryWithNegation(Set<String> labels, Set<String> negatedLabels, LabelMapper labelMapper) throws NonUniqueLabelException {
+	public static ProfileQuery createQueryWithNegation(Set<String> labels, Set<String> negatedLabels, LabelMapper labelMapper) throws NonUniqueLabelException {
 		Set<String> qids = labelMapper.lookupByUniqueLabels(labels);
 		Set<String> nqids = labelMapper.lookupByUniqueLabels(negatedLabels);
 		QueryWithNegation q = QueryWithNegationImpl.create(qids, nqids);

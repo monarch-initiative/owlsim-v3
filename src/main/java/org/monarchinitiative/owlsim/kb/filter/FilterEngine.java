@@ -24,6 +24,10 @@ public class FilterEngine {
 		this.knowledgeBase = knowledgeBase;
 	}
 
+	/**
+	 * @param knowledgeBase
+	 * @return FilterEngine
+	 */
 	public static FilterEngine create(BMKnowledgeBase knowledgeBase) {
 		return new FilterEngine(knowledgeBase);
 	}

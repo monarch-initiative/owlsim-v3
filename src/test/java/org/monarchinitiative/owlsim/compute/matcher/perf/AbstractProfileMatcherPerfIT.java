@@ -14,8 +14,8 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
-import org.monarchinitiative.owlsim.model.match.impl.BasicQueryImpl;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -41,7 +41,7 @@ public abstract class AbstractProfileMatcherPerfIT {
 		return inds.get((int)(Math.random() * inds.size()));
 	}
 	
-	private BasicQuery getRandomQuery(String ind, double decay) {
+	private ProfileQuery getRandomQuery(String ind, double decay) {
 		EWAHCompressedBitmap typesBM = kb.getTypesBM(ind);
 		Set<String> qcids = new HashSet<String>();
 		// TODO - this is not very good
@@ -50,7 +50,7 @@ public abstract class AbstractProfileMatcherPerfIT {
 				qcids.add(kb.getClassId(p));
 			}
 		}
-		return BasicQueryImpl.create(qcids);
+		return ProfileQueryImpl.create(qcids);
 	}
 	
 	@Test
@@ -78,7 +78,7 @@ public abstract class AbstractProfileMatcherPerfIT {
 		LOG.info("KB = "+profileMatcher.getKnowledgeBase());
 		String tgt = getRandomIndividual();
 		LOG.info("Target="+tgt);
-		BasicQuery q = getRandomQuery(tgt, decay);
+		ProfileQuery q = getRandomQuery(tgt, decay);
 		LOG.info("Query = "+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 

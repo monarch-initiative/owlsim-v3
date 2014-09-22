@@ -1,6 +1,6 @@
 package org.monarchinitiative.owlsim.eval;
 
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
  * A combination of a query an an expected result
@@ -9,16 +9,16 @@ import org.monarchinitiative.owlsim.model.match.BasicQuery;
  *
  */
 public class TestQuery {
-	public BasicQuery query;
+	public ProfileQuery query;
 	public String expectedId;
 	public int maxRank = 1;
 	
-	public TestQuery(BasicQuery query, String expectedId) {
+	public TestQuery(ProfileQuery query, String expectedId) {
 		super();
 		this.query = query;
 		this.expectedId = expectedId;
 	}
-	public TestQuery(BasicQuery query, String expectedId, int maxRank) {
+	public TestQuery(ProfileQuery query, String expectedId, int maxRank) {
 		super();
 		this.query = query;
 		this.expectedId = expectedId;

@@ -15,9 +15,9 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class PhenodigmMatcherTest extends AbstractProfileMatcherTest {
+public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(PhenodigmMatcherTest.class);
+	private Logger LOG = Logger.getLogger(PhenodigmICProfileMatcherTest.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
 		return PhenodigmICProfileMatcher.create(kb);

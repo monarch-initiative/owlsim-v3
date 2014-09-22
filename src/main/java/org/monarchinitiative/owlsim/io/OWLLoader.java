@@ -19,6 +19,9 @@ import com.google.common.base.Preconditions;
 /**
  * Object for loading OWL ontologies into a {@link BMKnowledgeBase}
  * 
+ * Note that a KB consists of classes and individuals, both of which can be loaded
+ * from an ontology
+ * 
  * @author cjm
  *
  */

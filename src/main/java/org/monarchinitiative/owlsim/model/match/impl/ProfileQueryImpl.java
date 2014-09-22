@@ -5,32 +5,33 @@ import java.util.Set;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
  * @author cjm
  *
  */
-public class BasicQueryImpl implements BasicQuery {
+public class ProfileQueryImpl implements ProfileQuery {
 	
 	private Set<String> queryClassIds;
 	private Filter filter;
+	private Integer limit;
 	
 	// TODO: inject this?
-	public BasicQueryImpl(Set<String> queryClassIds) {
+	public ProfileQueryImpl(Set<String> queryClassIds) {
 		super();
 		this.queryClassIds = queryClassIds;
 	}
 
 	@Deprecated
-	public static BasicQueryImpl create(Set<String> labels, LabelMapper labelMapper) throws NonUniqueLabelException {
+	public static ProfileQueryImpl create(Set<String> labels, LabelMapper labelMapper) throws NonUniqueLabelException {
 		Set<String> qids = labelMapper.lookupByUniqueLabels(labels);
-		BasicQueryImpl q = new BasicQueryImpl(qids);
+		ProfileQueryImpl q = new ProfileQueryImpl(qids);
 		return q;
 	}
 	
-	public static BasicQuery create(Set<String> qcids) {
-		return new BasicQueryImpl(qcids);
+	public static ProfileQuery create(Set<String> qcids) {
+		return new ProfileQueryImpl(qcids);
 	}
 	
 	public Set<String> getQueryClassIds() {
@@ -49,6 +50,16 @@ public class BasicQueryImpl implements BasicQuery {
 
 	public void setFilter(Filter filter) {
 		this.filter = filter;
+	}
+	
+	
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
 	}
 
 	@Override

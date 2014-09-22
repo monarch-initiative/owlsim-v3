@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
@@ -48,7 +48,7 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 	 * @return match profile containing probabilities of each individual
 	 * @throws UnknownFilterException 
 	 */
-	public MatchSet findMatchProfileImpl(BasicQuery q) throws UnknownFilterException {
+	public MatchSet findMatchProfileImpl(ProfileQuery q) throws UnknownFilterException {
 		
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		

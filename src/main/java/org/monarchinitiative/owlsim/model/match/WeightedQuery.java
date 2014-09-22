@@ -12,7 +12,7 @@ import java.util.Map;
  * @author cjm
  *
  */
-public interface WeightedQuery extends BasicQuery {
+public interface WeightedQuery extends ProfileQuery {
 
 	/**
 	 * @return map between classId and weight

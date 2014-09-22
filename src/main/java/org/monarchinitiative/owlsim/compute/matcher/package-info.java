@@ -1,6 +1,6 @@
 
 /**
- * Computation of matches to a {@link org.monarchinitiative.owlsim.model.match.BasicQuery} against a knowledge base
+ * Computation of matches to a {@link org.monarchinitiative.owlsim.model.match.ProfileQuery} against a knowledge base
  * 
  * @author cjm
  *

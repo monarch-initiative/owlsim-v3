@@ -8,7 +8,7 @@ import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
  * @author cjm
  *
  */
-public class QueryWithNegationImpl extends BasicQueryImpl implements QueryWithNegation {
+public class QueryWithNegationImpl extends ProfileQueryImpl implements QueryWithNegation {
 	
 	private Set<String> queryNegatedClassIds;
 	

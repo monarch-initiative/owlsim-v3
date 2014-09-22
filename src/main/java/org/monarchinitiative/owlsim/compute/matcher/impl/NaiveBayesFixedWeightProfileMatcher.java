@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
@@ -63,7 +63,7 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSet findMatchProfileImpl(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(ProfileQuery q) {
 
 		boolean isUseNegation = q instanceof QueryWithNegation;
 

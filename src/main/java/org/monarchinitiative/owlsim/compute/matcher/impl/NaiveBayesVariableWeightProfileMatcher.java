@@ -6,7 +6,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
@@ -50,7 +50,7 @@ public class NaiveBayesVariableWeightProfileMatcher extends AbstractProfileMatch
 	 * @param q
 	 * @return match profile containing probabilities of each individual
 	 */
-	public MatchSet findMatchProfileImpl(BasicQuery q) {
+	public MatchSet findMatchProfileImpl(ProfileQuery q) {
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		int[] qvector = bmToVector(queryProfileBM, knowledgeBase.getNumClassNodes());
 

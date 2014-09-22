@@ -13,7 +13,7 @@ import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
@@ -63,10 +63,10 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 
 
 
-	protected EWAHCompressedBitmap getProfileBM(BasicQuery q) {
+	protected EWAHCompressedBitmap getProfileBM(ProfileQuery q) {
 		return knowledgeBase.getSuperClassesBM(q.getQueryClassIds());
 	}
-	protected EWAHCompressedBitmap getDirectProfileBM(BasicQuery q) {
+	protected EWAHCompressedBitmap getDirectProfileBM(ProfileQuery q) {
 		Set<Integer> positions = new HashSet<Integer>();
 		for (String cid : q.getQueryClassIds()) {
 			positions.add(knowledgeBase.getClassIndex(cid));
@@ -106,14 +106,16 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return filterEngine.applyFilter(filter);
 	}
 	
-	public MatchSet findMatchProfile(BasicQuery q) {
+	public MatchSet findMatchProfile(ProfileQuery q) {
 		long t1 = System.currentTimeMillis();
 		MatchSet ms = findMatchProfileImpl(q);
 		long t2 = System.currentTimeMillis();
 		ms.setExecutionMetadata(ExecutionMetadataImpl.create(t1, t2));
 		LOG.info("t(ms)="+ms.getExecutionMetadata().getDuration());
+		int limit = q.getLimit() == null ? 200 : q.getLimit();
+		ms.truncate(limit);
 		return ms;
 	}
 
-	protected abstract MatchSet findMatchProfileImpl(BasicQuery q);
+	protected abstract MatchSet findMatchProfileImpl(ProfileQuery q);
 }

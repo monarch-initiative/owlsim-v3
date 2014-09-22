@@ -17,6 +17,15 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+/**
+ * Performance test for PhenodigmICProfileMatcher using full HPO and HPO annotations,
+ * queried using a single profile
+ * 
+ * This test relies on files being present in resources - see the Makefile for details
+ * 
+ * @author cjm
+ *
+ */
 public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 
 	private Logger LOG = Logger.getLogger(PhenodigmMatcherPerfIT.class);
@@ -34,7 +43,7 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 		eval.writeJsonTo("target/phenodigm-results.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Renal Dysplasia - Megalocystis - Sirenomelia",
-				1,
+				6,
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia");		Level level = Level.DEBUG;

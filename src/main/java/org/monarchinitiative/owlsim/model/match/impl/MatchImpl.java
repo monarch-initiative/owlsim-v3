@@ -78,6 +78,6 @@ public class MatchImpl implements Match {
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " sc="+getPercentageScore()+" p="+rawScore;
+		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " %sc="+getPercentageScore()+" rawScore="+rawScore;
 	}
 }

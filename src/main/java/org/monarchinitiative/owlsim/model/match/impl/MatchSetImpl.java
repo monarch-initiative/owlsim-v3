@@ -8,7 +8,7 @@ import java.util.List;
 import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.BasicQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
  * A collection of matches for a single query profile against a set of
@@ -18,7 +18,7 @@ import org.monarchinitiative.owlsim.model.match.BasicQuery;
  *
  */
 public class MatchSetImpl implements MatchSet {
-	private BasicQuery query;
+	private ProfileQuery query;
 	private List<Match> matches; // TODO - make this neutral
 	ExecutionMetadata executionMetadata;
 	private boolean isSorted;
@@ -26,25 +26,25 @@ public class MatchSetImpl implements MatchSet {
 	/**
 	 * constructor
 	 */
-	public MatchSetImpl(BasicQuery query) {
+	public MatchSetImpl(ProfileQuery query) {
 		super();
 		isSorted = false;
 		this.query = query;
 		matches = new ArrayList<Match>();
 	}
 	
-	public static MatchSet create(BasicQuery query) {
+	public static MatchSet create(ProfileQuery query) {
 		return new MatchSetImpl(query);
 	}
 	
 
-	public BasicQuery getQuery() {
+	public ProfileQuery getQuery() {
 		return query;
 	}
 
 
 
-	public void setQuery(BasicQuery query) {
+	public void setQuery(ProfileQuery query) {
 		this.query = query;
 	}
 
@@ -75,6 +75,16 @@ public class MatchSetImpl implements MatchSet {
 		}
 		return ms;
 	}
+	
+	public Match getMatchesWithId(String id) {
+		for (Match m : matches) {
+			if (m.getMatchId().equals(id)) {
+				return m;
+			}
+		}
+		return null;
+	}
+
 
 	/**
 	 * @param matches
@@ -125,7 +135,11 @@ public class MatchSetImpl implements MatchSet {
 		}
 	}
 	
-
+	@Override
+	public void truncate(int limit) {
+		if (matches.size() > limit)
+			matches = matches.subList(0, limit);
+	}
 
 	
 	public String toString() {
@@ -143,5 +157,7 @@ public class MatchSetImpl implements MatchSet {
 		}
 		return sb.toString();
 	}
+
+
 
 }
