@@ -8,16 +8,16 @@ import java.util.Map;
  * @author cjm
  *
  */
-public class ClassFrequenceStoreImpl {
+public class ClassFrequencyStoreImpl {
 	
-	private Map<String,Integer> classToFrequenceMa;
+	private Map<String,Integer> classToFrequencyMap;
 	
 	/**
 	 * @param classId
 	 * @return frequency
 	 */
 	public int getFrequency(String classId) {
-		return classToFrequenceMa.get(classId);
+		return classToFrequencyMap.get(classId);
 	}
 
 	/**
@@ -27,10 +27,10 @@ public class ClassFrequenceStoreImpl {
 	 */
 	public Integer getFrequency(String classId, boolean isStrict) {
 		if (isStrict)
-			return classToFrequenceMa.get(classId);
+			return classToFrequencyMap.get(classId);
 		else 
-			if (classToFrequenceMa.containsKey(classId))
-				return classToFrequenceMa.get(classId);
+			if (classToFrequencyMap.containsKey(classId))
+				return classToFrequencyMap.get(classId);
 			else
 				return null;	
 	}
