@@ -3,6 +3,7 @@ package org.monarchinitiative.owlsim.compute.mica.impl;
 import javax.inject.Inject;
 
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator;
+import org.monarchinitiative.owlsim.compute.stats.ICStatsCalculator;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -24,7 +25,7 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 
 	
 	private int[] frequencyByClassIndex;
-	private Double[] informationContentByClassIndex;
+	private ICStatsCalculator icc;
 	private final BMKnowledgeBase knowledgeBase;
 	
 
@@ -36,17 +37,7 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 			BMKnowledgeBase knowledgeBase) {
 		super();
 		this.knowledgeBase = knowledgeBase;
-		frequencyByClassIndex = knowledgeBase.getIndividualCountPerClassArray();
-		int numInds = knowledgeBase.getIndividualIdsInSignature().size();
-		informationContentByClassIndex = new Double[frequencyByClassIndex.length];
-		for (int i=0; i<frequencyByClassIndex.length; i++) {
-			int freq = frequencyByClassIndex[i];
-			informationContentByClassIndex[i] = 
-					freq == 0 ?
-							null :
-								-Math.log(freq / (double)numInds);
-							
-		}
+		this.icc = new ICStatsCalculator(knowledgeBase);
 	}
 
 	public int getFrequencyOfMostInformativeCommonAncestor(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM) {
@@ -85,10 +76,11 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 			int bit = bitIterator.next();
 			String classId = knowledgeBase.getClassId(bit);
 			return new ClassInformationContentPair(classId,
-					informationContentByClassIndex[bit]);
+					icc.getInformationContentByClassIndex(bit));
 		}
 		else {
 			return null;
 		}
 	}
+	
 }
