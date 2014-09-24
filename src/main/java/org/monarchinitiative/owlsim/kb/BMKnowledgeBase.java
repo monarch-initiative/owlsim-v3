@@ -94,6 +94,8 @@ public interface BMKnowledgeBase {
 	public int getIndividualIndex(String individualId);
 
 	
+	public String getIndividualId(int index);
+	
 	/**
 	 * TODO
 	 * 

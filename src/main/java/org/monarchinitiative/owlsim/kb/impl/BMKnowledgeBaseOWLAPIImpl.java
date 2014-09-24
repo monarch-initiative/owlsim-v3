@@ -493,6 +493,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Node<OWLClass> getClassNode(int index) {
 		return classNodeArray[index];
 	}
+	
+	/**
+	 * @param index
+	 * @return OWLClass Node that corresponds to this index
+	 */
+	public Node<OWLNamedIndividual> getIndividualNode(int index) {
+		return individualNodeArray[index];
+	}
 
 	/**
 	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
@@ -778,6 +786,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	@Override
 	public int getRootIndex() {
 		return getIndex(getOWLThing());
+	}
+
+
+
+	@Override
+	public String getIndividualId(int index) {
+		Node<OWLNamedIndividual> n = getIndividualNode(index);
+		OWLNamedIndividual ind = n.getRepresentativeElement();
+		return curieMapper.getShortForm(ind.getIRI());
 	}
 
 

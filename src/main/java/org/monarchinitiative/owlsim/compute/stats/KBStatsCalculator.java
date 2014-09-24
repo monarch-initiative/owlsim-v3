@@ -30,6 +30,7 @@ public class KBStatsCalculator {
 		}
 		s.avgParentsPerClass = totParents / (double)s.numClasses;
 		s.avgAncestorsPerClass = totAncestors / (double)s.numClasses;
+		
 		return s;
 	}
 	
@@ -40,6 +41,9 @@ public class KBStatsCalculator {
 		public double avgDirectTypesPerIndividual;
 		public double avgTypesPerIndividual;
 		public double avgAncestorsPerClass;
-		
 	}
+	
+	
+
+	
 }

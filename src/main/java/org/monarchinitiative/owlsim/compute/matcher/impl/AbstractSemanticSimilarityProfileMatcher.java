@@ -48,7 +48,5 @@ public abstract class AbstractSemanticSimilarityProfileMatcher extends AbstractP
 		this.micaCalculator = micaCalculator;
 	}
 	
-	
-
 
 }

@@ -6,8 +6,8 @@ import org.apache.commons.math.stat.descriptive.*;
  * Can be used to store scores for collections/sets.
  * For example, these could be used to store collections of IC per individual, or counts of classes per individual,
  * or counts of individuals per class, or collections of similarity scores for one set of matches versus is another.
- * @author nicole
- *
+ * 
+ * @author nlw
  */
 public class SetDescriptiveStatistics {
 
@@ -29,11 +29,12 @@ public class SetDescriptiveStatistics {
 	public String toString() {
 		String s = "";
 		s+="n: "+n.getN()+"\n";
-		s+="mean(n/indiv): "+String.format("%1$.5f", n.getMean())+"\n";
-		s+="mean(meanIC): "+String.format("%1$.5f", mean.getMean())+"\n";
-		s+="mean(maxIC): "+String.format("%1$.5f", max.getMean())+"\n";
-		s+="max(maxIC): "+String.format("%1$.5f", max.getMax())+"\n";
-		s+="mean(sumIC): "+String.format("%1$.5f", sum.getMean())+"\n";
+		s+="mean(n/indiv): "+String.format("%1$.4f", n.getMean())+" +/-"+String.format("%1$.4f", n.getStandardDeviation())+"\n";
+		s+="mean(meanIC): "+String.format("%1$.4f", mean.getMean())+" +/-"+String.format("%1$.4f", mean.getStandardDeviation())+"\n";
+		s+="mean(maxIC): "+String.format("%1$.4f", max.getMean())+" +/-"+String.format("%1$.4f", max.getStandardDeviation())+"\n";
+		s+="min(minIC): "+String.format("%1$.4f", min.getMin())+"\n";
+		s+="max(maxIC): "+String.format("%1$.4f", max.getMax())+"\n";
+		s+="mean(sumIC): "+String.format("%1$.4f", sum.getMean())+" +/-"+String.format("%1$.4f", sum.getStandardDeviation())+"\n";
 		return s;
 	}
 
