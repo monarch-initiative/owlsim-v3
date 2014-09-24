@@ -158,7 +158,7 @@ public class ICStatsCalculator {
 		return dsKBIndSummary.toString();
 	}
 	
-	public SetDescriptiveStatistics getKBSummaryForAllIndividuals() {
+	public SetDescriptiveStatistics getICSummaryForAllIndividuals() {
 		return dsKBIndSummary;
 	}
 

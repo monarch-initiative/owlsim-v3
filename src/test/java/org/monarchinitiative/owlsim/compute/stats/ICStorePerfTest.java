@@ -106,7 +106,7 @@ public class ICStorePerfTest {
 	
 	private ICRun access(int avgIndividuals) throws OWLOntologyCreationException, NoRootException {
 		LOG.info("Building random subset of individuals");
-		int numIndividuals = (int)icc.getKBSummaryForAllIndividuals().getN().getN();
+		int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 		Set<String> individualIds = new HashSet<String>();
 		while (Math.random() > (1 / (double) avgIndividuals)) {
 			int ibit = (int)Math.round(Math.random()*numIndividuals);
