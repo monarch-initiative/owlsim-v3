@@ -1,10 +1,12 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
@@ -70,7 +72,7 @@ public class ICStatsCalculator {
 			int ibit = knowledgeBase.getIndividualIndex(individualId);
 			EWAHCompressedBitmap attsBM = knowledgeBase.getDirectTypesBM(individualId);
 			DescriptiveStatistics ds = new DescriptiveStatistics();
-			ds = getICStatsForBM(attsBM);
+			ds = getICStatsForAttributesByBM(attsBM);
 //			LOG.info(individualId+": "+ds.toString());
 
 			//add the summary to the whole 
@@ -107,7 +109,7 @@ public class ICStatsCalculator {
 	 * @param attsBM
 	 * @return
 	 */
-	public DescriptiveStatistics getICStatsForBM(EWAHCompressedBitmap attsBM) {
+	public DescriptiveStatistics getICStatsForAttributesByBM(EWAHCompressedBitmap attsBM) {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (int bit : attsBM) {
 			Double ic = this.getInformationContentByClassIndex(bit);
@@ -115,7 +117,19 @@ public class ICStatsCalculator {
 		}
 		return ds;
 	}
-
+	
+	
+	/**
+	 * Given a list of class IDs, generate IC-based DescriptiveStatistics.  This first
+	 * passes through a bitmap mapper.
+	 * @param classIds
+	 * @return
+	 */
+	public DescriptiveStatistics getICStatsForAttributesByClassIds(Set<String> classIds) {
+		EWAHCompressedBitmap attsBM = getDirectProfileBM(classIds);
+		return getICStatsForAttributesByBM(attsBM);
+	}
+	
 	/**
 	 * Retrieve the DescriptiveStatistics for the supplied individual (id).
 	 * @param individualId
@@ -162,5 +176,13 @@ public class ICStatsCalculator {
 		return dsKBIndSummary;
 	}
 
+	//TODO this was stolen from a protected method in AbstractProfileMatcher - should i reference that instead?
+	private EWAHCompressedBitmap getDirectProfileBM(Set<String> classIds) {
+		Set<Integer> positions = new HashSet<Integer>();
+		for (String cid : classIds) {
+			positions.add(knowledgeBase.getClassIndex(cid));
+		}
+		return EWAHUtils.converIndexSetToBitmap(positions);
+	}
 
 }

@@ -1,20 +1,13 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-import org.apache.jena.atlas.lib.ListUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.mica.MICAStorePerfIT;
-import org.monarchinitiative.owlsim.compute.mica.MICAStorePerfIT.MICARun;
-import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
-import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator.KBStats;
 import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
