@@ -1,6 +1,6 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
-import org.apache.commons.math.stat.descriptive.*;
+import org.apache.commons.math3.stat.descriptive.*;
 
 /**
  * Can be used to store scores for collections/sets.
