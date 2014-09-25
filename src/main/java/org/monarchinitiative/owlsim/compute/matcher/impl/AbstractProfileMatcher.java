@@ -61,8 +61,6 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		this.knowledgeBase = knowledgeBase;
 	}
 
-
-
 	protected EWAHCompressedBitmap getProfileBM(ProfileQuery q) {
 		return knowledgeBase.getSuperClassesBM(q.getQueryClassIds());
 	}
