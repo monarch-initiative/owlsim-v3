@@ -72,12 +72,18 @@ public class RandomOntologyMaker {
 		for (int i=0; i<numIndividuals; i++) {
 			OWLIndividual individual = createIndividual(i);
 			//LOG.info("INDIVIDUAL:"+individual);
+			//add at least one
+			addRandomClassToIndividual(individual);
 			while (Math.random() > (1 / (double) avgTypes)) {
-				OWLClass parent = getRandomClass();
-				addAxiom(getOWLDataFactory().getOWLClassAssertionAxiom(parent, individual));
+				addRandomClassToIndividual(individual);
 			}
 		}
 		return this;
+	}
+	
+	private void addRandomClassToIndividual(OWLIndividual individual) {
+		OWLClass parent = getRandomClass();
+		addAxiom(getOWLDataFactory().getOWLClassAssertionAxiom(parent, individual));
 	}
 	
 	public RandomOntologyMaker addEquivalentClasses(int numECs) {

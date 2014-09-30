@@ -4,4 +4,6 @@ target/
 .project
 .settings
 ./src/test/resources/catalog-v001.xml
-
+*iml
+.idea
+/bin/
