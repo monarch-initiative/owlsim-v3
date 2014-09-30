@@ -55,6 +55,8 @@ public class JSONWriter {
 		stream.flush();
 	}
 	
-	
+	public String toString() {
+		return "JSONWriter file: "+stream;
+	}
 
 }
