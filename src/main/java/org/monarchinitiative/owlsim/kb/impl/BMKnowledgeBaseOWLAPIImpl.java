@@ -523,6 +523,17 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 		return cids;
 	}
+	
+	public Set<String> getClassIds(EWAHCompressedBitmap bm) {
+		Set<String> cids = new HashSet<String>();
+		for (int x : bm) {
+			Node<OWLClass> n = getClassNode(x);
+			for (OWLClass c : n.getEntities()) {
+				cids.add(curieMapper.getShortForm(c.getIRI()) );
+			}
+		}
+		return cids;
+	}
 
 
 	/**
@@ -656,6 +667,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	protected EWAHCompressedBitmap getDirectTypesBM(OWLNamedIndividual i) {
 		return ontoEWAHStore.getDirectTypes(getIndex(i));
 	}
+	
+	/**
+	 * @param i
+	 * @param classFilter
+	 * @return Bitmap representation of the subset of direct types of i, which are descendants of classFilter
+	 */
+	protected EWAHCompressedBitmap getFilteredDirectTypesBM(OWLNamedIndividual i, OWLClass c) {
+		return ontoEWAHStore.getDirectTypes(getIndex(i), this.getIndex(c));
+	}
 
 	/**
 	 * @param i
@@ -693,6 +713,17 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		Preconditions.checkNotNull(id);
 		return ontoEWAHStore.getDirectTypes(getIndividualIndex(id));
 	}
+	
+	/**
+	 * @param id
+	 * @return bitmap representation of all (direct and indirect) instantiated classes that are subclasses of classId
+	 */
+	public EWAHCompressedBitmap getFilteredDirectTypesBM(String id, String classId) {
+		Preconditions.checkNotNull(id);
+		Preconditions.checkNotNull(classId);
+		return ontoEWAHStore.getDirectTypes(getIndividualIndex(id), getClassIndex(classId));
+	}
+	
 
 
 	private OWLClass getOWLThing() {
@@ -797,6 +828,33 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return curieMapper.getShortForm(ind.getIRI());
 	}
 
+
+
+	@Override
+	public EWAHCompressedBitmap getFilteredTypesBM(Set<String> ids,
+			String classId) {
+		
+		Set<Integer> classBits = new HashSet<Integer>();
+		for (String id : ids) {
+			classBits.add(this.getClassIndex(id));
+		}
+		
+		return ontoEWAHStore.getTypes(classBits, getClassIndex(classId));
+
+	}
+
+
+	public EWAHCompressedBitmap getFilteredDirectTypesBM(Set<String> classIds,
+			String classId) {
+		
+		Set<Integer> classBits = new HashSet<Integer>();
+		for (String id : classIds) {
+			classBits.add(this.getClassIndex(id));
+		}
+		
+		return ontoEWAHStore.getDirectTypes(classBits, getClassIndex(classId));
+
+	}
 
 
 

@@ -113,11 +113,52 @@ public class EWAHKnowledgeBaseStore {
 	}
 	
 	/**
+	 * @param clsIndices
+	 * @param classIndex - a class to filter the resulting types
+	 * @return all classes (direct and indirect) instantiated by individual, that are subclasses of classIndex
+	 */
+	public EWAHCompressedBitmap getTypes(Set<Integer> clsIndices, int classIndex) {
+		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+		EWAHCompressedBitmap subclasses = getSubClasses(classIndex);
+
+		for (int i : clsIndices) {
+			//TODO: determine why this does not work - may be faster?
+			//bm.orToContainer(getSuperClasses(i), bm);
+			bm = bm.or(getSuperClasses(i));
+		}
+		return bm.and(subclasses);
+
+	}
+	
+	/**
 	 * @param individualIndex
 	 * @return all classes directly instantiated by individual
 	 */
 	public EWAHCompressedBitmap getDirectTypes(int individualIndex) {
 		return storedDirectTypes[individualIndex];
+	}
+	
+
+	/**
+	 * @param individualIndex
+	 * @param classIndex - a class by which to filter the results
+	 * @return all classes directly instantiated by individual, that are subclasses of classIndex
+	 */
+	public EWAHCompressedBitmap getDirectTypes(int individualIndex, int classIndex) {
+		EWAHCompressedBitmap filteredDirectTypes = storedDirectTypes[individualIndex];
+		EWAHCompressedBitmap subclasses = getSubClasses(classIndex);
+		return filteredDirectTypes.and(subclasses);
+	}
+	
+	/**
+	 * @param clsIndices - a set of class indices to filter
+	 * @param classIndex - a class by which to filter the results
+	 * @return all classes directly instantiated by individual, that are subclasses of classIndex
+	 */
+	public EWAHCompressedBitmap getDirectTypes(Set<Integer> clsIndices, int classIndex) {
+		EWAHCompressedBitmap bm = EWAHUtils.converIndexSetToBitmap(clsIndices);
+		EWAHCompressedBitmap subclasses = getSubClasses(classIndex);
+		return bm.and(subclasses);
 	}
 
 	/**
@@ -139,6 +180,9 @@ public class EWAHKnowledgeBaseStore {
 		else
 			return storedTypes[individualIndex];
 	}
+	
+	
+	
 	
 	/**
 	 * Adds stored set of superClasses for a class. This must be called for

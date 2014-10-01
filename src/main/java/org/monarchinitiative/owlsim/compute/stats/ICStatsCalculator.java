@@ -1,12 +1,16 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
+import org.monarchinitiative.owlsim.kb.filter.Filter;
+import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
+import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
@@ -130,6 +134,12 @@ public class ICStatsCalculator {
 		return getICStatsForAttributesByBM(attsBM);
 	}
 	
+	public DescriptiveStatistics getICStatsForAttributeSubsetByClassIds(Set<String> classIds, String classId) {
+		//trim the attsBM to be only subclasses of the rootClass
+		EWAHCompressedBitmap attsBM = knowledgeBase.getFilteredDirectTypesBM(classIds, classId);
+		return getICStatsForAttributesByBM(attsBM);
+	}
+	
 	/**
 	 * Retrieve the DescriptiveStatistics for the supplied individual (id).
 	 * @param individualId
@@ -148,6 +158,15 @@ public class ICStatsCalculator {
 	public DescriptiveStatistics getICStatsForIndividual(int ibit) {
 		return iDescriptiveStatistics[ibit];
 	}
+	
+	public DescriptiveStatistics getICStatsForAttributeSubsetForIndividual(
+			String individualId, String classId) {
+		EWAHCompressedBitmap attsBM = knowledgeBase.getFilteredDirectTypesBM(individualId, classId);
+		return getICStatsForAttributesByBM(attsBM);
+	}
+
+
+	
 
 	/**
 	 * Retrieve the IC value for a class by id.

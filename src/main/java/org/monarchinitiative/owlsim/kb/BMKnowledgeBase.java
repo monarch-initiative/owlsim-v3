@@ -164,6 +164,27 @@ public interface BMKnowledgeBase {
 	
 	public EWAHCompressedBitmap getNegatedTypesBM(String itemId);
 
+	/**
+	 * @param id - individual ID
+	 * @param classId - the class with which to filter the classes mapped to the individual ID
+	 * @return
+	 */
+	public EWAHCompressedBitmap getFilteredDirectTypesBM(String id, String classId);
+
+	/**
+	 * @param ids - a set of class ids
+	 * @param classId - the class with which to filter the class set
+	 * @return a bitmap representation of only the original ids tha are subclasses of classId
+	 */
+	public EWAHCompressedBitmap getFilteredDirectTypesBM(Set<String> ids, String classId);
+
+	
+	/**
+	 * @param ids - a set of class ids
+	 * @param classId - the class with which to filter the class set
+	 * @return a bitmap representation of only the original ids tha are subclasses of classId
+	 */
+	public EWAHCompressedBitmap getFilteredTypesBM(Set<String> ids, String classId);
 
 	
 	/**
@@ -196,6 +217,17 @@ public interface BMKnowledgeBase {
 	 * @return classIds
 	 */
 	public Set<String> getClassIds(int index);
+	
+	/**
+	 * Return all classIds corresponding to a bitmap.
+	 * 
+	 * Note each index corresponds to a single equivalence set. This returns
+	 * all members of the equivalence set
+	 * 
+	 * @param bm
+	 * @return classIds
+	 */
+	public Set<String> getClassIds(EWAHCompressedBitmap bm);
 	
 	/**
 	 * @return array indexed by classIndex yielding the number of individuals per class

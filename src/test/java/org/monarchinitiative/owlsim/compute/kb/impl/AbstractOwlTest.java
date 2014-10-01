@@ -32,7 +32,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  *  
  *
  */
-public  class AbstractOwlTest {
+public class AbstractOwlTest {
 
 	private Logger LOG = Logger.getLogger(AbstractOwlTest.class);
 

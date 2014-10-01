@@ -1,5 +1,13 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.jena.atlas.lib.ListUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,6 +21,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import com.google.common.collect.Lists;
+import com.googlecode.javaewah.EWAHCompressedBitmap;
+
 public class ICDistributionTest {
 
 	protected BMKnowledgeBase kb;
@@ -20,6 +31,7 @@ public class ICDistributionTest {
 	protected boolean writeToStdout = false;
 	ICStatsCalculator icc;
 	private static double cutoff = 0.95;
+	OWLOntology ontology;
 
 	@Test
 	public void testSelfComparisonTTest() throws Exception {
@@ -125,9 +137,96 @@ public class ICDistributionTest {
 	}
 	
 	
+	@Test
+	public void testSelfBySubsetComparisonTTest() throws Exception {
+		create(2000, 2, 4000, 10);
+		int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
+
+		//make distribution in 10 bins
+		double binSize = icc.getICSummaryForAllIndividuals().getMax().getMax() / 10;
+
+		for (int i=1; i<=3; i++) {
+			int numClasses = 0;
+			int randomibit = -1;
+			DescriptiveStatistics referenceDS = new DescriptiveStatistics();
+			while (numClasses < 2) {
+				randomibit = (int)Math.round(Math.random()*numIndividuals);
+				referenceDS = icc.getICStatsForIndividual(randomibit);
+				numClasses = (int)referenceDS.getN();
+//				LOG.info("Skipping individual "+randomibit+" with too few classes");
+			}
+			//first, generate the reference distribution
+			ICDistribution referenceDistro = new ICDistribution(referenceDS, binSize);
+			LOG.info("IC vals (ref): "+Arrays.toString(referenceDS.getValues()));
+			
+			String indiv = kb.getIndividualId(randomibit);
+			EWAHCompressedBitmap dbm = kb.getDirectTypesBM(indiv);
+			
+			//get the superclasses
+			EWAHCompressedBitmap supersbm = kb.getTypesBM(indiv).andNot(dbm);
+			List<Integer> superbits = supersbm.getPositions();
+
+			Set<String> supers = kb.getClassIds(supersbm);
+			LOG.info("Supers="+supers);
+
+			numClasses = 0;
+			EWAHCompressedBitmap filteredAttsBM = new EWAHCompressedBitmap();
+			String classId = null;
+
+			//for the tTest to work, we need at least two items
+			while (numClasses < 2) {			
+				//select one random superclasses as a filter
+				int randomcbit = (int)Math.round(Math.random()*superbits.size());
+				classId = kb.getClassId(superbits.get(randomcbit));
+				//given one of the random superclasses to filter with,
+				//get the subset of classes that are subclasses of the filter
+				filteredAttsBM = kb.getFilteredDirectTypesBM(indiv, classId);
+				numClasses = kb.getClassIds(filteredAttsBM).size();
+				LOG.info("|subclasses of "+classId+"|="+numClasses);
+			}
+			
+			DescriptiveStatistics filteredDS = icc.getICStatsForAttributesByBM(filteredAttsBM);
+			ICDistribution filteredDistro = new ICDistribution(filteredDS, binSize);
+//			LOG.info("IC vals ("+classId+" filter): "+Arrays.toString(filteredDS.getValues()));
+			
+			DescriptiveStatistics subsetDS = icc.getICStatsForAttributeSubsetForIndividual(indiv, classId);
+			ICDistribution subsetDistro = new ICDistribution(subsetDS, binSize);
+
+//			LOG.info("IC vals ("+classId+" subset): "+Arrays.toString(subsetDistro.getDescriptiveStatistics().getValues()));
+
+			//the filtered and subset methods should give the same results
+			double pvalue = subsetDistro.tTest(filteredDistro);
+			LOG.info("filtered v subset (tTest), p="+pvalue);
+
+			Assert.assertTrue("filtered v subset (tTest), should have pvalue=1", pvalue==1.0);
+			pvalue = subsetDistro.tTest(referenceDistro);
+			LOG.info("I1subset v all (tTest) should have p<"+cutoff+", p="+pvalue);  
+			Assert.assertTrue("I1subset v all (tTest) should have p<"+cutoff, pvalue<cutoff);  //most likely they will not give the same distro
+
+		}
+	}	
+	
+	/**
+	 * @param n - depth
+	 * @return - a class at the specified depth with which to filter
+	 */
+	private String fetchRandomClassByDepth(int n) {
+		//get direct subclasses of the root
+		int index = kb.getRootIndex();
+		for (int i=0; i<n; i++) {
+			EWAHCompressedBitmap directSubclasses = kb.getStoredDirectSubClassIndex()[index];
+			//choose a random one of them to be the class
+			List<Integer> classBits = directSubclasses.getPositions();
+			LOG.info("Found "+classBits.size()+" subclasses of "+kb.getClassId(index));
+			index = (int) Math.round(Math.random()*classBits.size());
+			LOG.info("Setting index to "+index);
+		}
+		return kb.getClassId(index);
+	}
+	
 	private void create(int numClasses, int avgParents, int numIndividuals, int avgClassesPerIndividual) throws OWLOntologyCreationException, NoRootException {
 		System.gc();
-		OWLOntology ontology = 
+		this.ontology = 
 				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals, avgClassesPerIndividual).getOntology();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
 		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
@@ -137,6 +236,16 @@ public class ICDistributionTest {
 		LOG.info("created ICStoreSummary");
 		LOG.info("Summary="+icc.toString());
 	}
+	
+	
+	private Set<String> getClassIdsFromBM(EWAHCompressedBitmap bm) {
+		Set<String> cids = new HashSet<String>();
+		for (int c : bm) {
+			cids.add(kb.getClassId(c));
+		}
+		return cids;		
+	}
+
 	
 	
 	

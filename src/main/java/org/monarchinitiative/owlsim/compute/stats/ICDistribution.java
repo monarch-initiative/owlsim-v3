@@ -11,8 +11,11 @@ public class ICDistribution {
 
 	private Logger LOG = Logger.getLogger(ICDistribution.class);
 	private double samplingRate;
-	private DescriptiveStatistics stats;
 	private List<ICDistributionValue> distribution;
+	
+	//not sure if the original stats should be saved with this object
+	//convenient, but perhaps waste of space?
+	private DescriptiveStatistics stats;
 		
 	public ICDistribution(double[] icData, double samplingRate) {
 		stats = new DescriptiveStatistics();
@@ -34,7 +37,7 @@ public class ICDistribution {
 		int prevI = 0;
 
 		List<ICDistributionValue> distribution = new ArrayList<ICDistributionValue>();
-		while (current <= sortedDistroValues[sortedDistroValues.length - 1]) {
+		while ((sortedDistroValues.length > 0) && (current <= sortedDistroValues[sortedDistroValues.length - 1])) {
 			double rate = current + samplingRate;
 			
 			int count = 0;
@@ -69,7 +72,9 @@ public class ICDistribution {
 	}
 	
 	/**
-	 * Perform a one-sided {@code TestUtils.tTest} against the supplied reference
+	 * Perform a one-sided {@code TestUtils.tTest} against the supplied reference.  If
+	 * the tTest is unable to be performed due to insufficient values (length < 2),
+	 * -1 will be returned.
 	 * @param reference
 	 * @return
 	 * @throws Exception
@@ -77,7 +82,11 @@ public class ICDistribution {
 	public double tTest(ICDistribution reference) throws Exception {
 		double p = 0.0;
 		//should we be adding this instance's values into the reference before computing the mean?
-		p = TestUtils.tTest(reference.getDescriptiveStatistics().getMean(), stats.getValues());
+		if (stats.getValues().length < 2) {
+			p = -1;
+		} else {
+			p = TestUtils.tTest(reference.getDescriptiveStatistics().getMean(), stats.getValues());
+		}
 		return p;
 	}
 	
