@@ -54,8 +54,10 @@ public class ProfileMatchEvaluator {
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 
-		if (jsonWriter != null)
+		if (jsonWriter != null) {
+			LOG.info("Writing MatchSet using "+jsonWriter+" results will appear in "+jsonWriter);
 			jsonWriter.write(mp);
+		}
 
 		if (writeToStdout) {
 			//Gson gson = new GsonBuilder().setPrettyPrinting().create();
