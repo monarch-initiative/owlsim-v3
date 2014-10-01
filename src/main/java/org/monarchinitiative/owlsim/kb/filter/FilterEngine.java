@@ -71,13 +71,13 @@ public class FilterEngine {
 			else
 				return contains;
 		}
-		else if (filter instanceof TypeFilter) {
+/*		else if (filter instanceof TypeFilter) {
 			//TODO
 			//int tix = knowledgeBase.get ((TypeFilter)filter).getTypeId();
 			//EWAHCompressedBitmap typeBM = knowledgeBase.getTypesBM(id);
 			//if (typeBM.getPositions().contains(filter))
 			return false;
-		}
+		}*/
 		else {
 			throw new UnknownFilterException(filter.toString());
 		}
