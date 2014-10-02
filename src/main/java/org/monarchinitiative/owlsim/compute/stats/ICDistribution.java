@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.log4j.Logger;
 
@@ -138,5 +139,13 @@ public class ICDistribution {
 		return p;
 	}
 
-
+	/**
+	 * Returns the {@code Variance} of the current distribution against the mean of a supplied reference
+	 * @param reference
+	 * @return
+	 * @throws Exception
+	 */
+	public double variance(ICDistribution reference) throws Exception {
+		return new Variance().evaluate(stats.getValues(), reference.getDescriptiveStatistics().getMean());
+	}
 }
