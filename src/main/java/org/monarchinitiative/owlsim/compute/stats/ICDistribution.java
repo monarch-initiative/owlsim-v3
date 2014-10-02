@@ -16,7 +16,16 @@ public class ICDistribution {
 	//not sure if the original stats should be saved with this object
 	//convenient, but perhaps waste of space?
 	private DescriptiveStatistics stats;
-		
+	
+	/**
+	 * The constructor populates the DescriptiveStatistics, which are then used
+	 * for a quick access to the sorted elements and basic stats. The 'stats'
+	 * member may be removed in the near future and replaced with a linear
+	 * sort on the provided ic values.
+	 * 
+	 * The samplingRate represents the granularity of the bins to be created
+	 * when generating the frequency values and the distribution points.
+	 */
 	public ICDistribution(double[] icData, double samplingRate) {
 		stats = new DescriptiveStatistics();
 		for (double d : icData) {
@@ -26,12 +35,21 @@ public class ICDistribution {
 		distribution = generateDistribution(stats.getSortedValues());		
 	}
 	
+	/**
+	 * Same as above - but with a given 'stats' object.
+	 */
 	public ICDistribution(DescriptiveStatistics stats, double samplingRate) {
 		this.stats = stats;
 		this.samplingRate = samplingRate;
 		distribution = generateDistribution(stats.getSortedValues());		
 	}
 
+	/**
+	 * Generates the distribution for the given set of sorted IC values by using the
+	 * samplingRate to create bins and to compute the associated frequencies.
+	 * The distribution is returned as a series of <x,y> coordinates encapsulated in
+	 * {@code ICDistributionValue} objects.
+	 */
 	private List<ICDistributionValue> generateDistribution(double[] sortedDistroValues) {
 		double current = 0;
 		int prevI = 0;
@@ -63,6 +81,7 @@ public class ICDistribution {
 		return distribution;
 	}
 	
+	//Comment: Not sure we need this
 	public DescriptiveStatistics getDescriptiveStatistics() {
 		return stats;
 	}

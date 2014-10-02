@@ -1,5 +1,9 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
+/**
+ * This is a proxy for a set of <x,y> coordinates,
+ * used to return IC distributions.
+ */
 public class ICDistributionValue {
 
 	private double x;
