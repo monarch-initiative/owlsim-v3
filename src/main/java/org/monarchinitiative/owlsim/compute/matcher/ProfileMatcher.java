@@ -22,6 +22,15 @@ public interface ProfileMatcher {
 	public MatchSet findMatchProfile(ProfileQuery q) throws UnknownFilterException;
 
 	/**
+	 * @param q
+	 * @param alpha - pvalue cutoff
+	 * @return scored matches
+	 * @throws UnknownFilterException 
+	 */
+	public MatchSet findMatchProfile(ProfileQuery q, double alpha) throws UnknownFilterException;
+
+	
+	/**
 	 * @return ontology interface
 	 */
 	public BMKnowledgeBase getKnowledgeBase();

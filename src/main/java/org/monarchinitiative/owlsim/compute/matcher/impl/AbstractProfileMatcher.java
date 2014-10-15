@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -19,6 +21,7 @@ import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
+import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -105,13 +108,38 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	}
 	
 	public MatchSet findMatchProfile(ProfileQuery q) {
+		MatchSet ms = findMatchProfileAll(q);
+		int limit = q.getLimit() == null ? 200 : q.getLimit();
+		if (limit > -1) {
+			ms.truncate(limit);
+		}
+		return ms;
+	}
+	
+	public MatchSet findMatchProfile(ProfileQuery q, double alpha) {
+		MatchSet ms = findMatchProfileAll(q);
+
+		//use all matches as "background"
+		//TODO this is a naive assumption, needs refactor
+		DescriptiveStatistics ds = ms.getScores();
+		MatchSet significantMatchingSet = MatchSetImpl.create(q);
+
+		for (Match m : ms.getMatches()) {	
+			double p = TestUtils.tTest(m.getScore(), ds);
+			if (p < alpha) {
+				m.setSignificance(p);
+				significantMatchingSet.add(m);
+			}
+		}		
+		return ms;
+	}
+	
+	private MatchSet findMatchProfileAll(ProfileQuery q) {
 		long t1 = System.currentTimeMillis();
 		MatchSet ms = findMatchProfileImpl(q);
 		long t2 = System.currentTimeMillis();
 		ms.setExecutionMetadata(ExecutionMetadataImpl.create(t1, t2));
 		LOG.info("t(ms)="+ms.getExecutionMetadata().getDuration());
-		int limit = q.getLimit() == null ? 200 : q.getLimit();
-		ms.truncate(limit);
 		return ms;
 	}
 
