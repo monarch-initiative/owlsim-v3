@@ -196,6 +196,8 @@ public abstract class AbstractProfileMatcherMPTest {
 		LOG.info("Query = "+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 
+		mp.calculateMatchSignificance(mp.getScores());
+		
 		JSONWriter w = new JSONWriter("target/match-results.json");
 		w.write(mp);
 
