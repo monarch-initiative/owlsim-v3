@@ -78,6 +78,14 @@ public class FilterEngine {
 			//if (typeBM.getPositions().contains(filter))
 			return false;
 		}*/
+		else if (filter instanceof IdFilter) {
+			IdFilter idf = (IdFilter)filter;
+			if (idf.getIds().contains(id)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 		else {
 			throw new UnknownFilterException(filter.toString());
 		}
