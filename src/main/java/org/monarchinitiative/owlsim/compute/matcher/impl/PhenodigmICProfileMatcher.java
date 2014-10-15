@@ -66,7 +66,6 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 		double maxScoreOfOptimalTarget = getScore(queryProfileBM, queryProfileBM);
 		double avgScoreOfOptimalTarget = 0;
 		
-		getScore(queryProfileBM, queryProfileBM);
 		for (int j = 0; j<qsize; j++) {
 			EWAHCompressedBitmap queryBM = queryProfileBMArr[j];
 			avgScoreOfOptimalTarget += getScore(queryBM, queryBM);
