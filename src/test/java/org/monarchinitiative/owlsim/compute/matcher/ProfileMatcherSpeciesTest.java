@@ -161,7 +161,7 @@ public class ProfileMatcherSpeciesTest {
 					actualRank = m.getRank();
 				}
 			}
-			LOG.info("Rank of "+tq.expectedId+" == "+actualRank+" when using "+profileMatcher);
+			LOG.info("Rank of "+tq.expectedId+" == "+actualRank+" when using "+profileMatcher+" expected to be <="+tq.maxRank);
 			
 			Assert.assertTrue(actualRank <= tq.maxRank);
 		}

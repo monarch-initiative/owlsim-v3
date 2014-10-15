@@ -32,7 +32,7 @@ public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {
 		ProfileMatcher profileMatcher2 = GridProfileMatcher.create(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
 		Double diff = eval.compareMatchers(profileMatcher1, profileMatcher2);
-		
+		LOG.info("diff: "+diff);
 		//assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		
 	}
