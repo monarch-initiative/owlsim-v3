@@ -40,11 +40,13 @@ public class CoAnnotationStats {
 			int[] attributes = knowledgeBase.getDirectTypesBM(individualId).toArray();
 
 			for (int i = 0; i < attributes.length - 1; i++) {
+				coAnnotationMatrix.addToEntry(attributes[i], attributes[i], 1);
+				
 				for (int j = i + 1; j < attributes.length; j++) {
 					coAnnotationMatrix.addToEntry(attributes[i], attributes[j], 1);
-					coAnnotationMatrix.addToEntry(attributes[j], attributes[i], 1);
 				}
 			}
+			coAnnotationMatrix.addToEntry(attributes[attributes.length - 1], attributes[attributes.length - 1], 1);
 		}
 	}
 	
@@ -60,7 +62,6 @@ public class CoAnnotationStats {
 			for (int i = 0; i < attributes.length - 1; i++) {
 				for (int j = i + 1; j < attributes.length; j++) {
 					subsetCoAnnotationMatrix.addToEntry(attributes[i], attributes[j], 1);
-					subsetCoAnnotationMatrix.addToEntry(attributes[j], attributes[i], 1);
 				}
 			}
 		}
@@ -123,5 +124,48 @@ public class CoAnnotationStats {
 		}
 		
 		return map;
+	}
+	
+	/**
+	 * Computes the pairwise Mutual Information of two classes - using their ids
+	 */
+	public double pairwiseMutualInformation(String classId1, String classId2) {
+		int id1_index = knowledgeBase.getClassIndex(classId1);
+		int id2_index = knowledgeBase.getClassIndex(classId2);
+		return pairwiseMutualInformation(id1_index, id2_index);
+	}
+
+	/**
+	 * Computes the pairwise Mutual Information of two classes - using their indices
+	 */
+	public double pairwiseMutualInformation(int classId1_index, int classId2_index) {
+		double N_11 = coAnnotationMatrix.getEntry(classId1_index, classId2_index);
+		double N = (double) knowledgeBase.getIndividualIdsInSignature().size();
+		double N_10 = coAnnotationMatrix.getEntry(classId1_index, classId1_index) - N_11;
+		double N_01 = coAnnotationMatrix.getEntry(classId2_index, classId2_index) - N_11;
+		double N_00 = N - N_10 - N_01 - N_11;
+		
+		double t1 = computeMITerm(N_11, N_10 + N_11, N_01 + N_11);
+		double t2 = computeMITerm(N_01, N_01 + N_00, N_01 + N_11);
+		double t3 = computeMITerm(N_10, N_10 + N_11, N_00 + N_10);
+		double t4 = computeMITerm(N_00, N_01 + N_00, N_10 + N_00);
+
+		return 	t1 + t2 + t3 + t4;
+	}
+
+	/**
+	 * Utility method for computing the Mutual Informantion term:
+	 *    (N_Joint / N_Total) * log [(N_Total * N_Joint) / (N_LeftOnly * N_RightOnly)]
+	 */
+	private double computeMITerm(double jointFrequency, double individualFreqL, double individualFreqR) {
+		if (jointFrequency == 0 || individualFreqL == 0 || individualFreqR == 0) {
+			return 0.0;
+		}
+		
+		double totalIndividuals = (double) knowledgeBase.getIndividualIdsInSignature().size();
+		double frac = jointFrequency / totalIndividuals;
+		double logFrac = (totalIndividuals * jointFrequency) / (individualFreqL * individualFreqR); 
+		
+		return frac * Math.log(logFrac);
 	}
 }

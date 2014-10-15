@@ -21,7 +21,7 @@ public class CoAnnotationStatsTest {
 	
 	@Test
 	public void testCoAnnotationInitialization() throws Exception {
-		create(10000, 2, 5000, 20);
+		create(10000, 2, 2000, 20);
 
 		long start = System.currentTimeMillis();
 		LOG.info("Initializing co-annotation statistics ...");
@@ -35,6 +35,9 @@ public class CoAnnotationStatsTest {
 		end = System.currentTimeMillis();
 		LOG.info("Co-annotation statistics populated ... " + (end - start) + " ms");
 
+		double mi = coAnnotationStats.pairwiseMutualInformation(2456, 1345);
+		LOG.info("MI = " + mi);
+		
 		LOG.info("Test done ...");
 	}
 
