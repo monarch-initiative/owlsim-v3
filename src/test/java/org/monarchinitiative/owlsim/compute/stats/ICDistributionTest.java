@@ -200,9 +200,16 @@ public class ICDistributionTest {
 
 			Assert.assertTrue("filtered v subset (tTest), should have pvalue=1", pvalue==1.0);
 			pvalue = subsetDistro.tTest(referenceDistro);
-			LOG.info("I1subset v all (tTest) should have p<"+cutoff+", p="+pvalue);  
-			Assert.assertTrue("I1subset v all (tTest) should have p<"+cutoff, pvalue<cutoff);  //most likely they will not give the same distro
 
+			//if the subset != reference, then presumably it has less elements, 
+			//and therefore is not identical, so p<1.0
+			if (!subsetDistro.equals(referenceDistro)) {
+				LOG.info("I1subset v all (tTest) should have p<1.0+, p="+pvalue);  
+				Assert.assertTrue("I1subset v all (tTest) should have p<"+1.0, pvalue<1.0);  //most likely they will not give the same distro
+			} else {
+				LOG.info("subset == all (tTest) should have p<1.0+, p="+pvalue);  
+				Assert.assertTrue("I1subset v all (tTest) should have p=="+1.0, pvalue==1.0);  //most likely they will not give the same distro				
+			}
 		}
 	}	
 	
