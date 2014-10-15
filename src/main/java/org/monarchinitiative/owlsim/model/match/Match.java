@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.model.match;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 /**
  * Representation of a match between a Query and some individual (aka item, element, label)
  * 
@@ -42,4 +44,17 @@ public interface Match {
 	 * @param rank
 	 */
 	public void setRank(int rank);
+	
+	/**
+	 * 
+	 * @return significance (p-value)
+	 */
+	public double getSignificance();
+	
+	/**
+	 * set the significance (p-value) of the match
+	 * this is agnostic to the kind of significance test
+	 * that is performed.
+	 */
+	public void setSignificance(double p);
 }

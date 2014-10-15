@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.TestUtils;
 import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 
@@ -15,6 +17,7 @@ public class MatchImpl implements Match {
 	private String matchLabel;
 	private double rawScore;
 	private Integer rank;
+	private Double p;
 	
 	/**
 	 * @param matchId
@@ -27,6 +30,7 @@ public class MatchImpl implements Match {
 		this.matchLabel = matchLabel;
 		this.rawScore = probability;
 		rank = null;
+		p = Double.NaN;
 	}
 	
 	public static Match create(String matchId, String matchLabel, double probability) {
@@ -64,8 +68,6 @@ public class MatchImpl implements Match {
 	public double getScore() {
 		return rawScore * 100;
 	}
-	
-
 
 	public int getRank() {
 		return rank == null ? -1 :  rank;
@@ -78,6 +80,15 @@ public class MatchImpl implements Match {
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " %sc="+getPercentageScore()+" rawScore="+rawScore;
+		return matchId + " \"" + matchLabel+ "\" Rank:" + getRank()+ " %sc="+getPercentageScore()+" rawScore="+rawScore+" p="+getSignificance();
 	}
+
+	public double getSignificance() {
+		return p;
+	}
+
+	public void setSignificance(double p) {
+		this.p = p;
+	}
+	
 }

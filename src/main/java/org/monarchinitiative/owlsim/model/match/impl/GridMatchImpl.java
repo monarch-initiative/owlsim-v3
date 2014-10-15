@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.TestUtils;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.model.match.Match;
 
@@ -17,6 +19,7 @@ public class GridMatchImpl implements Match {
 	double score;
 	ClassInformationContentPair[] queryMatchArray;
 	int rank;
+	Double p;
 	
 	/**
 	 * @param matchId
@@ -30,6 +33,7 @@ public class GridMatchImpl implements Match {
 		this.matchLabel = matchLabel;
 		this.score = probability;
 		this.queryMatchArray = queryMatchArray;
+		this.p = Double.NaN;
 	}
 	
 	public static Match create(String matchId, String matchLabel, double probability, ClassInformationContentPair[] qmatchArr) {
@@ -77,6 +81,15 @@ public class GridMatchImpl implements Match {
 	// TODO - move to abstract
 	@Override
 	public String toString() {
-		return matchId + " \"" + matchLabel+ "\" Rank="+getRank() + " sc=" + getPercentageScore()+" score="+score;
+		return matchId + " \"" + matchLabel+ "\" Rank="+getRank() + " sc=" + getPercentageScore()+" score="+score+" p="+getSignificance();
 	}
+	
+	public double getSignificance() {
+		return p;
+	}
+	
+	public void setSignificance(double p) {
+		this.p = p;
+	}
+	
 }

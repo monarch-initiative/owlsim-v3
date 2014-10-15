@@ -27,7 +27,13 @@ public interface ProfileQuery {
 	 */
 	public Filter getFilter();
 	
+	public void setFilter(Filter f);
+	
 	public Integer getLimit();
 
+	/**
+	 * set to -1 for no limit (all)
+	 * @param limit
+	 */
 	public void setLimit(Integer limit);
 }

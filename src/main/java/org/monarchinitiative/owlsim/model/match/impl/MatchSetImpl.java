@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.TestUtils;
 import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -140,7 +142,14 @@ public class MatchSetImpl implements MatchSet {
 		if (matches.size() > limit)
 			matches = matches.subList(0, limit);
 	}
-
+	
+	public DescriptiveStatistics getScores() {
+		DescriptiveStatistics ds = new DescriptiveStatistics();
+		for (Match m : this.matches) {
+			ds.addValue(m.getScore());
+		}
+		return ds;
+	}
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -158,6 +167,12 @@ public class MatchSetImpl implements MatchSet {
 		return sb.toString();
 	}
 
+	public void calculateMatchSignificance(DescriptiveStatistics background) {
+		for (Match m : this.matches) {
+			double p = TestUtils.tTest(m.getScore(), background);
+			m.setSignificance(p);
+		}
+	}
 
 
 }

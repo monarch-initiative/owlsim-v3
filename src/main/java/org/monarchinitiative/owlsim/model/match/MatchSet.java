@@ -2,6 +2,8 @@ package org.monarchinitiative.owlsim.model.match;
 
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 /**
  * Represents all matches for a query against a set of individuals
  * 
@@ -52,7 +54,13 @@ public interface MatchSet {
 	public void setExecutionMetadata(ExecutionMetadata executionMetadata);
 
 	public void truncate(int limit);
-	
+		
+	public DescriptiveStatistics getScores();
+
+	/**
+	 * @param background - distribution of scores to compare for significance
+	 */
+	public void calculateMatchSignificance(DescriptiveStatistics background);
 
 	// TODO - filters
 	
