@@ -65,7 +65,7 @@ public class BackgroundData {
 				ibits.add(rand.nextInt(max));
 			}
 			bm = EWAHUtils.converIndexSetToBitmap(ibits);
-			LOG.info("Created random set with length "+setLength);
+//			LOG.info("Created random set with length "+setLength);
 			newbms[i] = bm;
 		}		
 		return newbms;
@@ -73,7 +73,7 @@ public class BackgroundData {
 	
 	/**
 	 * Will create {@code n} {@link EWAHCompressedBitmap}s to represent
-	 * individuals with a random set of classes.  A random quantity of 
+	 * individuals associated with a random set of classes.  A random quantity of 
 	 * classes will be added to each bitmap, maximally determined by the number
 	 * of classes of the individuals in the knowledgeBase.  
 	 * This will leverage only the classes that are actually
@@ -109,10 +109,9 @@ public class BackgroundData {
 				ibits.add(allClasses.get(rand.nextInt(max)));
 			}
 			bm = EWAHUtils.converIndexSetToBitmap(ibits);
-			LOG.info("Created random set with length "+setLength);
+//			LOG.info("Created random set with length "+setLength);
 			newbms[i] = bm;
-		}		
-		
+		}				
 		return newbms;
 	}
 	
