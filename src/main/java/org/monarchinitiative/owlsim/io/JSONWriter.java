@@ -49,7 +49,7 @@ public class JSONWriter {
 	 * @param obj
 	 */
 	public void write(Object obj) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().setPrettyPrinting().create();
 		String json = gson.toJson(obj);
 		stream.println(json);
 		stream.flush();
