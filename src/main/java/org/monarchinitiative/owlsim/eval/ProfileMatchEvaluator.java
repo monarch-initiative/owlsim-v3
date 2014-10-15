@@ -54,6 +54,9 @@ public class ProfileMatchEvaluator {
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
 
+		mp.calculateMatchSignificance(mp.getScores());
+		LOG.info("first match:"+mp.getMatches().get(0));
+		
 		if (jsonWriter != null) {
 			LOG.info("Writing MatchSet using "+jsonWriter+" results will appear in "+jsonWriter);
 			jsonWriter.write(mp);
@@ -158,7 +161,7 @@ public class ProfileMatchEvaluator {
 		return tq;
 	}
 
-	public double compareMatchSets(MatchSet ms1, MatchSet ms2) {
+	public double compareMatchSetRanks(MatchSet ms1, MatchSet ms2) {
 		int totalRankDiff = 0;
 		int n=0;
 		for (Match m1 : ms1.getMatches()) {
@@ -168,6 +171,20 @@ public class ProfileMatchEvaluator {
 		}
 		double avgRankDiff = totalRankDiff / (double)n;
 		return avgRankDiff;
+	}
+	
+	public double compareMatchSetP(MatchSet ms1, MatchSet ms2) {
+		int totalpdiff = 0;
+		int n=0;
+		ms1.calculateMatchSignificance(ms1.getScores());
+		ms2.calculateMatchSignificance(ms2.getScores());
+		for (Match m1 : ms1.getMatches()) {
+			Match m2 = ms2.getMatchesWithId(m1.getMatchId());
+			totalpdiff += m1.getSignificance() - m2.getSignificance();
+			n++;
+		}
+		double avgPDiff = totalpdiff / (double)n;
+		return avgPDiff;
 	}
 	
 	/**
@@ -194,7 +211,7 @@ public class ProfileMatchEvaluator {
 			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
 			MatchSet ms1 = pm1.findMatchProfile(q);
 			MatchSet ms2 = pm2.findMatchProfile(q);
-			double diff = compareMatchSets(ms1, ms2);
+			double diff = compareMatchSetRanks(ms1, ms2);
 			tdiff += diff;
 			n++;
 		}

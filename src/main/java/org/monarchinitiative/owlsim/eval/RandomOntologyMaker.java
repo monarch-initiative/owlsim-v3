@@ -33,12 +33,6 @@ public class RandomOntologyMaker {
 		counter = 0;
 	}
 	
-	
-
-	public OWLOntology getOntology() {
-		return ontology;
-	}
-	
 	public static RandomOntologyMaker create(int numberOfClasses, double averageNumberOfParents) throws OWLOntologyCreationException {
 		RandomOntologyMaker rom = new RandomOntologyMaker();
 		return rom.createOntology(numberOfClasses, averageNumberOfParents);
@@ -133,5 +127,9 @@ public class RandomOntologyMaker {
 	
 	private OWLDataFactory getOWLDataFactory() {
 		return owlOntologyManager.getOWLDataFactory();
+	}
+	
+	public OWLOntology getOntology() {
+		return this.ontology;
 	}
 }
