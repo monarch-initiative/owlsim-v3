@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -35,13 +36,14 @@ public class ICDistributionTest {
 
 	@Test
 	public void testSelfComparisonTTest() throws Exception {
+		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
 		for (int i=1; i<=10; i++) {
 			int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 			int numClasses = 0;
 			int randomibit = -1;
 			while (numClasses < 2) {
-				randomibit = (int)Math.round(Math.random()*numIndividuals);
+				randomibit = r.nextInt(numIndividuals);
 				numClasses = (int)icc.getICStatsForIndividual(randomibit).getN();
 //				LOG.info("Skipping individual "+randomibit+" with too few classes");
 			}
@@ -56,13 +58,14 @@ public class ICDistributionTest {
 	
 	@Test
 	public void testSelfComparisonOneWayAnova() throws Exception {
+		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
 		for (int i=1; i<=10; i++) {
 			int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 			int numClasses = 0;
 			int randomibit = -1;
 			while (numClasses < 2) {
-				randomibit = (int)Math.round(Math.random()*numIndividuals);
+				randomibit = r.nextInt(numIndividuals);
 				numClasses = (int)icc.getICStatsForIndividual(randomibit).getN();
 //				LOG.info("Skipping individual "+randomibit+" with too few classes");
 			}
@@ -77,13 +80,14 @@ public class ICDistributionTest {
 	
 	@Test
 	public void testSelfComparisonKS() throws Exception {
+		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
 		int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 		for (int i=1; i<=25; i++) {
 			int numClasses = 0;
 			int randomibit = -1;
 			while (numClasses < 2) {
-				randomibit = (int)Math.round(Math.random()*numIndividuals);
+				randomibit = r.nextInt(numIndividuals);
 				numClasses = (int)icc.getICStatsForIndividual(randomibit).getN();
 //				LOG.info("Skipping individual "+randomibit+" with too few classes");
 			}
@@ -98,6 +102,7 @@ public class ICDistributionTest {
 	
 	@Test
 	public void testRandomComparisonProbabilities() throws Exception {
+		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
 		int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 		for (int i=0; i<=10; i++) {
@@ -105,7 +110,7 @@ public class ICDistributionTest {
 			int numClassesRef = 0;
 			int refibit = -1;
 			while (numClassesRef < i+2) {
-				refibit = (int)Math.round(Math.random()*numIndividuals);
+				refibit = r.nextInt(numIndividuals);
 				numClassesRef = (int)icc.getICStatsForIndividual(refibit).getN();
 			}
 			String refindiv = kb.getIndividualId(refibit);
@@ -116,7 +121,7 @@ public class ICDistributionTest {
 				int numClasses = 0;
 				int randomibit = -1;
 				while (numClasses < 5) {
-					randomibit = (int)Math.round(Math.random()*numIndividuals);
+					randomibit = r.nextInt(numIndividuals);
 					numClasses = (int)icc.getICStatsForIndividual(randomibit).getN();
 				}
 				String indiv = kb.getIndividualId(randomibit);
@@ -139,6 +144,9 @@ public class ICDistributionTest {
 	
 	@Test
 	public void testSelfBySubsetComparisonTTest() throws Exception {
+		Random r = new Random(1);
+		Random r2 = new Random(1);
+		
 		create(2000, 2, 4000, 10);
 		int numIndividuals = (int)icc.getICSummaryForAllIndividuals().getN().getN();
 
@@ -150,7 +158,7 @@ public class ICDistributionTest {
 			int randomibit = -1;
 			DescriptiveStatistics referenceDS = new DescriptiveStatistics();
 			while (numClasses < 2) {
-				randomibit = (int)Math.round(Math.random()*numIndividuals);
+				randomibit = r.nextInt(numIndividuals);
 				referenceDS = icc.getICStatsForIndividual(randomibit);
 				numClasses = (int)referenceDS.getN();
 //				LOG.info("Skipping individual "+randomibit+" with too few classes");
@@ -176,7 +184,7 @@ public class ICDistributionTest {
 			//for the tTest to work, we need at least two items
 			while (numClasses < 2) {			
 				//select one random superclasses as a filter
-				int randomcbit = (int)Math.round(Math.random()*superbits.size());
+				int randomcbit = r2.nextInt(superbits.size());
 				classId = kb.getClassId(superbits.get(randomcbit));
 				//given one of the random superclasses to filter with,
 				//get the subset of classes that are subclasses of the filter
@@ -218,6 +226,7 @@ public class ICDistributionTest {
 	 * @return - a class at the specified depth with which to filter
 	 */
 	private String fetchRandomClassByDepth(int n) {
+		Random r = new Random(1);
 		//get direct subclasses of the root
 		int index = kb.getRootIndex();
 		for (int i=0; i<n; i++) {
@@ -225,7 +234,7 @@ public class ICDistributionTest {
 			//choose a random one of them to be the class
 			List<Integer> classBits = directSubclasses.getPositions();
 			LOG.info("Found "+classBits.size()+" subclasses of "+kb.getClassId(index));
-			index = (int) Math.round(Math.random()*classBits.size());
+			index = (int) r.nextInt(classBits.size());
 			LOG.info("Setting index to "+index);
 		}
 		return kb.getClassId(index);
