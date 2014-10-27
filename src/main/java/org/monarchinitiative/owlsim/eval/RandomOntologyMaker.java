@@ -2,6 +2,7 @@ package org.monarchinitiative.owlsim.eval;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -25,6 +26,8 @@ public class RandomOntologyMaker {
 	private List<OWLClass> classList;
 	private OWLOntology ontology;
 	private OWLOntologyManager owlOntologyManager;
+	
+	private Random random = new Random(1);
 	
 	
 	public RandomOntologyMaker() {
@@ -50,7 +53,7 @@ public class RandomOntologyMaker {
 				OWLSubClassOfAxiom ax = getOWLDataFactory().getOWLSubClassOfAxiom(c, parent);
 				addAxiom(ax);
 				i++;
-				if (Math.random() < (1 / (double) averageNumberOfParents) ) {
+				if (random.nextDouble() < (1 / (double) averageNumberOfParents) ) {
 					break;
 				}
 			}
@@ -68,7 +71,7 @@ public class RandomOntologyMaker {
 			//LOG.info("INDIVIDUAL:"+individual);
 			//add at least one
 			addRandomClassToIndividual(individual);
-			while (Math.random() > (1 / (double) avgTypes)) {
+			while (random.nextDouble() > (1 / (double) avgTypes)) {
 				addRandomClassToIndividual(individual);
 			}
 		}
