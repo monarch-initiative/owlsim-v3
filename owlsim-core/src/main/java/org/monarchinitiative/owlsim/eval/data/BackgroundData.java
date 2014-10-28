@@ -13,6 +13,16 @@ import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 
+/**
+ * Methods to create simulated individual-class associations based on
+ * the supplied {@link BMKnowledgeBase}.  These datasets can be used
+ * for significance testing of {@link Match}es resulting from ProfileMatchers. <br />
+ * For speed of subsequent analysis, proper {@link OWLIndividuals} are not used; 
+ * rather {@link EWAHCompressedBitmap}s are created, and could subsequently
+ * be converted into axioms and loaded into the knowledgeBase, if desired.
+ * @author nlw
+ *
+ */
 public class BackgroundData {
 
 	private static Logger LOG = Logger.getLogger(BackgroundData.class);

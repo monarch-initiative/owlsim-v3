@@ -18,6 +18,8 @@ public class FilterEngineTest extends AbstractFilterEngineTest {
 		testFilter(pvf, "http://x.org/ia");
 		
 		// TODO - test other owl property assertion types
+		
+		// TODO - test identifier (individual) filter
 	}
 
 }
