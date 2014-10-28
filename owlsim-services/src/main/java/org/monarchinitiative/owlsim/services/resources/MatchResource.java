@@ -15,10 +15,14 @@
  */
 package org.monarchinitiative.owlsim.services.resources;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -28,11 +32,17 @@ import com.wordnik.swagger.annotations.ApiOperation;
 @Produces({ MediaType.APPLICATION_JSON })
 public class MatchResource {
 
-  @GET
-  @Path("/hello")
-  @ApiOperation(value = "Match things", response = String.class)
-  public String test() {
-    return "Hello";
-  }
+	@Inject
+	protected BMKnowledgeBase kb;
+
+	@Inject
+	protected PhenodigmICProfileMatcher phenodigmMatcher;
+
+	@GET
+	@Path("/hello")
+	@ApiOperation(value = "Match things", response = String.class)
+	public String test() {
+		return "Hello";
+	}
 
 }

@@ -22,10 +22,16 @@ import java.util.Set;
 
 public class ApplicationConfiguration extends Configuration {
 
-  private Set<String> ontologyUris;
+	private Set<String> ontologyUris;
 
-  public Set<String> getOntologyUris() {
-    return ontologyUris;
-  }
+	private Set<String> ontologyDataUris;
+
+	public Set<String> getOntologyUris() {
+		return ontologyUris;
+	}
+
+	public Set<String> getOntologyDataUris() {
+		return ontologyDataUris;
+	}
 
 }
