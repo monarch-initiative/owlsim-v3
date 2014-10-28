@@ -14,12 +14,17 @@ import org.monarchinitiative.owlsim.model.match.ProfileQuery;
  */
 public interface ProfileMatcher {
 
+	/***
+	 * @return a short, URL friendly (no spaces, please) description of the matcher
+	 */
+	String getShortName();
+	
 	/**
 	 * @param q
 	 * @return scored matches
 	 * @throws UnknownFilterException 
 	 */
-	public MatchSet findMatchProfile(ProfileQuery q) throws UnknownFilterException;
+	MatchSet findMatchProfile(ProfileQuery q) throws UnknownFilterException;
 
 	/**
 	 * @param q
@@ -27,11 +32,11 @@ public interface ProfileMatcher {
 	 * @return scored matches
 	 * @throws UnknownFilterException 
 	 */
-	public MatchSet findMatchProfile(ProfileQuery q, double alpha) throws UnknownFilterException;
+	MatchSet findMatchProfile(ProfileQuery q, double alpha) throws UnknownFilterException;
 
 	
 	/**
 	 * @return ontology interface
 	 */
-	public BMKnowledgeBase getKnowledgeBase();
+	BMKnowledgeBase getKnowledgeBase();
 }

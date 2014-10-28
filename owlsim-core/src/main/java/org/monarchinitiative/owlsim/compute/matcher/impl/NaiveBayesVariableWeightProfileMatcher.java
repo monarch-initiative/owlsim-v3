@@ -48,6 +48,10 @@ public class NaiveBayesVariableWeightProfileMatcher extends AbstractProfileMatch
 		return v;
 	}
 
+	@Override
+	public String getShortName() {
+		return "bayes-variable";
+	}
 
 	/**
 	 * @param q

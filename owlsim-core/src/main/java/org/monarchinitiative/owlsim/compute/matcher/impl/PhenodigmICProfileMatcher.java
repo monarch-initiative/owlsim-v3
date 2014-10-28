@@ -46,7 +46,10 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 		return new PhenodigmICProfileMatcher(kb);
 	}
 	
-
+	@Override
+	public String getShortName() {
+		return "phenodigm";
+	}
 	/**
 	 * @param q
 	 * @return match profile containing probabilities of each individual

@@ -43,7 +43,10 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 		return new JaccardSimilarityProfileMatcher(kb);
 	}
 
-	
+	@Override
+	public String getShortName() {
+		return "jaccard";
+	}
 
 	/**
 	 * @param q

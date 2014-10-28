@@ -47,6 +47,10 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 		return new GridProfileMatcher(kb);
 	}
 	
+	@Override
+	public String getShortName() {
+		return "grid";
+	}
 
 	/**
 	 * @param q

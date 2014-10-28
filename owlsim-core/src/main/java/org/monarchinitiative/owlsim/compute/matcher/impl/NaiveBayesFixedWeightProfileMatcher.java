@@ -60,6 +60,10 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 		return new NaiveBayesFixedWeightProfileMatcher(kb);
 	}
 
+	@Override
+	public String getShortName() {
+		return "bayes-fixed";
+	}
 
 	/**
 	 * @param q

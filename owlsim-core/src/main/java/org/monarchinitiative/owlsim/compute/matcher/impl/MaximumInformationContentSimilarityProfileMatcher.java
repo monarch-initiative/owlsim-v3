@@ -44,8 +44,10 @@ public class MaximumInformationContentSimilarityProfileMatcher
 		return new MaximumInformationContentSimilarityProfileMatcher(kb);
 	}
 	
-	
-	
+	@Override
+	public String getShortName() {
+		return "max-information";
+	}
 
 	/**
 	 * @param q

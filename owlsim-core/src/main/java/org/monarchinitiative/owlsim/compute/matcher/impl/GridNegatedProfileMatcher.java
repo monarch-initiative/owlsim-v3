@@ -30,7 +30,10 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	}
 	
 
-
+	@Override
+	public String getShortName() {
+		return "grid-negated";
+	}
 
 	/**
 	 * @param q
@@ -39,6 +42,5 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	public MatchSet findMatchProfileImpl(ProfileQuery q) {
 		return null;
 	}
-
 
 }
