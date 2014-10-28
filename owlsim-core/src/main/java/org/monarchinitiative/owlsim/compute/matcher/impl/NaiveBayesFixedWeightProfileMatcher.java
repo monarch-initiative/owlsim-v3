@@ -2,12 +2,13 @@ package org.monarchinitiative.owlsim.compute.matcher.impl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
@@ -46,6 +47,7 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 	private double[] defaultFalsePositiveRateArr =  new double[]{1e-10,0.0005,0.001,0.005,0.01};
 	private double[] defaultFalseNegativeRateArr = new double[] {1e-10,0.005,0.01,0.05,0.1,0.2,0.4,0.8,0.9};
 
+	@Inject
 	private NaiveBayesFixedWeightProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

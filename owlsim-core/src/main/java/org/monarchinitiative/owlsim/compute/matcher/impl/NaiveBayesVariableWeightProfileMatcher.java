@@ -3,11 +3,13 @@ package org.monarchinitiative.owlsim.compute.matcher.impl;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -33,6 +35,7 @@ public class NaiveBayesVariableWeightProfileMatcher extends AbstractProfileMatch
 	/**
 	 * @param kb
 	 */
+	@Inject
 	public NaiveBayesVariableWeightProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

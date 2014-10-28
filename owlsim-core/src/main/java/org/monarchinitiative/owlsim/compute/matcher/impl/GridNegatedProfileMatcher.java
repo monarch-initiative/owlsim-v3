@@ -1,17 +1,12 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
-import java.util.Set;
+import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
-import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
-
-import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
  * As GridProfileMatcher, allows negated queries
@@ -29,6 +24,7 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	/**
 	 * @param kb
 	 */
+	@Inject
 	public GridNegatedProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
