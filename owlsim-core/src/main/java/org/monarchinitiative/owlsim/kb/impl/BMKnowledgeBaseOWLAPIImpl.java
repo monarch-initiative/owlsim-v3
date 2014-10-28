@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
+import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlDataOntologies;
+import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlOntologies;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
@@ -104,8 +108,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @param owlDataOntology
 	 * @param rf
 	 */
-	public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
-			OWLOntology owlDataOntology, OWLReasonerFactory rf) {
+	@Inject
+	public BMKnowledgeBaseOWLAPIImpl(
+			@IndicatesOwlOntologies OWLOntology owlOntology,
+			@IndicatesOwlDataOntologies OWLOntology owlDataOntology, 
+			OWLReasonerFactory rf) {
 		super();
 		curieMapper = new CURIEMapperImpl();
 		labelMapper = new LabelMapperImpl(curieMapper);
@@ -126,8 +133,6 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			populateLabelsFromOntology(labelMapper, owlDataOntology);
 		}
 	}
-
-	
 
 	public static BMKnowledgeBase create(OWLOntology owlOntology, OWLReasonerFactory rf) {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf);
