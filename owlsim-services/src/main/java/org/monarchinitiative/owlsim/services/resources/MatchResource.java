@@ -56,6 +56,7 @@ public class MatchResource {
 
 	@GET
 	@Path("/{matcher}")
+	@ApiOperation(value = "Match", response = MatchSet.class)
 	public MatchSet getMatches(
 			@PathParam("matcher") String matcherName,
 			@QueryParam("id") Set<String> ids) {
