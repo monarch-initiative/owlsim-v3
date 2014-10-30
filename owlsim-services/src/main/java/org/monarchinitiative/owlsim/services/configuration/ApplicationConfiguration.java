@@ -19,11 +19,14 @@ import io.dropwizard.Configuration;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
 
 public class ApplicationConfiguration extends Configuration {
 
+	@NotNull
 	private Set<String> ontologyUris;
 
+	@NotNull
 	private Set<String> ontologyDataUris;
 
 	public Set<String> getOntologyUris() {
