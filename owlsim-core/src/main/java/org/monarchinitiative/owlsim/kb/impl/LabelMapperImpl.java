@@ -1,5 +1,8 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static java.util.Collections.emptySet;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,22 +31,15 @@ public class LabelMapperImpl implements LabelMapper {
 
 	private Logger LOG = Logger.getLogger(LabelMapperImpl.class);
 
-	Map<String,Set<String>> labelToIdMap;
-	Map<String,Set<String>> idToLabelMap;
-	CURIEMapper curieMapper;
-	
+	Map<String,Set<String>> labelToIdMap = new HashMap<>();
+	Map<String,Set<String>> idToLabelMap = new HashMap<>();
+	private final CURIEMapper curieMapper;
+
 	/**
 	 * @param curieMapper
 	 */
 	public LabelMapperImpl(CURIEMapper curieMapper) {
-		super();
 		this.curieMapper = curieMapper;
-		initializeMaps();
-	}
-	
-	private void initializeMaps() {
-		labelToIdMap = new HashMap<String,Set<String>>();
-		idToLabelMap = new HashMap<String,Set<String>>();
 	}
 
 	/**
@@ -51,25 +47,24 @@ public class LabelMapperImpl implements LabelMapper {
 	 * @return ids
 	 */
 	public Set<String> lookupByLabel(String label) {
-		Set<String> ids = labelToIdMap.get(label);
-		if (ids == null)
-			ids = new HashSet<String>();
-		return new HashSet<String>(ids);
+		if (labelToIdMap.containsKey(label)) {
+			return new HashSet<>(labelToIdMap.get(label));
+		} else {
+			return emptySet();
+		}
 	}
-	
+
 	/**
 	 * @param label
 	 * @return id that has this label
 	 * @throws NonUniqueLabelException
 	 */
-	public String  lookupByUniqueLabel(String label) throws NonUniqueLabelException {
+	public String lookupByUniqueLabel(String label) throws NonUniqueLabelException {
 		Set<String> ids = lookupByLabel(label);
 		if (ids.size() > 1) {
 			throw new NonUniqueLabelException(label, ids);
 		}
-		if (ids.size() == 0)
-			return null;
-		return ids.iterator().next();
+		return getOnlyElement(ids, null);
 	}
 	
 	/**
@@ -78,7 +73,7 @@ public class LabelMapperImpl implements LabelMapper {
 	 * @throws NonUniqueLabelException
 	 */
 	public Set<String> lookupByUniqueLabels(Set<String> labels) throws NonUniqueLabelException {
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new HashSet<>();
 		for (String label : labels) {
 			String cid = lookupByUniqueLabel(label);
 			Preconditions.checkNotNull(cid);
@@ -92,10 +87,11 @@ public class LabelMapperImpl implements LabelMapper {
 	 * @return labels
 	 */
 	public Set<String> getLabel(String id) {
-		Set<String> labels = idToLabelMap.get(id);
-		if (labels == null)
-			labels = new HashSet<String>();
-		return new HashSet<String>(labels);
+		if (idToLabelMap.containsKey(id)) {
+			return new HashSet<>(idToLabelMap.get(id));
+		} else {
+			return emptySet();
+		}
 	}
 	
 	/**
@@ -108,9 +104,7 @@ public class LabelMapperImpl implements LabelMapper {
 		if (labels.size() > 1) {
 			throw new NonUniqueLabelException(id, labels);
 		}
-		if (labels.size() == 0)
-			return null;
-		return labels.iterator().next();
+		return getOnlyElement(labels, null);
 	}
 
 	/**
