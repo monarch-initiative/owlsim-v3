@@ -15,14 +15,26 @@
  */
 package org.monarchinitiative.owlsim.services.resources;
 
+import static com.google.common.collect.Sets.newHashSet;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
-import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
-import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
+import org.monarchinitiative.owlsim.model.match.ProfileQueryFactory;
 
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -33,16 +45,27 @@ import com.wordnik.swagger.annotations.ApiOperation;
 public class MatchResource {
 
 	@Inject
-	protected BMKnowledgeBase kb;
-
-	@Inject
-	protected PhenodigmICProfileMatcher phenodigmMatcher;
+	Map<String, ProfileMatcher> matchers;
 
 	@GET
-	@Path("/hello")
-	@ApiOperation(value = "Match things", response = String.class)
-	public String test() {
-		return "Hello";
+	@Path("/matchers")
+	@ApiOperation(value = "Get registered profile matchers", response = Collection.class)
+	public Collection<String> getMatchers() {
+		return matchers.keySet();
 	}
+
+	@GET
+	@Path("/{matcher}")
+	public MatchSet getMatches(
+			@PathParam("matcher") String matcherName,
+			@QueryParam("id") Set<String> ids) {
+		if (!matchers.containsKey(matcherName)) {
+			throw new WebApplicationException(Status.NOT_FOUND);
+		}
+		ProfileMatcher matcher = matchers.get(matcherName);
+		ProfileQuery query = ProfileQueryFactory.createQuery(newHashSet("http://x.org/cephalopod"));
+		return matcher.findMatchProfile(query);
+	}
+
 
 }

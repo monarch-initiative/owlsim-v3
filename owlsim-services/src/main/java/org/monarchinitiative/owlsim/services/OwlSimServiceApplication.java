@@ -20,10 +20,11 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
+import java.util.Set;
+
 import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
 
-import com.codahale.metrics.health.HealthCheck;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.inject.Guice;
@@ -38,10 +39,10 @@ import com.wordnik.swagger.jaxrs.listing.ResourceListingProvider;
 import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
 import com.wordnik.swagger.reader.ClassReaders;
 
-public class ServiceApplication extends Application<ApplicationConfiguration> {
+public class OwlSimServiceApplication extends Application<ApplicationConfiguration> {
 
 	public static void main(String[] args) throws Exception {
-		new ServiceApplication().run(args);
+		new OwlSimServiceApplication().run(args);
 	}
 
 	@Override
@@ -78,17 +79,15 @@ public class ServiceApplication extends Application<ApplicationConfiguration> {
 		environment.getApplicationContext().setContextPath("/api");
 		configureSwagger(environment);
 
-		
-		Injector i = Guice.createInjector(new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris()));
-
-		//Add health checks
-		for (ClassInfo classInfo: ClassPath.from(getClass().getClassLoader()).getTopLevelClasses("org.monarchinitiative.owlsim.services.health")) {
-			environment.healthChecks().register("health check", (HealthCheck)i.getInstance(classInfo.load()));
-		}
+		Injector i = Guice.createInjector(
+				new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris()),
+				new MatcherModule());
 
 		//Add resources
-		for (ClassInfo classInfo: ClassPath.from(getClass().getClassLoader()).getTopLevelClasses("org.monarchinitiative.owlsim.services.resources")) {
-			environment.jersey().register(i.getInstance(classInfo.load()));
+		Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
+				.getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");
+		for (ClassInfo resourceClass: resourceClasses) {
+			environment.jersey().register(i.getInstance(resourceClass.load()));
 		}
 
 	}
