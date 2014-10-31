@@ -134,6 +134,11 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.3</version>
 		</dependency>
+		<dependency>
+		  <groupId>commons-validator</groupId>
+		  <artifactId>commons-validator</artifactId>
+		  <version>1.4.0</version>
+		</dependency>
 	</dependencies>
 
 

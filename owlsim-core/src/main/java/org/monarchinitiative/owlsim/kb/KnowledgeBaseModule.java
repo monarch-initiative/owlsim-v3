@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.inject.Singleton;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlDataOntologies;
 import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlOntologies;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
@@ -25,6 +26,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 
 	private final ImmutableCollection<String> ontologyUris;
 	private final ImmutableCollection<String> ontologyDataUris;
+	private final UrlValidator urlValdiator = UrlValidator.getInstance();
 
 	public KnowledgeBaseModule(Collection<String> ontologyUris, Collection<String> ontologyDataUris) {
 		this.ontologyUris = new ImmutableSet.Builder<String>().addAll(ontologyUris).build();
@@ -39,10 +41,9 @@ public class KnowledgeBaseModule extends AbstractModule {
 	}
 
 	OWLOntology loadOntology(OWLOntologyManager manager, String uri) throws OWLOntologyCreationException {
-		if (uri.startsWith("http")) {
+		if (urlValdiator.isValid(uri)) {
 			return manager.loadOntology(IRI.create(uri));
-		}
-		else {
+		} else {
 			File file = new File(uri);
 			return manager.loadOntologyFromOntologyDocument(file);
 		}
