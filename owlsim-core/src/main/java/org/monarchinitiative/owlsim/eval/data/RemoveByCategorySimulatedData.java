@@ -146,37 +146,31 @@ public class RemoveByCategorySimulatedData extends AbstractSimulatedData {
 		//to store the set of derived BMs
 		Set<EWAHCompressedBitmap> newBMs = new HashSet<EWAHCompressedBitmap>();
 		
-		//If performance is poor with the fetching subclasses method, we can change it 
+		//FYI If performance is poor with the fetching subclasses method, we can change it 
 		//to iterating over the attributes, getting their superclasses, and seeing if they
 		//include the category.
-		EWAHCompressedBitmap bitsToRemove =  new EWAHCompressedBitmap();
+		EWAHCompressedBitmap subs = new EWAHCompressedBitmap();
 		if (!this.inverse) {
 			//figure out which attributes are subclasses of a given category
-			EWAHCompressedBitmap subs = this.getKnowledgeBase().getSubClasses(categoryBit);
+			subs = this.getKnowledgeBase().getSubClasses(categoryBit);
 			LOG.info("Removing any subclasses of bit "+categoryBit+": "+subs.getPositions());
 
 			//make sure that the category is removed from the list of subclasses when non-inclusive
 			if (!this.inclusive) {
-				List<Integer> spos = subs.getPositions();
-				spos.remove(categoryBit);
-				subs = EWAHUtils.convertSortedIndexListToBitmap(spos);
+				subs = makeExclusive(subs);
 			}
-			bitsToRemove = atts.and(subs);
 						
 		} else {
 			//make a mega-subclass BM
-			EWAHCompressedBitmap subs = new EWAHCompressedBitmap();
 			for (int cbit : this.inverseCategoryBits) {
 				EWAHCompressedBitmap theseSubs = this.getKnowledgeBase().getSubClasses(cbit);
 				if (!this.inclusive) {
-					List<Integer> spos = theseSubs.getPositions();
-					spos.remove(categoryBit);
-					theseSubs = EWAHUtils.convertSortedIndexListToBitmap(spos);
+					theseSubs = makeExclusive(theseSubs);
 				}
 				subs = subs.or(theseSubs);
 			}
-			bitsToRemove = atts.and(subs);
 		}
+		EWAHCompressedBitmap bitsToRemove = atts.and(subs);
 		
 		if (bitsToRemove.cardinality() == 0) {
 			//no attributes fall under this category,
@@ -194,7 +188,7 @@ public class RemoveByCategorySimulatedData extends AbstractSimulatedData {
 			LOG.info("All attributes in this set are within the category "+category);
 			return newBMs.toArray(new EWAHCompressedBitmap[newBMs.size()]);
 		} else {
-			LOG.info("Removing "+bitsToRemove.cardinality()+" attributes: "+	bitsToRemove.toString());
+			LOG.info("Removing "+bitsToRemove.cardinality()+" attributes: "+ bitsToRemove.toString());
 		}
 
 		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
@@ -304,6 +298,15 @@ public class RemoveByCategorySimulatedData extends AbstractSimulatedData {
 				return "No category found with id "+category;
 			}
 		}
+	}
+	
+	private EWAHCompressedBitmap makeExclusive (EWAHCompressedBitmap subs) {
+		if (!this.inclusive) {
+			List<Integer> spos = subs.getPositions();
+			spos.remove(categoryBit);
+			subs = EWAHUtils.convertSortedIndexListToBitmap(spos);
+		}
+		return subs;
 	}
 
 	
