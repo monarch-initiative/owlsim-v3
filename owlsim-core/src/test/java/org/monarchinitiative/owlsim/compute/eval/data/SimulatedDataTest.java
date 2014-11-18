@@ -7,12 +7,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.eval.data.LiftOneSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData.NoCategoryFoundException;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
+import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.impl.CURIEMapperImpl;
 import org.monarchinitiative.owlsim.kb.impl.LabelMapperImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -209,6 +211,42 @@ public class SimulatedDataTest {
 		}
 		LOG.info("Created a total of "+numSets+" from "+sets.size()+" individuals.");
 		return removedClasses;
+	}
+	
+	@Test
+	public void testLiftOneAnnotations() throws Exception {
+		load("mp-subset.ttl");
+		LiftOneSimulatedData data = new LiftOneSimulatedData(kb);
+
+		Map<Integer, EWAHCompressedBitmap[]> sets = data.createAssociations();
+		//save the classes that were removed
+		Set<String> removedClasses = new HashSet<String>();
+		Set<Integer> removedCBits = new HashSet<Integer>();
+		
+		for (int ibit : sets.keySet()) {
+			//get the individual
+			String i = kb.getIndividualId(ibit);
+			
+			//get the original individual class map
+			EWAHCompressedBitmap origBM =  kb.getDirectTypesBM(i);
+			//get the derived class sets for the individual
+			EWAHCompressedBitmap[] derivedBMs = sets.get(ibit);
+			if (derivedBMs.length == 0) {
+				LOG.info("No sets created for "+i);
+			}
+			for (EWAHCompressedBitmap bm : derivedBMs) {
+				EWAHCompressedBitmap removedBM = origBM.andNot(bm);
+//				LOG.info("For "+i+": removed "+ removedBM.cardinality()+ ": "+removedBM.toString());				
+				for (int cbit : removedBM.getPositions()) {
+					removedClasses.add(lm.getUniqueLabel(kb.getClassId(cbit)));	
+					removedCBits.add(cbit);
+				}
+				//numSets++;
+			}
+			//for each individual, the things removed == original
+			LOG.info("i= "+i+" orig="+origBM.toString()+" removed="+removedCBits.toString()+" in "+derivedBMs.length+" sets");
+			Assert.assertTrue("Bits missing: "+origBM.andNot(EWAHUtils.converIndexSetToBitmap(removedCBits)), origBM.andNotCardinality(EWAHUtils.converIndexSetToBitmap(removedCBits))==0);
+		}
 	}
 	
 	
