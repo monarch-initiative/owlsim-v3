@@ -45,7 +45,7 @@ public abstract class AbstractSimulatedData implements SimulatedData {
 		for (String iid : individualIds) {
 			int ibit = knowledgeBase.getIndividualIndex(iid);
 			EWAHCompressedBitmap cids = knowledgeBase.getDirectTypesBM(iid);
-			LOG.info("Creating simulated data for "+iid+" with "+cids.cardinality()+" attributes");
+			LOG.info("Creating simulated data for "+iid+" with "+cids.cardinality()+" attributes: "+cids.getPositions().toString());
 			bms.put(ibit,createAttributeSets(cids));
 		}
 		return bms;
