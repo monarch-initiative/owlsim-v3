@@ -115,9 +115,12 @@ public class ICStatsCalculator {
 	 */
 	public DescriptiveStatistics getICStatsForAttributesByBM(EWAHCompressedBitmap attsBM) {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
-		for (int bit : attsBM) {
-			Double ic = this.getInformationContentByClassIndex(bit);
-			ds.addValue(ic);
+		ds.addValue(0.0);
+		if (attsBM != null) {
+			for (int bit : attsBM) {
+				Double ic = this.getInformationContentByClassIndex(bit);
+				ds.addValue(ic);
+			}
 		}
 		return ds;
 	}
