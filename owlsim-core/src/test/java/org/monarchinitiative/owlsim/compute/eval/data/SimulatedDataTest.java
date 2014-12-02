@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.eval.data.LiftAllSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.LiftOneSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData.NoCategoryFoundException;
@@ -249,6 +250,50 @@ public class SimulatedDataTest {
 		}
 	}
 	
+	@Test
+	public void testLiftAllAnnotations() throws Exception {
+		this.testLiftAllAnnotationsByLevel(-1);
+	
+		this.testLiftAllAnnotationsByLevel(1);
+		
+		this.testLiftAllAnnotationsByLevel(3);
+	}
+	
+	private void testLiftAllAnnotationsByLevel(int numLevels) throws Exception {
+
+		load("mp-subset.ttl");
+		LiftAllSimulatedData data = new LiftAllSimulatedData(kb);
+
+		if (numLevels > 0) {
+			data.setNumLevels(numLevels);
+		} else {
+			//numLevels == default = 1
+			numLevels = 1;
+		}
+		
+		Map<Integer, EWAHCompressedBitmap[]> sets = data.createAssociations();
+		//save the classes that were removed
+		
+		for (int ibit : sets.keySet()) {
+			//get the individual
+			String i = kb.getIndividualId(ibit);
+			
+			//get the original individual class map
+			EWAHCompressedBitmap origBM =  kb.getDirectTypesBM(i);
+			//get the derived class sets for the individual
+			EWAHCompressedBitmap[] derivedBMs = sets.get(ibit);
+			if (derivedBMs.length == 0) {
+				LOG.info("No sets created for "+i);
+			}
+			//there should be |derivedBM| == numLevels
+			Assert.assertTrue("Derived datasets n="+derivedBMs.length+" (should be ="+numLevels+")", derivedBMs.length==numLevels);
+			for (EWAHCompressedBitmap bm : derivedBMs) {
+				EWAHCompressedBitmap removedBM = origBM.andNot(bm);
+				//the items removed from the derivedBM should be == original
+				Assert.assertTrue("missing: "+origBM.andNotCardinality(removedBM),origBM.equals(removedBM));
+			}
+		}
+	}
 	
 	private void load(String fn) throws OWLOntologyCreationException {
 		OWLLoader loader = new OWLLoader();
