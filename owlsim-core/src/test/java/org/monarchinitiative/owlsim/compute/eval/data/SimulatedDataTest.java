@@ -9,8 +9,10 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.stats.ICStatsCalculator;
+import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.eval.data.LiftAllSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.LiftOneSimulatedData;
+import org.monarchinitiative.owlsim.eval.data.RandomChooseNSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData.NoCategoryFoundException;
 import org.monarchinitiative.owlsim.eval.data.RemoveByICThresholdSimulatedData;
@@ -19,9 +21,13 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
+import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.kb.impl.CURIEMapperImpl;
 import org.monarchinitiative.owlsim.kb.impl.LabelMapperImpl;
+import org.semanticweb.elk.owlapi.ElkReasonerFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
@@ -347,10 +353,74 @@ public class SimulatedDataTest {
 		
 	}
 	
+	@Test
+	public void testRandomChooseNData() throws Exception {
+		LOG.info("Creating ontology");
+		this.create(2000,2,100);
+		LOG.info("Finished creating ontology");
+
+		//test defaults
+		testRandomChooseNWithParams(-1,-1); 
+		//decent sizes
+		testRandomChooseNWithParams(5, 2);
+
+		//bogus sizes - should resize
+		testRandomChooseNWithParams(200, 5000);
+	}
+	
+	private void testRandomChooseNWithParams(int numSets, int setLength) throws Exception {
+
+		RandomChooseNSimulatedData data = new RandomChooseNSimulatedData(kb);
+
+		if (setLength > 0) {
+			data.setSetLength(setLength);
+			Assert.assertTrue(data.getSetLength() == setLength);
+		}
+		
+		if (numSets > 0) {
+			data.setNumSets(numSets);
+			Assert.assertTrue(data.getNumSets() == numSets);
+		}
+		
+		LOG.info("Test creating random subsets with numSets="+numSets+", setLength="+setLength);
+		
+		Map<Integer, EWAHCompressedBitmap[]> sets = data.createAssociations();
+		//save the classes that were removed
+		LOG.info("Done creating associations for "+sets.size());
+		for (int ibit : sets.keySet()) {
+			//get the individual
+			String i = kb.getIndividualId(ibit);
+			
+			//get the original individual class map
+			EWAHCompressedBitmap origBM =  kb.getDirectTypesBM(i);
+
+			//get the derived class sets for the individual
+			EWAHCompressedBitmap[] derivedBMs = sets.get(ibit);
+			Assert.assertTrue("DerivedBM.size should be > "+ data.getNumSets()+ "; but is "+derivedBMs.length,
+					derivedBMs.length <= data.getNumSets());
+			for (EWAHCompressedBitmap bm : derivedBMs) {
+//				LOG.info("orig="+origBM+"; derived="+bm);
+				Assert.assertFalse("Orig and derived should not be equal", origBM.equals(bm));
+				if (origBM.cardinality() <= data.getSetLength()) {
+					Assert.assertTrue(bm.cardinality() == origBM.cardinality()-1);
+				} else {
+					Assert.assertTrue(bm.getPositions().size() == data.getSetLength());				
+				}
+			}
+		}
+	}
+	
 	private void load(String fn) throws OWLOntologyCreationException {
 		OWLLoader loader = new OWLLoader();
 		loader.load("src/test/resources/"+fn);
 		this.kb = loader.createKnowledgeBaseInterface();
+	}
+	
+	private void create(int numClasses, int avgParents, int numIndividuals) throws OWLOntologyCreationException {
+		OWLOntology ontology = 
+				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals).getOntology();
+		OWLReasonerFactory rf = new ElkReasonerFactory();
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
 	}
 	
 }
