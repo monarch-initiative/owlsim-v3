@@ -4,13 +4,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.stats.ICStatsCalculator;
 import org.monarchinitiative.owlsim.eval.data.LiftAllSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.LiftOneSimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData;
 import org.monarchinitiative.owlsim.eval.data.RemoveByCategorySimulatedData.NoCategoryFoundException;
+import org.monarchinitiative.owlsim.eval.data.RemoveByICThresholdSimulatedData;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
@@ -293,6 +296,55 @@ public class SimulatedDataTest {
 				Assert.assertTrue("missing: "+origBM.andNotCardinality(removedBM),origBM.equals(removedBM));
 			}
 		}
+	}
+	
+	@Test
+	public void testRemoveByICThreshold() throws Exception {
+		this.testRemoveByICThresholdByThreshold(-1.0);
+		this.testRemoveByICThresholdByThreshold(1.0);
+		
+	}
+	
+	private void testRemoveByICThresholdByThreshold(Double threshold) throws Exception {
+
+		load("mp-subset.ttl");
+		RemoveByICThresholdSimulatedData data = new RemoveByICThresholdSimulatedData(kb);
+		ICStatsCalculator icc = new ICStatsCalculator(kb);
+
+		if (threshold > 0) {
+			data.setICCutoff(threshold);
+		}
+		
+		Map<Integer, EWAHCompressedBitmap[]> sets = data.createAssociations();
+		//save the classes that were removed
+		
+		for (int ibit : sets.keySet()) {
+			//get the individual
+			String i = kb.getIndividualId(ibit);
+			
+			//get the original individual class map
+			EWAHCompressedBitmap origBM =  kb.getDirectTypesBM(i);
+			DescriptiveStatistics origds = icc.getICStatsForAttributesByBM(origBM);
+
+			//get the derived class sets for the individual
+			EWAHCompressedBitmap[] derivedBMs = sets.get(ibit);
+			
+			for (EWAHCompressedBitmap bm : derivedBMs) {
+				LOG.info("orig="+origBM+"; derived="+bm);
+				DescriptiveStatistics ds = icc.getICStatsForAttributesByBM(bm);
+				if (origBM.equals(bm)) {
+					Assert.assertTrue("set="+bm+"; orig="+origds.getSum()+"; derived="+ds.getSum()+
+							"; cutoff="+data.getICCutoff(),
+							(ds.getSum() == origds.getSum())); 
+					
+				} else {
+					Assert.assertTrue("set="+bm+"; orig="+origds.getSum()+"; derived="+ds.getSum()+
+						"; cutoff="+data.getICCutoff(),
+						(ds.getSum() < origds.getSum())); 
+				}
+			}
+		}
+		
 	}
 	
 	private void load(String fn) throws OWLOntologyCreationException {
