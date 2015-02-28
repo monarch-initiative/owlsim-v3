@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.jena.atlas.logging.Log;
+import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
@@ -14,6 +16,8 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
  */
 public class FilterEngine {
 	
+	private Logger LOG = Logger.getLogger(FilterEngine.class);
+
 	BMKnowledgeBase knowledgeBase;
 	//private Logger LOG = Logger.getLogger(FilterEngine.class);
 	
@@ -50,6 +54,7 @@ public class FilterEngine {
 		return ids;	
 	}
 
+	// returns true if id has properties that match Filter
 	private boolean test(String id, Filter filter) throws UnknownFilterException {
 		if (filter instanceof FilterSet) {
 			FilterSet fs = (FilterSet)filter;
@@ -63,6 +68,7 @@ public class FilterEngine {
 		else if (filter instanceof PropertyValueFilter) {
 			PropertyValueFilter fpv = (PropertyValueFilter)filter;
 			Set<Object> values = knowledgeBase.getPropertyValues(id, fpv.getPropertySymbol());
+			LOG.info(id+ " VALs="+values);
 			boolean contains = false;
 			if (values.contains(fpv.getFiller()))
 				contains = true;

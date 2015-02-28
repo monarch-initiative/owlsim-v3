@@ -10,5 +10,5 @@ AnnotationProperty: ap
 
 Individual: ia Types: a Facts: op ib
 Individual: ib Types: b Facts: dp "foo"
-Individual: iabc Types: a, b Annotations: ap "foo"
+Individual: iabc Types: a, b Annotations: ap "bar"
 

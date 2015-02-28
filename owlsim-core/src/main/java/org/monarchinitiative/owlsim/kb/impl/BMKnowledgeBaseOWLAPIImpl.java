@@ -29,6 +29,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -340,9 +342,27 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			if (ax instanceof OWLPropertyAssertionAxiom) {
 				OWLPropertyAssertionAxiom paa = (OWLPropertyAssertionAxiom)ax;
 				OWLPropertyExpression p = paa.getProperty();
-				if (p instanceof OWLObjectProperty) {
-					String pid = curieMapper.getShortForm(((OWLObjectProperty) p).getIRI());
+				if (p instanceof OWLObjectProperty ||
+						p instanceof OWLDataProperty) {
+					String pid;
+					if (p instanceof OWLObjectProperty)
+						pid = curieMapper.getShortForm(((OWLObjectProperty) p).getIRI());
+					else
+						pid = curieMapper.getShortForm(((OWLDataProperty) p).getIRI());
 					OWLPropertyAssertionObject obj = paa.getObject();
+					if (obj instanceof OWLLiteral) {
+						addPropertyValue(pvm,pid, ((OWLLiteral)obj).getLiteral());
+					}
+					else if (obj instanceof OWLNamedIndividual) {
+						addPropertyValue(pvm,pid,
+								curieMapper.getShortForm(((OWLNamedIndividual) obj).getIRI()));
+						
+					}
+					
+				}
+				else if (false) {
+					String pid = curieMapper.getShortForm(((OWLDataProperty) p).getIRI());
+					OWLLiteral obj = ((OWLDataPropertyAssertionAxiom)paa).getObject();
 					if (obj instanceof OWLLiteral) {
 						addPropertyValue(pvm,pid, ((OWLLiteral)obj).getLiteral());
 					}

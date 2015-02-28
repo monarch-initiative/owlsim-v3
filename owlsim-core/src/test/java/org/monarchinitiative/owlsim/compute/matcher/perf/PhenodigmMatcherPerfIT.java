@@ -46,7 +46,8 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				6,
 				"Scrotal hypoplasia",
 				"Renal cyst",
-				"Micrognathia");		Level level = Level.DEBUG;
+				"Micrognathia");		
+		Level level = Level.DEBUG;
 		LOG.setLevel(level );
 		LOG.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);

@@ -14,10 +14,12 @@ public class FilterEngineTest extends AbstractFilterEngineTest {
 		
 		
 		// TODO - allow shortForms in properties
-		PropertyValueFilter pvf = PropertyValueFilter.create("http://x.org/op", "http://x.org/ib", false);
-		testFilter(pvf, "http://x.org/ia");
+		PropertyValueFilter opvf = PropertyValueFilter.create("http://x.org/op", "http://x.org/ib", false);
+		testFilter(opvf, "http://x.org/ia");
 		
 		// TODO - test other owl property assertion types
+		PropertyValueFilter dpvf = PropertyValueFilter.create("http://x.org/dp", "foo", false);
+		testFilter(dpvf, "http://x.org/ib");
 		
 		// TODO - test identifier (individual) filter
 	}
