@@ -219,6 +219,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return classNodeArray.length;
 	}
 
+
+	
 	/**
 	 * @return set of all individual identifiers
 	 */
@@ -414,6 +416,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					clsIndex, 
 					subs);
 			
+			Set<Integer> individualInts = new HashSet<Integer>();
+			for (OWLClassAssertionAxiom ax : owlOntology.getClassAssertionAxioms(c)) {
+				if (ax.getIndividual().isNamed()) {
+					individualInts.add(getIndex(ax.getIndividual().asOWLNamedIndividual()));
+				}
+			}
+			ontoEWAHStore.setDirectIndividuals(clsIndex, individualInts);
+			
 		}
 		for (OWLNamedIndividual i : individualsInSignature) {
 			int individualIndex = 	getIndex(i);
@@ -526,6 +536,38 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Node<OWLNamedIndividual> getIndividualNode(int index) {
 		return individualNodeArray[index];
 	}
+	
+	/**
+	 * @param cix
+	 * @return bitmap
+	 */
+	public EWAHCompressedBitmap getDirectIndividualsBM(int cix) {
+		return ontoEWAHStore.getDirectIndividuals(cix);
+	}
+	
+	@Override
+	public EWAHCompressedBitmap getIndividualsBM(String classId) {
+		return getIndividualsBM(getClassIndex(classId));
+	}
+	
+	@Override
+	public EWAHCompressedBitmap getIndividualsBM(int classIndex) {
+		EWAHCompressedBitmap subsBM = getSubClasses(classIndex);
+		EWAHCompressedBitmap indsBM = null;
+		// Note this implementation iterates through all subclasses
+		// combining individuals; it is too expensive to store all inferred inds by class
+		for (int subcix : subsBM.getPositions()) {
+			EWAHCompressedBitmap bm = getDirectIndividualsBM(subcix);
+			if (indsBM == null) {
+				indsBM = bm;
+			}
+			else {
+				indsBM = indsBM.or(bm);
+			}
+		}
+		return indsBM;
+	}
+	
 
 	/**
 	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
@@ -820,6 +862,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public int[] getIndividualCountPerClassArray() {
 		return individualCountPerClassArray;
 	}
+	
+	
 
 	@Override
 	public Map<String, Set<Object>> getPropertyValueMap(String individualId) {
@@ -880,6 +924,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return ontoEWAHStore.getDirectTypes(classBits, getClassIndex(classId));
 
 	}
+
+
 
 
 
