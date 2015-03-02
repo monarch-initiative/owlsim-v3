@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -38,7 +39,12 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 	@Inject
 	private BayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
-		calculateConditionalProbabilities(kb);
+		try {
+			calculateConditionalProbabilities(kb);
+		} catch (IncoherentStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -54,7 +60,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		return "bayesian-network";
 	}
 
-	public void calculateConditionalProbabilities(BMKnowledgeBase kb) {
+	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException {
 		cpi = TwoStateConditionalProbabilityIndex.create(kb);
 		cpi.calculateConditionalProbabilities(kb);
 	}

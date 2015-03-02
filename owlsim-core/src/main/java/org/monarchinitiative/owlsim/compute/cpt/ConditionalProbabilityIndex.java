@@ -20,9 +20,9 @@ public interface ConditionalProbabilityIndex {
 
 	public Double getConditionalProbability(int clsIndex, int parentsStatesIndex);
 	public void setConditionalProbabilityTableRow(int childClassIndex, int parentsStatesIndex, int numStates, 
-			double cp);
+			double cp) throws IncoherentStateException;
 	
-	public void calculateConditionalProbabilities(BMKnowledgeBase kb);
+	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException;
 	public int getNumberOfParentStates(int childClassIndex);
 	public Map<Integer, Character> getParentsToStateMapping(int clsIndex, int parentsState);
 
