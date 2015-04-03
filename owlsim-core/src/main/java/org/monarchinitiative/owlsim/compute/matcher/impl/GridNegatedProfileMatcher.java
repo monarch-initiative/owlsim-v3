@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;

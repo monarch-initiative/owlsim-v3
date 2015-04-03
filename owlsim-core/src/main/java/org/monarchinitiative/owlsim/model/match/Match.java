@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.model.match;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 /**
  * Representation of a match between a Query and some individual (aka item, element, label)

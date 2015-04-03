@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.compute.kb.impl;
 
-import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,20 +7,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.io.JSONWriter;
-import org.monarchinitiative.owlsim.io.OWLLoader;
-import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.Match;
-import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import com.google.common.collect.Sets;
-import com.google.monitoring.runtime.instrumentation.common.com.google.common.io.Resources;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**

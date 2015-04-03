@@ -40,7 +40,7 @@ public class BasicProbabilisticProfileMatcherHPPerfIT extends AbstractProfileMat
 				"Micrognathia");
 		Level level = Level.INFO;
 		LOG.setLevel(level );
-		LOG.getRootLogger().setLevel(level);
+		Logger.getRootLogger().setLevel(level);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		
 	}

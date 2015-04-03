@@ -13,12 +13,9 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-
-import com.google.common.io.Resources;
 
 public class AbstractProfileMatcherTest {
 

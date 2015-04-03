@@ -2,9 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
 
-import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherMPTest.DISEASE;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;

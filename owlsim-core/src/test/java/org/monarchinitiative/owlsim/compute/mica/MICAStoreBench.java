@@ -12,7 +12,6 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import com.google.caliper.Benchmark;
-import com.google.caliper.runner.CaliperMain;
 
 /**
  * Tests performance of MICAStore using caliper
