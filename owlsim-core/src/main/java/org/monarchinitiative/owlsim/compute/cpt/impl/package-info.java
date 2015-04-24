@@ -1,7 +1,6 @@
 /**
+ * Default implementations
  * 
- */
-/**
  * @author cjm
  *
  */

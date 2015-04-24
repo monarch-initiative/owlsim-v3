@@ -1,19 +1,29 @@
 package org.monarchinitiative.owlsim.compute.cpt.impl;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
+/**
+ * An implementation of {@link ConditionalProbabilityIndex} in which only two states are
+ * possible:
+ * 
+ *  0 = u (unknown/false/off)
+ *  1 = t (true/on)
+ *  
+ * TODO: Put some methods into an abstract class ready for implementation of a
+ * 3 state CPI (false,unknown,true)
+ * 
+ * @author cjm
+ *
+ */
 public class TwoStateConditionalProbabilityIndex implements ConditionalProbabilityIndex {
 
 	private Logger LOG = Logger.getLogger(TwoStateConditionalProbabilityIndex.class);
@@ -26,10 +36,16 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 	Double[][] conditionalProbabilityByChildParentState;
 	Map<Integer,Character>[][] parentStateMapByIndex;
 	
+	/**
+	 * @param size
+	 */
 	public TwoStateConditionalProbabilityIndex(int size) {
 		super();
 		init(size);
 	}
+	/**
+	 * @param kb
+	 */
 	public TwoStateConditionalProbabilityIndex(BMKnowledgeBase kb) {
 		super();
 		this.kb = kb;
@@ -41,10 +57,18 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 				 (Map<Integer,Character>[][])new Map[size][];
 	}
 	
+	/**
+	 * @param kb
+	 * @return CPI
+	 */
 	public static ConditionalProbabilityIndex create(BMKnowledgeBase kb) {
 		return new TwoStateConditionalProbabilityIndex(kb.getNumClassNodes());
 	}
 	
+	/**
+	 * @param size
+	 * @return CPI
+	 */
 	public static ConditionalProbabilityIndex create(int size) {
 		return new TwoStateConditionalProbabilityIndex(size);
 	}
