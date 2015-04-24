@@ -1,9 +1,7 @@
 package org.monarchinitiative.owlsim.compute.mica;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -15,17 +13,10 @@ import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
-import org.monarchinitiative.owlsim.model.match.Match;
-import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
-
-import com.google.caliper.Benchmark;
-import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
  * Tests performance of MICAStore

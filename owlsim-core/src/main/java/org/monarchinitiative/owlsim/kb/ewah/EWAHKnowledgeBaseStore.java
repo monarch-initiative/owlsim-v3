@@ -2,8 +2,6 @@ package org.monarchinitiative.owlsim.kb.ewah;
 
 import java.util.Set;
 
-import org.apache.jena.atlas.logging.Log;
-
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**

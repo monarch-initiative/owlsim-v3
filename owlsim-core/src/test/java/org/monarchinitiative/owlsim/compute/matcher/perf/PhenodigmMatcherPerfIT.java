@@ -49,7 +49,7 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				"Micrognathia");		
 		Level level = Level.DEBUG;
 		LOG.setLevel(level );
-		LOG.getRootLogger().setLevel(level);
+		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		

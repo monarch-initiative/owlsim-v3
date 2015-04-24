@@ -1,15 +1,11 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import static org.junit.Assert.*;
-
 import java.io.FileNotFoundException;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
-import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;

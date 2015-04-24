@@ -1,10 +1,8 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -46,7 +44,7 @@ public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatche
 				"not zebrafish");
 		Level level = Level.DEBUG;
 		LOG.setLevel(level );
-		LOG.getRootLogger().setLevel(level);
+		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		

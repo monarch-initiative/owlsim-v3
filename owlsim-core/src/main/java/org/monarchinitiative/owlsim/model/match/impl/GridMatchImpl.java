@@ -1,7 +1,5 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.commons.math3.stat.inference.TestUtils;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.model.match.Match;
 

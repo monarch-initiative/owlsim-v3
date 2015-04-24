@@ -1,16 +1,12 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
-import org.monarchinitiative.owlsim.kb.filter.Filter;
-import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
-import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 

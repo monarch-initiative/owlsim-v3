@@ -3,15 +3,11 @@ package org.monarchinitiative.owlsim.compute.mica;
 import java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 

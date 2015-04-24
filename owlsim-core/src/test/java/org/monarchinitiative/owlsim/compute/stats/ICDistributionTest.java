@@ -1,19 +1,16 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.apache.jena.atlas.lib.ListUtils;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
-import org.monarchinitiative.owlsim.compute.stats.ICDistribution;
 import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
@@ -22,7 +19,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.collect.Lists;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 public class ICDistributionTest {
