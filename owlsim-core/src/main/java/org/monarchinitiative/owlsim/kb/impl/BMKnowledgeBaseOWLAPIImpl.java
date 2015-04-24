@@ -145,8 +145,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			OWLReasonerFactory rf) {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology,owlDataOntology, rf);
 	}
-	
-	
+
+
 
 	public KBMetadata getKbMetdata() {
 		return kbMetdata;
@@ -169,7 +169,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		for (OWLAnnotationAssertionAxiom aaa : ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION)) {
 			if (aaa.getProperty().isLabel()) {
 				if (aaa.getSubject() instanceof IRI &&
-					aaa.getValue() instanceof OWLLiteral) {
+						aaa.getValue() instanceof OWLLiteral) {
 					labelMapper.add(getShortForm((IRI) aaa.getSubject()), 
 							((OWLLiteral) aaa.getValue()).getLiteral());
 					n++;
@@ -218,6 +218,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public int getNumClassNodes() {
 		return classNodeArray.length;
 	}
+
+
 
 	/**
 	 * @return set of all individual identifiers
@@ -356,9 +358,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					else if (obj instanceof OWLNamedIndividual) {
 						addPropertyValue(pvm,pid,
 								curieMapper.getShortForm(((OWLNamedIndividual) obj).getIRI()));
-						
+
 					}
-					
+
 				}
 				else if (false) {
 					String pid = curieMapper.getShortForm(((OWLDataProperty) p).getIRI());
@@ -369,13 +371,13 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					else if (obj instanceof OWLNamedIndividual) {
 						addPropertyValue(pvm,pid,
 								curieMapper.getShortForm(((OWLNamedIndividual) obj).getIRI()));
-						
+
 					}
-					
+
 				}
 			}
 		}
-		
+
 	}
 
 
@@ -413,7 +415,18 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ontoEWAHStore.setSubClasses(
 					clsIndex, 
 					subs);
-			
+
+			// direct individuals are those asserted to be of type c or anything equivalent to c
+			Set<Integer> individualInts = new HashSet<Integer>();
+			for (OWLClass ec : owlReasoner.getEquivalentClasses(c).getEntities()) {
+				for (OWLClassAssertionAxiom ax : owlOntology.getClassAssertionAxioms(ec)) {
+					if (ax.getIndividual().isNamed()) {
+						individualInts.add(getIndex(ax.getIndividual().asOWLNamedIndividual()));
+					}
+				}
+			}
+			ontoEWAHStore.setDirectIndividuals(clsIndex, individualInts);
+
 		}
 		for (OWLNamedIndividual i : individualsInSignature) {
 			int individualIndex = 	getIndex(i);
@@ -424,7 +437,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ontoEWAHStore.setTypes(
 					individualIndex, 
 					getIntegersForClassSet(owlReasoner.getTypes(i, false)));
-		
+
 			// Treat CLassAssertion( ComplementOf(c) i) as a negative assertion
 			Set<Integer> ncs = new HashSet<Integer>();
 			for (OWLClassAssertionAxiom cx : owlOntology.getClassAssertionAxioms(i)) {
@@ -518,7 +531,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Node<OWLClass> getClassNode(int index) {
 		return classNodeArray[index];
 	}
-	
+
 	/**
 	 * @param index
 	 * @return OWLClass Node that corresponds to this index
@@ -526,6 +539,38 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Node<OWLNamedIndividual> getIndividualNode(int index) {
 		return individualNodeArray[index];
 	}
+
+	/**
+	 * @param cix
+	 * @return bitmap
+	 */
+	public EWAHCompressedBitmap getDirectIndividualsBM(int cix) {
+		return ontoEWAHStore.getDirectIndividuals(cix);
+	}
+
+	@Override
+	public EWAHCompressedBitmap getIndividualsBM(String classId) {
+		return getIndividualsBM(getClassIndex(classId));
+	}
+
+	@Override
+	public EWAHCompressedBitmap getIndividualsBM(int classIndex) {
+		EWAHCompressedBitmap subsBM = getSubClasses(classIndex);
+		EWAHCompressedBitmap indsBM = null;
+		// Note this implementation iterates through all subclasses
+		// combining individuals; it is too expensive to store all inferred inds by class
+		for (int subcix : subsBM.getPositions()) {
+			EWAHCompressedBitmap bm = getDirectIndividualsBM(subcix);
+			if (indsBM == null) {
+				indsBM = bm;
+			}
+			else {
+				indsBM = indsBM.or(bm);
+			}
+		}
+		return indsBM;
+	}
+
 
 	/**
 	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
@@ -548,7 +593,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 		return cids;
 	}
-	
+
 	public Set<String> getClassIds(EWAHCompressedBitmap bm) {
 		Set<String> cids = new HashSet<String>();
 		for (int x : bm) {
@@ -692,7 +737,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	protected EWAHCompressedBitmap getDirectTypesBM(OWLNamedIndividual i) {
 		return ontoEWAHStore.getDirectTypes(getIndex(i));
 	}
-	
+
 	/**
 	 * @param i
 	 * @param classFilter
@@ -729,7 +774,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return ontoEWAHStore.getNegatedTypes(getIndividualIndex(id));
 	}
 
-	
+
 	/**
 	 * @param id
 	 * @return bitmap representation of all (direct and indirect) instantiated classes
@@ -738,7 +783,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		Preconditions.checkNotNull(id);
 		return ontoEWAHStore.getDirectTypes(getIndividualIndex(id));
 	}
-	
+
 	/**
 	 * @param id
 	 * @return bitmap representation of all (direct and indirect) instantiated classes that are subclasses of classId
@@ -748,7 +793,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		Preconditions.checkNotNull(classId);
 		return ontoEWAHStore.getDirectTypes(getIndividualIndex(id), getClassIndex(classId));
 	}
-	
+
 
 
 	private OWLClass getOWLThing() {
@@ -821,6 +866,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return individualCountPerClassArray;
 	}
 
+
+
 	@Override
 	public Map<String, Set<Object>> getPropertyValueMap(String individualId) {
 		return propertyValueMapMap.get(individualId);
@@ -858,12 +905,12 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	@Override
 	public EWAHCompressedBitmap getFilteredTypesBM(Set<String> ids,
 			String classId) {
-		
+
 		Set<Integer> classBits = new HashSet<Integer>();
 		for (String id : ids) {
 			classBits.add(this.getClassIndex(id));
 		}
-		
+
 		return ontoEWAHStore.getTypes(classBits, getClassIndex(classId));
 
 	}
@@ -871,15 +918,17 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	public EWAHCompressedBitmap getFilteredDirectTypesBM(Set<String> classIds,
 			String classId) {
-		
+
 		Set<Integer> classBits = new HashSet<Integer>();
 		for (String id : classIds) {
 			classBits.add(this.getClassIndex(id));
 		}
-		
+
 		return ontoEWAHStore.getDirectTypes(classBits, getClassIndex(classId));
 
 	}
+
+
 
 
 

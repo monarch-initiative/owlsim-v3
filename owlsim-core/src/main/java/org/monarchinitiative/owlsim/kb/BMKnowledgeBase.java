@@ -235,6 +235,20 @@ public interface BMKnowledgeBase {
 	public int[] getIndividualCountPerClassArray();
 
 	/**
+	 * @param classId - an identifier for a class
+	 * @return a bitmap representation of only the individuals that (directly or indirectly)
+	 *   instantiate classId
+	 */
+	public EWAHCompressedBitmap getIndividualsBM(String classId);
+
+	/**
+	 * @param classIndex - index for a class
+	 * @return a bitmap representation of only the individuals that (directly or indirectly)
+	 *   instantiate classId
+	 */
+	public EWAHCompressedBitmap getIndividualsBM(int classIndex);
+
+	/**
 	 * @param individualId
 	 * @return property-value map
 	 */
@@ -260,6 +274,7 @@ public interface BMKnowledgeBase {
 	 * @return root class Id
 	 */
 	public int getRootIndex();
+
 
 
 

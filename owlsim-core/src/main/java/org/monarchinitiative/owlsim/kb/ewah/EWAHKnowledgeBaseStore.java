@@ -25,13 +25,14 @@ public class EWAHKnowledgeBaseStore {
 	
 	private int numberOfClasses;
 	private int numberOfIndividuals;
-	private EWAHCompressedBitmap[] storedSuperClasses;
-	private EWAHCompressedBitmap[] storedDirectSuperClasses;
-	private EWAHCompressedBitmap[] storedSubClasses;
-	private EWAHCompressedBitmap[] storedDirectSubClasses;
-	private EWAHCompressedBitmap[] storedTypes;
-	private EWAHCompressedBitmap[] storedDirectTypes;
-	private EWAHCompressedBitmap[] storedNegatedTypes;
+	private EWAHCompressedBitmap[] storedSuperClasses;        // by class
+	private EWAHCompressedBitmap[] storedDirectSuperClasses;  // by class
+	private EWAHCompressedBitmap[] storedSubClasses;          // by class
+	private EWAHCompressedBitmap[] storedDirectSubClasses;    // by class
+	private EWAHCompressedBitmap[] storedTypes;               // by ind
+	private EWAHCompressedBitmap[] storedDirectTypes;         // by ind
+	private EWAHCompressedBitmap[] storedNegatedTypes;        // by ind
+	private EWAHCompressedBitmap[] storedDirectIndividuals;   // by class
 	
 	/**
 	 * @param numberOfClasses
@@ -49,6 +50,7 @@ public class EWAHKnowledgeBaseStore {
 		storedTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedDirectTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedNegatedTypes =  new EWAHCompressedBitmap[numberOfIndividuals];
+		storedDirectIndividuals =  new EWAHCompressedBitmap[numberOfClasses];
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class EWAHKnowledgeBaseStore {
 		return bm.and(subclasses);
 
 	}
-	
+		
 	/**
 	 * @param individualIndex
 	 * @return all classes directly instantiated by individual
@@ -179,8 +181,14 @@ public class EWAHKnowledgeBaseStore {
 			return storedTypes[individualIndex];
 	}
 	
-	
-	
+	/**
+	 * @param classIndex
+	 * @return all individuals directly asserted to be of the specified type
+	 */
+	public EWAHCompressedBitmap getDirectIndividuals(int classIndex) {
+		return storedDirectIndividuals[classIndex];
+	}
+
 	
 	/**
 	 * Adds stored set of superClasses for a class. This must be called for
@@ -272,7 +280,22 @@ public class EWAHKnowledgeBaseStore {
 	public void setNegatedTypes(int individualIndex, Set<Integer> types) {
 		 storedNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
 	}
+	
+	/**
+	 * individuals that directly instantiate a class
+	 * 
+	 * note we have no corresponding index for direct plus indirect; this
+	 * would explode the cache. Instead the caller should iterate through subclasses
+	 * calling this
+	 * 
+	 * @param classIndex
+	 * @param individuals
+	 */
+	public void setDirectIndividuals(int classIndex, Set<Integer> individuals) {
+		storedDirectIndividuals[classIndex] = EWAHUtils.converIndexSetToBitmap(individuals);
+	}
 
+	
 	@Override
 	public String toString() {
 		return "OntoEWAH for ontology with "+numberOfClasses+" classes and "+
