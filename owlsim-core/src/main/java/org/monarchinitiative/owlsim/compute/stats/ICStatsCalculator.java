@@ -36,6 +36,11 @@ public class ICStatsCalculator {
 	 * per class index in the supplied knowledgeBase.
 	 * IC is defined as the negative log of the probability
 	 * for a given class used in an annotation.
+	 * 
+	 * classes with no inferred individuals will have a frequency of zero,
+	 * and hence infinite IC. To avoid problems we assume every class has
+	 * a frequency of at least 1.
+	 * 
 	 * @param kb
 	 */
 	public ICStatsCalculator(BMKnowledgeBase kb) {
@@ -50,7 +55,7 @@ public class ICStatsCalculator {
 			int freq = frequencyByClassIndex[i];
 			informationContentByClassIndex[i] = 
 					freq == 0 ?
-							null :
+							-Math.log(freq / (double)numInds) :
 								-Math.log(freq / (double)numInds);
 		}
 	}

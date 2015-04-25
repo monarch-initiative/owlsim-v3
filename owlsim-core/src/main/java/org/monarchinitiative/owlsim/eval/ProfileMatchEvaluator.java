@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.eval;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
@@ -14,7 +15,9 @@ import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 //import org.junit.Assert;
@@ -53,6 +56,11 @@ public class ProfileMatchEvaluator {
 		ProfileQuery q = tq.query;
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
+		LOG.info("|Matches|="+mp.getMatches().size());
+		if (mp.getMatches().size() == 0) {
+			LOG.error("No matches for "+tq+" using "+profileMatcher);
+			return false;
+		}
 
 		mp.calculateMatchSignificance(mp.getScores());
 		LOG.info("first match:"+mp.getMatches().get(0));
@@ -196,7 +204,7 @@ public class ProfileMatchEvaluator {
 	 * @param pm2
 	 * @return average average difference in ranking
 	 */
-	public Double compareMatchers(ProfileMatcher pm1, ProfileMatcher pm2) {
+	public MatcherComparisonResult compareMatchers(ProfileMatcher pm1, ProfileMatcher pm2) {
 		BMKnowledgeBase kb = pm1.getKnowledgeBase();
 		Set<String> inds = kb.getIndividualIdsInSignature();
 		double tdiff = 0;
@@ -215,8 +223,36 @@ public class ProfileMatchEvaluator {
 			tdiff += diff;
 			n++;
 		}
+		LOG.info("Total difference = "+tdiff + " / "+n+" runs");
+		double distance = tdiff / (double)n;
+		return new MatcherComparisonResult(pm1.getShortName(), pm2.getShortName(), distance);
+	}
+	
+	public class MatcherComparisonResult {
+		public String matcher1Type;
+		public String matcher2Type;
+		public Double distance;
+		public MatcherComparisonResult(String matcher1Type,
+				String matcher2Type, Double distance) {
+			super();
+			this.matcher1Type = matcher1Type;
+			this.matcher2Type = matcher2Type;
+			this.distance = distance;
+		}
 		
-		return tdiff / (double)n;
+		
 	}
 
+	public List<MatcherComparisonResult> compareAllMatchers(Set<ProfileMatcher> pms) {
+		List<MatcherComparisonResult> results = new ArrayList<MatcherComparisonResult>();
+		for (ProfileMatcher pm1 : pms) {
+			for (ProfileMatcher pm2 : pms) {
+				if (pm1.equals(pm2))
+					continue;
+				results.add(compareMatchers(pm1, pm2));
+			}			
+		}
+		return results;
+	
+	}
 }

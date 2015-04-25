@@ -107,7 +107,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	/**
 	 * @param owlOntology
-	 * @param owlDataOntology
+	 * @param owlDataOntology TODO - fix this
 	 * @param rf
 	 */
 	@Inject
@@ -140,6 +140,12 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf);
 	}
 
+	/**
+	 * @param owlOntology
+	 * @param owlDataOntology
+	 * @param rf
+	 * @return
+	 */
 	public static BMKnowledgeBase create(OWLOntology owlOntology, 
 			OWLOntology owlDataOntology,
 			OWLReasonerFactory rf) {
@@ -272,9 +278,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		individualNodes = new HashSet<Node<OWLNamedIndividual>>();
 		Set<OWLClass> classesInSignature;
 		classesInSignature = owlOntology.getClassesInSignature(true);
+		LOG.info("|classes|=" + classesInSignature.size());
 		classesInSignature.add(getOWLThing());
 		classesInSignature.remove(getOWLNothing());
 		individualsInSignature = owlOntology.getIndividualsInSignature(true);
+		LOG.info("|individuals|=" + individualsInSignature.size());
 		classToNodeMap = new HashMap<OWLClass,Node<OWLClass>>();
 		individualToNodeMap = new HashMap<OWLNamedIndividual,Node<OWLNamedIndividual>>();
 		classNodeToIntegerMap = new HashMap<Node<OWLClass>, Integer>();

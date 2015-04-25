@@ -25,7 +25,7 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 
 	
 	private int[] frequencyByClassIndex;
-	private ICStatsCalculator icc;
+	private ICStatsCalculator icStatsCalculator;
 	private final BMKnowledgeBase knowledgeBase;
 	
 
@@ -37,7 +37,7 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 			BMKnowledgeBase knowledgeBase) {
 		super();
 		this.knowledgeBase = knowledgeBase;
-		this.icc = new ICStatsCalculator(knowledgeBase);
+		this.icStatsCalculator = new ICStatsCalculator(knowledgeBase);
 	}
 
 	public int getFrequencyOfMostInformativeCommonAncestor(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM) {
@@ -72,11 +72,13 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 		
 		EWAHCompressedBitmap commonSubsumersBM = queryProfileBM.and(targetProfileBM);
 		IntIterator bitIterator = commonSubsumersBM.intIterator();
+
+		// bits are ordered
 		if (bitIterator.hasNext()) {
 			int bit = bitIterator.next();
 			String classId = knowledgeBase.getClassId(bit);
 			return new ClassInformationContentPair(classId,
-					icc.getInformationContentByClassIndex(bit));
+					icStatsCalculator.getInformationContentByClassIndex(bit));
 		}
 		else {
 			return null;

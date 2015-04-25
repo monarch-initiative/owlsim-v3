@@ -60,6 +60,10 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		return "bayesian-network";
 	}
 
+	/**
+	 * @param kb
+	 * @throws IncoherentStateException
+	 */
 	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException {
 		cpi = TwoStateConditionalProbabilityIndex.create(kb);
 		cpi.calculateConditionalProbabilities(kb);
@@ -76,15 +80,15 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		//double fpr = getFalsePositiveRate();
 		//double fnr = getFalseNegativeRate();
 		double sumOfProbs = 0.0;
-		int numClasses = knowledgeBase.getClassIdsInSignature().size();
-		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
-		EWAHCompressedBitmap negatedQueryProfileBM = null;
-		if (isUseNegation) {
-			LOG.info("Using negation*******");
-			QueryWithNegation nq = (QueryWithNegation)q;
-			negatedQueryProfileBM = getNegatedProfileBM(nq);
-			LOG.info("nqp=" + negatedQueryProfileBM);
-		}
+		//int numClasses = knowledgeBase.getClassIdsInSignature().size();
+		//EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
+//		EWAHCompressedBitmap negatedQueryProfileBM = null;
+//		if (isUseNegation) {
+//			LOG.info("Using negation*******");
+//			QueryWithNegation nq = (QueryWithNegation)q;
+//			negatedQueryProfileBM = getNegatedProfileBM(nq);
+//			LOG.info("nqp=" + negatedQueryProfileBM);
+//		}
 
 		Set<String> queryClassIds = q.getQueryClassIds();
 		MatchSet mp = MatchSetImpl.create(q);
@@ -116,6 +120,14 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		return mp;
 	}
 
+	/**
+	 * Calculate the probability of all queryClasses being on,
+	 * given 
+	 * 
+	 * @param queryClassIds
+	 * @param targetProfileBM
+	 * @return probability
+	 */
 	public double calculateProbability(Set<String> queryClassIds,
 			EWAHCompressedBitmap targetProfileBM) {
 		double cump = 1.0;
@@ -132,6 +144,13 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		return cump;
 	}
 
+	/**
+	 * probability of queryClass being true, given all targets are on
+	 * 
+	 * @param queryClassId
+	 * @param targetProfileBM
+	 * @return probability
+	 */
 	private double calculateProbability(String queryClassId,
 			EWAHCompressedBitmap targetProfileBM) {
 		BMKnowledgeBase kb = getKnowledgeBase();
@@ -154,13 +173,17 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 			double[] parentProbs = new double[pixs.size()];
 			LOG.info("calculating for parents");
 			for (int i=0; i<pixs.size(); i++) {
+				// TODO - cache, to avoid repeated calculations
 				parentProbs[i] = 
 						calculateProbability(pixs.get(i), targetProfileBM);
 			}
+			
 			int numParents = pixs.size();
 			// assume two states for now: will be extendable to yes, no, unknown
 			int numStates = (int) Math.pow(2, numParents);
 			double sump = 0; // TODO: use logs
+			
+			// Pr(Q | Parents) = sum of { Pr(Q | off, off, ..., off), ... } 
 			for (int parentState=0; parentState<numStates; parentState++) {
 				double cp = cpi.getConditionalProbability(qcix, parentState);
 				LOG.info(" cp="+cp+" for states="+parentState);
@@ -178,15 +201,10 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 					p *= onPixs.contains(pix) ? parentProbs[i] : 1-parentProbs[i];
 				}
 				sump += p * cp;
-			}			
+			}
 			LOG.info("Calculated probability for "+qcix+" ie "+kb.getClassId(qcix)+" = "+sump);
 
 			return sump;
 		}
 	}
-
-
-
-
-
 }

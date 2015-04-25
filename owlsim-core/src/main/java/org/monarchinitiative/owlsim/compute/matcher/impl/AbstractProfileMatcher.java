@@ -22,6 +22,7 @@ import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -107,6 +108,19 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return filterEngine.applyFilter(filter);
 	}
 	
+	protected ProfileQuery createProfileQuery(String individualId) {
+		EWAHCompressedBitmap bmi = knowledgeBase.getTypesBM(individualId);
+		Set<String> qcids = knowledgeBase.getClassIds(bmi);
+		ProfileQuery q = ProfileQueryImpl.create(qcids);
+		return q;
+	}
+
+	public MatchSet findMatchProfile(String individualId) {
+		ProfileQuery q = createProfileQuery(individualId);
+		return findMatchProfile(q);
+	}
+	
+
 	public MatchSet findMatchProfile(ProfileQuery q) {
 		MatchSet ms = findMatchProfileAll(q);
 		int limit = q.getLimit() == null ? 200 : q.getLimit();

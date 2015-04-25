@@ -33,7 +33,7 @@ public class OWLLoader {
 	OWLOntology owlDataOntology;
 	OWLReasoner owlReasoner;
 	OWLReasonerFactory owlReasonerFactory = new ElkReasonerFactory();
-	
+
 	/**
 	 * @param iri
 	 * @return OWL Ontology 
@@ -42,15 +42,15 @@ public class OWLLoader {
 	public OWLOntology loadOWL(IRI iri) throws OWLOntologyCreationException {
 		return getOWLOntologyManager().loadOntology(iri);
 	}
-	
+
 	/**
 	 * @param file
 	 * @return OWL Ontology
 	 * @throws OWLOntologyCreationException
 	 */
 	public OWLOntology loadOWL(File file) throws OWLOntologyCreationException {
-	    IRI iri = IRI.create(file);
-	    return getOWLOntologyManager().loadOntologyFromOntologyDocument(iri);	    
+		IRI iri = IRI.create(file);
+		return getOWLOntologyManager().loadOntologyFromOntologyDocument(iri);	    
 	}
 
 	/**
@@ -62,14 +62,14 @@ public class OWLLoader {
 	 */
 	public OWLOntology loadOWL(String path) throws OWLOntologyCreationException {
 		if (path.startsWith("http")) {
-			 return loadOWL(IRI.create(path));
+			return loadOWL(IRI.create(path));
 		}
 		else {
 			File file = new File(path);
 			return loadOWL(file);
 		}
 	}
-	
+
 	/**
 	 * @param iri
 	 * @throws OWLOntologyCreationException
@@ -78,7 +78,7 @@ public class OWLLoader {
 		owlOntology = getOWLOntologyManager().loadOntology(iri);
 		Preconditions.checkNotNull(owlOntology);	    
 	}
-	
+
 	/**
 	 * @param file
 	 * @throws OWLOntologyCreationException
@@ -87,8 +87,8 @@ public class OWLLoader {
 		owlOntology = loadOWL(file);
 		Preconditions.checkNotNull(owlOntology);	    
 	}
-	
-	
+
+
 
 	/**
 	 * Loads an OWL ontology from a URI or file
@@ -100,6 +100,19 @@ public class OWLLoader {
 		owlOntology = loadOWL(path);
 		Preconditions.checkNotNull(owlOntology);	    
 	}
+	
+	/**
+	 * Loads OWL ontologies from a URI or file
+	 * 
+	 * @param path
+	 * @throws OWLOntologyCreationException
+	 */
+	public void loadOntologies(String... paths) throws OWLOntologyCreationException {
+		for (String path : paths)
+			mergeOntology( loadOWL(path) );
+		Preconditions.checkNotNull(owlOntology);	    
+	}
+
 
 	/**
 	 * Loads an OWL ontology from a URI or file
@@ -112,7 +125,18 @@ public class OWLLoader {
 			mergeData( loadOWL(path) );
 		Preconditions.checkNotNull(owlDataOntology);	    
 	}
-	
+
+	private void mergeOntology(OWLOntology o) {
+		if (owlOntology == null) {
+			LOG.info("Ont ontology="+o);
+			owlOntology = o;
+		}
+		else {
+			LOG.info("Merging ont axioms from="+o);
+			owlOntology.getOWLOntologyManager().addAxioms(owlOntology, o.getAxioms());
+		}
+	}
+
 	private void mergeData(OWLOntology o) {
 		if (owlDataOntology == null) {
 			LOG.info("Data ontology="+o);
@@ -129,13 +153,13 @@ public class OWLLoader {
 			manager = OWLManager.createOWLOntologyManager();
 		return manager;
 	}
-	
+
 	/**
 	 * @return handle for a Bitmap-based Knowledge Base
 	 */
 	public BMKnowledgeBase createKnowledgeBaseInterface() {
 		// TODO: use factories, or injection
-		
+
 		return BMKnowledgeBaseOWLAPIImpl.create(owlOntology, owlDataOntology, owlReasonerFactory);
 	}
 }

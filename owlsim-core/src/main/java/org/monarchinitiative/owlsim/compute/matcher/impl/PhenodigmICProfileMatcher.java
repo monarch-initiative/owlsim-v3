@@ -93,7 +93,7 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 			
 			EWAHCompressedBitmap targetProfileDirectBM = knowledgeBase.getDirectTypesBM(itemId);
 			int tsize = targetProfileDirectBM.cardinality();
-			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
+			//LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 			
 			// note: this is an experimental implementation that
 			// does not make use of a MICA cache; it may be replaced by
@@ -143,6 +143,9 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 		ClassInformationContentPair mica = 
 				getMicaCalculator().getMostInformativeCommonAncestorWithIC(qbm,
 						tbm);
+		if (mica == null) {
+			LOG.error("No MICA between "+qbm+" -vs- "+tbm);
+		}
 		return  mica.ic;
 	}
 

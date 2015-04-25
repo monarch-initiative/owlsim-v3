@@ -1,11 +1,17 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator.MatcherComparisonResult;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
@@ -21,15 +27,45 @@ public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmVsGrid() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher1 = PhenodigmICProfileMatcher.create(kb);
 		ProfileMatcher profileMatcher2 = GridProfileMatcher.create(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		Double diff = eval.compareMatchers(profileMatcher1, profileMatcher2);
-		LOG.info("diff: "+diff);
+		MatcherComparisonResult result = eval.compareMatchers(profileMatcher1, profileMatcher2);
+		LOG.info("diff: "+result.distance);
 		//assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+		
+	}
+
+	@Test
+	public void testPhenodigmVsBN() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+		load();
+		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		ProfileMatcher profileMatcher1 = PhenodigmICProfileMatcher.create(kb);
+		ProfileMatcher profileMatcher2 = BayesianNetworkProfileMatcher.create(kb);
+		LabelMapper labelMapper = kb.getLabelMapper();
+		MatcherComparisonResult result = eval.compareMatchers(profileMatcher1, profileMatcher2);
+		LOG.info("diff: "+result.distance);
+		//assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+		
+	}
+	
+	@Test
+	public void testAll() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+		load();
+		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		Set<ProfileMatcher> pms = new HashSet<ProfileMatcher>();
+		pms.add(GridProfileMatcher.create(kb));
+		pms.add(PhenodigmICProfileMatcher.create(kb));
+		pms.add(BayesianNetworkProfileMatcher.create(kb));
+		pms.add(NaiveBayesFixedWeightProfileMatcher.create(kb));
+
+		List<MatcherComparisonResult> results = eval.compareAllMatchers(pms);
+		for (MatcherComparisonResult r : results) {
+			LOG.info(r.matcher1Type + " -vs- "+r.matcher2Type+ " DIST= "+r.distance);
+		}
 		
 	}
 

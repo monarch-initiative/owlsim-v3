@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +62,9 @@ public class AbstractProfileMatcherTest {
 		loader.load(getClass().getResource(fn).getFile());
 		for (String datafn : datafns) {
 			LOG.info("R="+datafn);
-			loader.loadData(getClass().getResource(datafn).getFile());
+			URL res = getClass().getResource(datafn);
+			LOG.info("RES="+res);
+			loader.loadOntologies(res.getFile());
 		}
 		kb = loader.createKnowledgeBaseInterface();
 	}
