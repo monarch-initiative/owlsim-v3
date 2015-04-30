@@ -13,11 +13,25 @@ import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
+import org.monarchinitiative.owlsim.model.match.Match;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+/**
+ * 
+ * Assumptions:
+ * - all URIs are http://x.org/ (may change with CURIEs)
+ * 
+ * @author cjm
+ *
+ */
+/**
+ * @author cjm
+ *
+ */
 public class AbstractProfileMatcherTest {
 
 	protected BMKnowledgeBase kb;
@@ -30,6 +44,13 @@ public class AbstractProfileMatcherTest {
 		return false;
 	}
 	
+	/**
+	 * Fetch an ID by a name; is isUseLabels is set, then this will
+	 * do a label lookup; otherwise affix name onto standard prefix
+	 * 
+	 * @param label
+	 * @return
+	 */
 	protected String getId(String label) {
 		if (isUseLabels()) {
 			try {
@@ -42,20 +63,43 @@ public class AbstractProfileMatcherTest {
 		return "http://x.org/"+label;
 	}
 
+	/**
+	 * @param q
+	 * @param expectedId
+	 * @param maxRank
+	 * @return test query
+	 */
 	protected TestQuery getTestQuery(ProfileQuery q, String expectedId, int maxRank) {
 		return new TestQuery(q, getId(expectedId), maxRank);
 	}
 
+	/**
+	 * @param q
+	 * @param expectedId
+	 */
 	protected void getTestQuery(ProfileQuery q, String expectedId) {
 		getTestQuery(q, expectedId, 1);
 	}
 
+	/**
+	 * Load an ontology from resources folder
+	 * 
+	 * @param fn
+	 * @throws OWLOntologyCreationException
+	 */
 	protected void load(String fn) throws OWLOntologyCreationException {
 		OWLLoader loader = new OWLLoader();
 		loader.load("src/test/resources/"+fn);
 		kb = loader.createKnowledgeBaseInterface();
 	}
 
+	/**
+	 * Load ontology plus data ontologies
+	 * 
+	 * @param fn
+	 * @param datafns
+	 * @throws OWLOntologyCreationException
+	 */
 	protected void load(String fn, String... datafns) throws OWLOntologyCreationException {
 		OWLLoader loader = new OWLLoader();
 		LOG.info("R="+fn);
@@ -69,7 +113,12 @@ public class AbstractProfileMatcherTest {
 		kb = loader.createKnowledgeBaseInterface();
 	}
 	
+	protected void loadSimplePhenoWithNegation() throws OWLOntologyCreationException {
+		load("simple-pheno-with-negation.owl");
+		
+	}
 
+	@Deprecated
 	protected void search(ProfileMatcher profileMatcher,
 			String expectedId, int maxRank,
 			String... labels) throws NonUniqueLabelException, OWLOntologyCreationException, FileNotFoundException, UnknownFilterException {
@@ -103,13 +152,45 @@ public class AbstractProfileMatcherTest {
 	}
 	
 
-	// given a test query (a query plus expected results) and a matcher,
-	// run the matcher with the query and evaluate results
+	/**
+	 * given a test query (a query plus expected results) and a matcher,
+	 * run the matcher with the query and evaluate results
+	 * 
+	 * @param profileMatcher
+	 * @param tq
+	 * @throws OWLOntologyCreationException
+	 * @throws NonUniqueLabelException
+	 * @throws FileNotFoundException
+	 * @throws UnknownFilterException
+	 */
 	protected void evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 
 		Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
 
+	}
+	
+	protected boolean isRankedLast(String matchId, MatchSet matchSet) {
+		int matchRank = 0;
+		for (Match m : matchSet.getMatches()) {
+			int rank = m.getRank();
+			
+			if (m.getMatchId().equals(matchId)) {
+				matchRank = rank;
+			}
+			else {
+				if (matchRank > 0 && rank > matchRank) {
+					LOG.error("Ranking of match "+matchId+" is "+matchRank+" which is < "+m);
+					return false;
+				}
+			}
+		}
+		if (matchRank == 0) {
+			LOG.error("Not found: "+matchId);
+			return false;
+		}
+		LOG.info("Rank of match "+matchId+" is "+matchRank+" which is last or joint last");
+		return true;
 	}
 
 }

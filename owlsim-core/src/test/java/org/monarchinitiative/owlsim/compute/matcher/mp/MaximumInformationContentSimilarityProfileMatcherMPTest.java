@@ -1,17 +1,18 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.mp;
 
 import java.io.FileNotFoundException;
 
-import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class JaccardSimilarityProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
+public class MaximumInformationContentSimilarityProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return JaccardSimilarityProfileMatcher.create(kb);
+		return MaximumInformationContentSimilarityProfileMatcher.create(kb);
 	}
 
 	@Override
@@ -28,13 +29,14 @@ public class JaccardSimilarityProfileMatcherMPTest extends AbstractProfileMatche
 
 	@Override
 	public void testMultiPhenotypeDisease() throws Exception {
-		testMultiPhenotypeDisease(DISEASE.foo, null);
+		// ep, pd and foo all have equal ranking by max IC
+		testMultiPhenotypeDisease(DISEASE.sg, null); // based on rarity of phenotype
 	}
 
 
 	@Override
 	public void testEpDiseaseFuzzy() throws Exception {
-		testEpDiseaseFuzzy(DISEASE.ep, null);
+		testEpDiseaseFuzzy(null, null);
 	}
 
 
@@ -44,7 +46,7 @@ public class JaccardSimilarityProfileMatcherMPTest extends AbstractProfileMatche
 	}
 	@Override
 	public void testPdDisease() throws Exception {
-		testNervousSystemDisease(DISEASE.pd, 100);
+		//testNervousSystemDisease(DISEASE.pd, 100);
 		
 	}
 }

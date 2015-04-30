@@ -10,6 +10,7 @@ import org.apache.commons.math3.stat.inference.TestUtils;
 import org.monarchinitiative.owlsim.model.match.ExecutionMetadata;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.monarchinitiative.owlsim.model.match.MethodMetadata;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
@@ -23,6 +24,7 @@ public class MatchSetImpl implements MatchSet {
 	private ProfileQuery query;
 	private List<Match> matches; // TODO - make this neutral
 	ExecutionMetadata executionMetadata;
+	MethodMetadata methodMetadata;
 	private boolean isSorted;
 	
 	/**
@@ -56,6 +58,14 @@ public class MatchSetImpl implements MatchSet {
 
 	public void setExecutionMetadata(ExecutionMetadata executionMetadata) {
 		this.executionMetadata = executionMetadata;
+	}
+
+	public MethodMetadata getMethodMetadata() {
+		return methodMetadata;
+	}
+
+	public void setMethodMetadata(MethodMetadata methodMetadata) {
+		this.methodMetadata = methodMetadata;
 	}
 
 	/**

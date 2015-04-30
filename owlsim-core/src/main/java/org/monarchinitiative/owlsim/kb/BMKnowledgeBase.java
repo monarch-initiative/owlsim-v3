@@ -149,7 +149,7 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex);
 
-	
+		
 	/**
 	 * @param id - an individual
 	 * @return types (direct and indirect) as bitmap

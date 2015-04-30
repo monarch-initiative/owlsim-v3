@@ -20,6 +20,15 @@ public interface ProfileMatcher {
 	String getShortName();
 	
 	/**
+	 * Translate the phenotype profile of an individual to a ProfileQuery object
+	 * 
+	 * @param individualId
+	 * @return profile query corresponding to individual
+	 */
+	public ProfileQuery createProfileQuery(String individualId);
+
+	
+	/**
 	 * Use q to scan all individuals in the kb that match the filter,
 	 * returned a sorted scored list of matches
 	 * 

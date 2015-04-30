@@ -1,4 +1,4 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.mp;
 
 import java.io.FileNotFoundException;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
@@ -18,9 +20,9 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {
+public class ProfileMatcherComparisonMPTest extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(ProfileMatcherComparisonTest.class);
+	private Logger LOG = Logger.getLogger(ProfileMatcherComparisonMPTest.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
 		return PhenodigmICProfileMatcher.create(kb);
@@ -33,10 +35,8 @@ public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {
 		ProfileMatcher profileMatcher1 = PhenodigmICProfileMatcher.create(kb);
 		ProfileMatcher profileMatcher2 = GridProfileMatcher.create(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/compare-phenodigm-vs-grid.js");
 		MatcherComparisonResult result = eval.compareMatchers(profileMatcher1, profileMatcher2);
 		LOG.info("diff: "+result.distance);
-		eval.writeJson(result);
 		//assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		
 	}
@@ -72,7 +72,7 @@ public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {
 	}
 
 	private void load() throws OWLOntologyCreationException {
-		loadSimplePhenoWithNegation();
+		load("/mp-subset.ttl");
 		
 	}
 

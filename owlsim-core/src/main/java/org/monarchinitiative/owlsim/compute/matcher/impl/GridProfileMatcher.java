@@ -69,7 +69,7 @@ public class GridProfileMatcher extends AbstractSemanticSimilarityProfileMatcher
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
-			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
+			//LOG.debug("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 			
 			double score = 0;
 			ClassInformationContentPair[] qmatchArr = new ClassInformationContentPair[qsize];

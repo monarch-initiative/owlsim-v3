@@ -1,4 +1,4 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.sp;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -15,9 +17,9 @@ import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest {
+public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(ProfileMatcherWithNegationMPTest.class);
+	private Logger LOG = Logger.getLogger(ProfileMatcherWithNegationSpeciesTest.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
 		return NaiveBayesFixedWeightProfileMatcher.create(kb);
@@ -25,17 +27,24 @@ public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest
 
 	@Test
 	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
-		load();
+		loadSpecies();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
+		eval.writeJsonTo("target/nst.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
-				"ep",
-				1,
-				"nervous system phenotype",    // ep
-				"not reproductive system phenotype",   // rules out sg
-				"not abnormal cerebellum development"  // rules out pd and foo
-				);
+				"OnlyInsect",
+				10,
+				//"human",
+				"not deuterostome",
+				"protostome",
+				"fruitfly",
+				"not spider",
+				//"not mouse",
+				//"not rodent",
+				//"not cetacean",
+				//"not carnivore",
+				"not zebrafish");
 		Level level = Level.DEBUG;
 		LOG.setLevel(level );
 		Logger.getRootLogger().setLevel(level);
@@ -44,8 +53,8 @@ public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest
 		
 	}
 
-	private void load() throws OWLOntologyCreationException {
-		load("/mp-subset.ttl");
+	private void loadSpecies() throws OWLOntologyCreationException {
+		load("/speciesWithNegation.owl");
 		
 	}
 

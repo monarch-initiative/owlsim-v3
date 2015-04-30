@@ -31,6 +31,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -454,7 +455,19 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					OWLObjectComplementOf nx = (OWLObjectComplementOf)(cx.getClassExpression());
 					OWLClassExpression nc = nx.getOperand();
 					ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(nc, false)));
-					ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(nc, false)));
+					ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(nc)));
+				}
+			}
+			
+			// Populate negative assertions from DisjointClasses axioms
+			for (OWLClass c : owlReasoner.getTypes(i, false).getFlattened()) {
+				LOG.debug("TESTING FOR DCs: "+c);
+				for (OWLDisjointClassesAxiom dca : owlOntology.getDisjointClassesAxioms(c)) {
+					for (OWLClassExpression dc : dca.getClassExpressionsMinus(c)) {
+						LOG.info(i+" Type: "+c+" DisjointWith: "+dc);
+						ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(dc, false)));					
+						ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+					}
 				}
 			}
 			ontoEWAHStore.setNegatedTypes(individualIndex, ncs);
@@ -724,7 +737,6 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getSuperClassesBM(Set<String> clsIds) {
 		Set<Integer> classIndices = new HashSet<Integer>();
 		for (String id : clsIds) {
-			LOG.info("IX("+id+") = "+getClassIndex(id));
 			classIndices.add(getClassIndex(id));
 		}
 		return ontoEWAHStore.getSuperClasses(classIndices);

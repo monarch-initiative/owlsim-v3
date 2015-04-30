@@ -31,13 +31,15 @@ public class CompareAllByAll {
 	
 	private Logger LOG = Logger.getLogger(CompareAllByAll.class);
 	private boolean writeToStdout = true;
-	private JSONWriter jsonWriter;
 	ProfileMatcher profileMatcher;
 	
-	public void writeJsonTo(String fileName) throws FileNotFoundException {
-		jsonWriter = new JSONWriter(fileName);
-	}
 	
+	
+	public CompareAllByAll(ProfileMatcher profileMatcher) {
+		super();
+		this.profileMatcher = profileMatcher;
+	}
+
 	public int[][] compareAllByAll() {
 		BMKnowledgeBase kb = profileMatcher.getKnowledgeBase();
 		Set<String> indIds = kb.getIndividualIdsInSignature();

@@ -15,6 +15,7 @@ import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.FilterEngine;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
+import org.monarchinitiative.owlsim.model.match.MethodMetadata;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -23,6 +24,7 @@ import org.monarchinitiative.owlsim.model.match.impl.ExecutionMetadataImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchImpl;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -108,10 +110,18 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return filterEngine.applyFilter(filter);
 	}
 	
-	protected ProfileQuery createProfileQuery(String individualId) {
+	public ProfileQuery createProfileQuery(String individualId) {
 		EWAHCompressedBitmap bmi = knowledgeBase.getTypesBM(individualId);
+		EWAHCompressedBitmap nbmi = knowledgeBase.getNegatedTypesBM(individualId);
 		Set<String> qcids = knowledgeBase.getClassIds(bmi);
-		ProfileQuery q = ProfileQueryImpl.create(qcids);
+		Set<String> nqcids = knowledgeBase.getClassIds(nbmi);
+		ProfileQuery q;
+		if (nqcids.size() == 0) {
+			q = ProfileQueryImpl.create(qcids);
+		}
+		else {
+			q = QueryWithNegationImpl.create(qcids, nqcids);
+		}
 		return q;
 	}
 
@@ -148,12 +158,16 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return ms;
 	}
 	
+	// additional layer of indirection above Impl, adds standard metadata
 	private MatchSet findMatchProfileAll(ProfileQuery q) {
 		long t1 = System.currentTimeMillis();
-		MatchSet ms = findMatchProfileImpl(q);
+		MatchSet ms = findMatchProfileImpl(q); // implementing class
 		long t2 = System.currentTimeMillis();
 		ms.setExecutionMetadata(ExecutionMetadataImpl.create(t1, t2));
 		LOG.info("t(ms)="+ms.getExecutionMetadata().getDuration());
+		MethodMetadata mmd = new MethodMetadata();
+		mmd.methodName = getShortName();
+		ms.setMethodMetadata(mmd);
 		return ms;
 	}
 

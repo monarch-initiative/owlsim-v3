@@ -1,20 +1,25 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import static org.junit.Assert.*;
-
 import java.io.FileNotFoundException;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
+import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+/**
+ * Tests bayesian network matcher, making use of both negative queries and negative
+ * associations
+ * 
+ * @author cjm
+ *
+ */
 public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 
 	private Logger LOG = Logger.getLogger(PhenodigmICProfileMatcherTest.class);
@@ -25,29 +30,31 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 
 	@Test
 	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
-		load();
+		loadSimplePhenoWithNegation();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
-		LabelMapper labelMapper = kb.getLabelMapper();
-		TestQuery tq = eval.constructTestQuery(labelMapper,
-				"Epilepsy (fake for testing)",
-				2,
-				"nervous system phenotype",    // ep
-				"abnormal synaptic transmission",
-				//"reproductive system phenotype",   // 
-				"abnormal cerebellum development"  // 
-				);
-		Level level = Level.DEBUG;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
-		LOG.info("TQ="+tq.query);
-		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		
+		int nOk = 0;
+		for (String i : kb.getIndividualIdsInSignature()) {
+			
+			ProfileQuery pq = profileMatcher.createProfileQuery(i);
+			TestQuery tq =  new TestQuery(pq, i, 1); // self should always be ranked first
+			String fn = i.replaceAll(".*/", "");
+			eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
+			Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+			
+			if (i.equals("http://x.org/ind-dec-all")) {
+				Assert.assertTrue(isRankedLast("http://x.org/ind-brain", tq.matchSet));
+				nOk++;
+			}
+			if (i.equals("http://x.org/ind-small-heart-big-brain")) {
+				Assert.assertTrue(isRankedLast("http://x.org/ind-bone", tq.matchSet));
+				nOk++;
+			}
+			
+		}
+		Assert.assertEquals(2, nOk);
 	}
-
-	private void load() throws OWLOntologyCreationException {
-		load("/mp-subset.ttl");
-		
-	}
+	
 
 }

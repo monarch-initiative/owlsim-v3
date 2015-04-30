@@ -16,8 +16,10 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 //import org.junit.Assert;
@@ -36,6 +38,10 @@ public class ProfileMatchEvaluator {
 	
 	public void writeJsonTo(String fileName) throws FileNotFoundException {
 		jsonWriter = new JSONWriter(fileName);
+	}
+	
+	public void writeJson(Object obj) {
+		jsonWriter.write(obj);
 	}
 
 	/**
@@ -56,6 +62,7 @@ public class ProfileMatchEvaluator {
 		ProfileQuery q = tq.query;
 		LOG.info("Q="+q);
 		MatchSet mp = profileMatcher.findMatchProfile(q);
+		tq.matchSet = mp;
 		LOG.info("|Matches|="+mp.getMatches().size());
 		if (mp.getMatches().size() == 0) {
 			LOG.error("No matches for "+tq+" using "+profileMatcher);
@@ -123,14 +130,16 @@ public class ProfileMatchEvaluator {
 	}
 	
 	/**
-	 * Constructs a test query using labels as inputs.
+	 * Constructs a test query given a set of class labels constituting the query profile
 	 * 
 	 * if a label follows the pattern "not X" then X is used as the label, and is added
 	 * to the set of negated queries - the object returned will be a {@link QueryWithNegation} object.
 	 * 
+	 * The test query object also holds a pointer to an expected result, and a maximum
+	 * ranking at which the match is to be found
 	 * 
 	 * @param labelMapper
-	 * @param expectedId
+	 * @param expectedMatchLabel
 	 * @param maxRank
 	 * @param labels - should match the rdfs:label field in the ontology
 	 * @return testQuery
@@ -138,7 +147,7 @@ public class ProfileMatchEvaluator {
 	 */
 	public TestQuery constructTestQuery(
 			LabelMapper labelMapper,
-			String expectedId,
+			String expectedMatchLabel,
 			int maxRank,
 			String... labels) throws NonUniqueLabelException {
 		Set<String> qids = new HashSet<String>();
@@ -148,7 +157,8 @@ public class ProfileMatchEvaluator {
 				nqids.add(labelMapper.lookupByUniqueLabel(label.replaceFirst("not ", "")));
 			}
 			else {
-				qids.add(labelMapper.lookupByUniqueLabel(label));
+				String qid = labelMapper.lookupByUniqueLabel(label);
+				qids.add(qid);
 			}
 		}
 		LOG.info("QIDS="+qids);
@@ -161,22 +171,56 @@ public class ProfileMatchEvaluator {
 		}
 		
 		// expected may be passed in as ID or as label
-		Set<String> ids = labelMapper.lookupByLabel(expectedId);
+		Set<String> ids = labelMapper.lookupByLabel(expectedMatchLabel);
 		if (ids.size() > 0) {
-			expectedId = ids.iterator().next();
+			expectedMatchLabel = ids.iterator().next();
 		}
-		TestQuery tq = new TestQuery(q, expectedId, maxRank);
+		TestQuery tq = new TestQuery(q, expectedMatchLabel, maxRank);
 		return tq;
 	}
 
+	public TestQuery constructTestQueryAgainstIndividual(
+			BMKnowledgeBase kb,
+			LabelMapper labelMapper,
+			String expectedMatchLabel,
+			int maxRank,
+			String individualLabel) throws NonUniqueLabelException {
+		
+		String iid = labelMapper.lookupByUniqueLabel(individualLabel);
+		Set<String> qids = kb.getClassIds(kb.getTypesBM(iid));
+		LOG.info("QIDS="+qids);
+		ProfileQuery q = ProfileQueryImpl.create(qids);
+		
+		// expected may be passed in as ID or as label
+		Set<String> ids = labelMapper.lookupByLabel(expectedMatchLabel);
+		if (ids.size() > 0) {
+			expectedMatchLabel = ids.iterator().next();
+		}
+		TestQuery tq = new TestQuery(q, expectedMatchLabel, maxRank);
+		return tq;
+	}
 	public double compareMatchSetRanks(MatchSet ms1, MatchSet ms2) {
 		int totalRankDiff = 0;
+		int maxRankDiff = 0;
+		String maxRankDiffWitnessId = null;
+		int maxRankDiffWitness1 = 0;
+		int maxRankDiffWitness2 = 0;
 		int n=0;
 		for (Match m1 : ms1.getMatches()) {
 			Match m2 = ms2.getMatchesWithId(m1.getMatchId());
-			totalRankDiff += m1.getRank() - m2.getRank();
+			int rankDiff = Math.abs(m1.getRank() - m2.getRank());
+			totalRankDiff += rankDiff;
+			if (rankDiff > maxRankDiff) {
+				maxRankDiff = rankDiff;
+				maxRankDiffWitnessId = m1.getMatchId();
+				maxRankDiffWitness1 = m1.getRank();
+				maxRankDiffWitness2 = m2.getRank();			
+			}
 			n++;
 		}
+		// TODO: if this isuseful return as an object rather than logging it
+		LOG.info("  Max rank diff = "+maxRankDiff+" for match on "+maxRankDiffWitnessId+
+				" RANKS= "+maxRankDiffWitness1+","+maxRankDiffWitness2);
 		double avgRankDiff = totalRankDiff / (double)n;
 		return avgRankDiff;
 	}
@@ -208,36 +252,66 @@ public class ProfileMatchEvaluator {
 		BMKnowledgeBase kb = pm1.getKnowledgeBase();
 		Set<String> inds = kb.getIndividualIdsInSignature();
 		double tdiff = 0;
+		double maxdiff = 0;
+		String maxdiffWitness = null;
 		int n = 0;
+		LOG.info("Comparing "+pm1+" -vs- "+pm2);
 		for (String ind : inds) {
 			EWAHCompressedBitmap typesBM = kb.getTypesBM(ind);
 			// TODO - add to utils
-			Set<String> qids = new HashSet<String>();
-			for (int ix : typesBM.getPositions()) {
-				qids.add(kb.getClassId(ix));
-			}
-			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
-			MatchSet ms1 = pm1.findMatchProfile(q);
-			MatchSet ms2 = pm2.findMatchProfile(q);
+//			Set<String> qids = new HashSet<String>();
+//			for (int ix : typesBM.getPositions()) {
+//				qids.add(kb.getClassId(ix));
+//			}
+//			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
+			MatchSet ms1 = pm1.findMatchProfile(ind);
+			MatchSet ms2 = pm2.findMatchProfile(ind);
+			LOG.info("Comparing matchers on "+ind);
 			double diff = compareMatchSetRanks(ms1, ms2);
 			tdiff += diff;
+			if (diff > maxdiff) {
+				maxdiff = diff;
+				maxdiffWitness = ind;
+			}
 			n++;
 		}
 		LOG.info("Total difference = "+tdiff + " / "+n+" runs");
+		LOG.info("Max difference = "+maxdiff + " Observed with "+maxdiffWitness);
 		double distance = tdiff / (double)n;
 		return new MatcherComparisonResult(pm1.getShortName(), pm2.getShortName(), distance);
 	}
 	
 	public class MatcherComparisonResult {
+		
+		public class RankPair {
+			public int rank1;
+			public int rank2;
+			public RankPair(int rank1, int rank2) {
+				super();
+				this.rank1 = rank1;
+				this.rank2 = rank2;
+			}
+			
+			
+		}
+		
 		public String matcher1Type;
 		public String matcher2Type;
 		public Double distance;
+		public Map<String,RankPair> individualToMapPairMap;
+		
 		public MatcherComparisonResult(String matcher1Type,
 				String matcher2Type, Double distance) {
 			super();
 			this.matcher1Type = matcher1Type;
 			this.matcher2Type = matcher2Type;
 			this.distance = distance;
+			
+			individualToMapPairMap = new HashMap<String,RankPair>();
+		}
+		
+		public void addDiff(String ind, int rank1, int rank2) {
+			individualToMapPairMap.put(ind, new RankPair(rank1, rank2));
 		}
 		
 		

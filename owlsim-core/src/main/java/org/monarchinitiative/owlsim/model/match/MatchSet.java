@@ -53,6 +53,14 @@ public interface MatchSet {
 	public ExecutionMetadata getExecutionMetadata();
 	public void setExecutionMetadata(ExecutionMetadata executionMetadata);
 
+	public MethodMetadata getMethodMetadata();
+	public void setMethodMetadata(MethodMetadata methodMetadata);
+
+	/**
+	 * Truncate the match set to the top n hits
+	 * 
+	 * @param limit
+	 */
 	public void truncate(int limit);
 		
 	public DescriptiveStatistics getScores();

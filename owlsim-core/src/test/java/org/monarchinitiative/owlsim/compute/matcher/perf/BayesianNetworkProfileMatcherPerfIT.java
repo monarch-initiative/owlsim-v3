@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -26,37 +26,15 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * @author cjm
  *
  */
-public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
+public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(PhenodigmMatcherPerfIT.class);
+	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcherPerfIT.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return PhenodigmICProfileMatcher.create(kb);
+		return BayesianNetworkProfileMatcher.create(kb);
 	}
 
-	@Test
-	public void testPhenodigmSingleProfileQuery() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
-		load();
-		int numInds = kb.getIndividualIdsInSignature().size();
-		LOG.info("NumInds = "+numInds);
-		assertTrue(numInds > 0);
-		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
-		ProfileMatcher profileMatcher = createProfileMatcher(kb);
-		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/phenodigm-results.json");
-		TestQuery tq = eval.constructTestQuery(labelMapper,
-				"Renal Dysplasia - Megalocystis - Sirenomelia",
-				16,
-				"Scrotal hypoplasia",
-				"Renal cyst",
-				"Micrognathia");		
-		Level level = Level.DEBUG;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
-		LOG.info("TQ="+tq.query);
-		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
-	}
 
 	/**
 	 * Tests that self is the top hit for Schwartz-Jampel Syndrome
@@ -67,15 +45,18 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 	 * @throws UnknownFilterException
 	 */
 	@Test
-	public void testPhenodigmQueryWithSelf() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testQueryWithSelf() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 		load();
+		Level level = Level.INFO;
+		LOG.setLevel(level );
+		Logger.getRootLogger().setLevel(level);
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
 		assertTrue(numInds > 0);
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/phenodigm-it-results-sjs.json");
+		eval.writeJsonTo("target/bn-it-results-sjs.json");
 		String d = "Schwartz-Jampel Syndrome, Type 1";
 		TestQuery tq = eval.constructTestQueryAgainstIndividual(
 				kb,
@@ -83,33 +64,57 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				d,
 				1,
 				d);		
-		Level level = Level.DEBUG;
+		LOG.info("TQ="+tq.query);
+		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+
+	}
+	
+	@Test
+	public void testSingleProfileQuery() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+		load();
+		Level level = Level.INFO;
 		LOG.setLevel(level );
 		Logger.getRootLogger().setLevel(level);
+		int numInds = kb.getIndividualIdsInSignature().size();
+		LOG.info("NumInds = "+numInds);
+		assertTrue(numInds > 0);
+		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		ProfileMatcher profileMatcher = createProfileMatcher(kb);
+		LabelMapper labelMapper = kb.getLabelMapper();
+		eval.writeJsonTo("target/bn-it-results-rdms.json");
+		TestQuery tq = eval.constructTestQuery(labelMapper,
+				"Smith-Lemli-Opitz Syndrome",
+				16,
+				"Scrotal hypoplasia",
+				"Renal cyst",
+				"Micrognathia");		
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
 	}
 
 	@Test
-	public void testPhenodigmQueryMultiple() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testQueryMultiple() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
 		load();
+		Level level = Level.INFO;
+		LOG.setLevel(level );
+		Logger.getRootLogger().setLevel(level);
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/phenodigm-it-results-multi.json");
+		eval.writeJsonTo("target/bn-it-results-multi.json");
 		String dq = "Schwartz-Jampel Syndrome, Type 1";
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
 					"Microcephalic Osteodysplastic Primordial Dwarfism, Type I",
-					3,
+					16,
 					dq)));		
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
-					"Multicentric Osteolysis, Nodulosis, And Arthropathy",
+					"Arthrogryposis, Distal, Type 2a",
 					6,
 					dq)));		
 	}

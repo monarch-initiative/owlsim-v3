@@ -18,8 +18,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  *  0 = u (unknown/false/off)
  *  1 = t (true/on)
  *  
- * TODO: Put some methods into an abstract class ready for implementation of a
- * 3 state CPI (false,unknown,true)
+ * TODO: Use Abstract parent class
  * 
  * @author cjm
  *
@@ -103,7 +102,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 
 		LOG.info("Calculating all CPTs...");
 		for (String cid : kb.getClassIdsInSignature()) {
-			LOG.info("   Calculating CPT for "+cid);
+			LOG.debug("   Calculating CPT for "+cid);
 			int cix = kb.getClassIndex(cid);
 			int numIndividualsForChild = kb.getIndividualsBM(cix).cardinality();
 
@@ -122,6 +121,9 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 				parentStateMapByIndex[cix] = new Map[numStates];
 
 			for (int parentState=0; parentState<numStates; parentState++) {
+				
+				// Pr(C=on | P1=S1, ..., Pn=Sn) = |C| / |{ p in P & P=on } |
+				
 				Map<Integer, Character> parentStateMap = calculateParentStateMapForIndex(parentState, pixs);
 
 				EWAHCompressedBitmap allIndsForOnParentsBM = null;
@@ -142,7 +144,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 								totalInds : allIndsForOnParentsBM.cardinality();
 				double conditionalProbability = 
 						numIndividualsForChild / (double) numIndividualsForOnParents;
-				LOG.info("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbability);
+				LOG.debug("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbability);
 				setConditionalProbabilityTableRow(cix, parentState, 
 						numStates, conditionalProbability);
 				parentStateMapByIndex[cix][parentState] = parentStateMap;

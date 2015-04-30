@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.eval;
 
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
@@ -12,6 +13,7 @@ public class TestQuery {
 	public ProfileQuery query;
 	public String expectedId;
 	public int maxRank = 1;
+	public MatchSet matchSet;
 	
 	public TestQuery(ProfileQuery query, String expectedId) {
 		super();

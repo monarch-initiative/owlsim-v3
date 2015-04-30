@@ -1,7 +1,8 @@
-package org.monarchinitiative.owlsim.compute.matcher;
+package org.monarchinitiative.owlsim.compute.matcher.mp;
 
 import java.io.FileNotFoundException;
 
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
@@ -34,7 +35,7 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 
 	@Override
 	public void testEpDiseaseFuzzy() throws Exception {
-		testEpDiseaseFuzzy(DISEASE.sg, null);
+		testEpDiseaseFuzzy(DISEASE.ep, null);
 	}
 
 
@@ -42,9 +43,10 @@ public class GridProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 	public void testNervousSystemDisease() throws Exception {
 		testNervousSystemDisease(DISEASE.foo, null);
 	}
+
 	@Override
 	public void testPdDisease() throws Exception {
-		testNervousSystemDisease(DISEASE.pd, 100);
-		
+
 	}
+
 }
