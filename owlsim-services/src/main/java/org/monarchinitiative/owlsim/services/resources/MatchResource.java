@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 The SciGraph authors
+ * Copyright (C) 2014 The OwlSim authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.ProfileQueryFactory;
@@ -71,7 +73,7 @@ public class MatchResource {
 			@ApiParam( value = "IDs that should match", required = false)
 			@QueryParam("id") Set<String> ids,
 			@ApiParam( value = "IDs that should not match", required = false)
-			@QueryParam("negatedId") Set<String> negatedIds) {
+			@QueryParam("negatedId") Set<String> negatedIds) throws UnknownFilterException, IncoherentStateException {
 		if (!matchers.containsKey(matcherName)) {
 			throw new UnknownMatcherException(matcherName);
 		}

@@ -8,8 +8,10 @@ import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.services.exceptions.NonNegatedMatcherException;
 import org.monarchinitiative.owlsim.services.exceptions.UnknownMatcherException;
 
@@ -28,17 +30,17 @@ public class MatchResourceTest {
 	}
 
 	@Test(expected=UnknownMatcherException.class)
-	public void testUnkownMatcher() {
+	public void testUnkownMatcher() throws UnknownFilterException, IncoherentStateException {
 		match.getMatches("unknown", Collections.<String>emptySet(), Collections.<String>emptySet());
 	}
 	
 	@Test(expected=NonNegatedMatcherException.class)
-	public void testNegatedIdsWithNonNegatedMatcher() {
+	public void testNegatedIdsWithNonNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
 		match.getMatches("foo", Collections.<String>emptySet(), newHashSet("not me"));
 	}
 	
 	@Test
-	public void testNegatedIdsWithNegatedMatcher() {
+	public void testNegatedIdsWithNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
 		match.getMatches("notfoo", Collections.<String>emptySet(), newHashSet("not me"));
 	}
 
