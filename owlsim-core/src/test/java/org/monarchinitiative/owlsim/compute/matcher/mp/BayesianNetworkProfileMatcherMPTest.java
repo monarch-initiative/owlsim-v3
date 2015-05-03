@@ -26,7 +26,7 @@ public class BayesianNetworkProfileMatcherMPTest extends AbstractProfileMatcherT
 	}
 
 	@Test
-	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testBasic() throws Exception {
 		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);

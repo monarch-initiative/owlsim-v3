@@ -1,8 +1,10 @@
 package org.monarchinitiative.owlsim.compute.cpt.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
@@ -15,12 +17,12 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * INCOMPLETE
  * 
  * An implementation of {@link ConditionalProbabilityIndex} with 3 states:
- * possible: on, unknown, off
+ * on (true), unknown, off (false)
  * 
- * Pr(Top=on) = 1
+ * The calculation for the on & unknown state combos is the same as for
+ *  {@link TwoStateConditionalProbabilityIndex}; if any parent is off then
+ *  the child is off.
  * 
- * 
- *  
  * 
  * @author cjm
  *
@@ -35,6 +37,10 @@ implements ConditionalProbabilityIndex {
 	private char ON = 't';
 	private char OFF = 'f';
 	private char[] STATES = {'f', 'u','t'};
+
+	//Double[][] conditionalProbabilityOnByChildParentState; // Pr(C=on|ParentsStateCombo)
+	//Double[][] conditionalProbabilityOffByChildParentState; // Pr(C=on|ParentsStateCombo)
+	NodeProbabilities[][] conditionalProbabilityDistributionByChildParentState; // Pr(C=on|ParentsStateCombo)
 
 
 
@@ -56,7 +62,7 @@ implements ConditionalProbabilityIndex {
 	 * @param kb
 	 * @return CPI
 	 */
-	public static ConditionalProbabilityIndex create(BMKnowledgeBase kb) {
+	public static ThreeStateConditionalProbabilityIndex create(BMKnowledgeBase kb) {
 		return new ThreeStateConditionalProbabilityIndex(kb.getNumClassNodes());
 	}
 
@@ -68,11 +74,35 @@ implements ConditionalProbabilityIndex {
 		return new ThreeStateConditionalProbabilityIndex(size);
 	}
 
+	protected void init(int size) {
+		//conditionalProbabilityOnByChildParentState = new Double[size][];
+		//conditionalProbabilityOffByChildParentState = new Double[size][];
+		conditionalProbabilityDistributionByChildParentState = new NodeProbabilities[size][];
+		parentStateMapByIndex = 
+				(Map<Integer,Character>[][])new Map[size][];
+	}
+
+	public NodeProbabilities getConditionalProbabilityDistribution(int clsIndex, int parentsState) {
+		return conditionalProbabilityDistributionByChildParentState[clsIndex][parentsState];
+	}
+	public void setConditionalProbabilityDistribution(int childClassIndex, int parentsState, int numStates, NodeProbabilities cp) throws IncoherentStateException {
+		if (conditionalProbabilityDistributionByChildParentState[childClassIndex] == null)
+			conditionalProbabilityDistributionByChildParentState[childClassIndex] = new NodeProbabilities[numStates];
+		conditionalProbabilityDistributionByChildParentState[childClassIndex][parentsState] = cp;
+	}
+	
 	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException {
 		this.kb = kb;
 		int totalInds = kb.getIndividualsBM(kb.getRootIndex()).cardinality();
 
-		LOG.info("Calculating all CPTs...");
+		Set<String> individualsWithNegatedTypes = new HashSet<String>();
+		for (String i : kb.getIndividualIdsInSignature()) {
+			if (kb.getDirectNegatedTypesBM(i).cardinality() > 0) {
+				individualsWithNegatedTypes.add(i);
+			}
+		}
+		long t1 = System.currentTimeMillis();
+		LOG.info("Calculating all CPTs... Time: "+t1);
 		for (String cid : kb.getClassIdsInSignature()) {
 			LOG.debug("   Calculating CPT for "+cid);
 			int cix = kb.getClassIndex(cid);
@@ -83,7 +113,7 @@ implements ConditionalProbabilityIndex {
 			int numParents = pixs.size();
 
 			// assume two states for now: will be extendable to yes, no, unknown
-			int numStates = (int) Math.pow(2, numParents);
+			int numStates = (int) Math.pow(3, numParents);
 
 			if (numParents == 0) {
 				LOG.debug("Root: "+cid);
@@ -97,27 +127,22 @@ implements ConditionalProbabilityIndex {
 						calculateParentStateMapForIndex(parentSetStateIx, pixs, STATES);
 
 				EWAHCompressedBitmap allIndsForOnParentsBM = null;
-				int numOff = 0;
+				boolean hasParentThatIsOff = false;
 				for (int pix : parentStateMap.keySet()) {
 					char stateOfParent = parentStateMap.get(pix);
-					if (stateOfParent == ON || stateOfParent == OFF) {
+					if (stateOfParent == ON) {
 						// treat OFF as ON*Pr(FN)
 						EWAHCompressedBitmap indsBM = kb.getIndividualsBM(pix);
 						if (allIndsForOnParentsBM == null)
 							allIndsForOnParentsBM = indsBM;
 						else
 							allIndsForOnParentsBM = allIndsForOnParentsBM.and(indsBM);
-						
-						if (stateOfParent == OFF) {
-							// if parent is OFF, then logically the child must be OFF,
-							// regardless of other parents. However, we also
-							// allow for the possibility of false negatives.
-							//
-							// also consider the scenario that as we get more specific,
-							// we may be less sure of our high-level negation
-							// TODO
-							numOff++;
-						}
+					}
+					else if (stateOfParent == OFF) {
+						// if parent is OFF, then logically the child must be OFF,
+						// regardless of other parents.
+						hasParentThatIsOff = true;
+						break;
 					}
 					else {
 						// UNKNOWN
@@ -126,25 +151,72 @@ implements ConditionalProbabilityIndex {
 
 				}
 
-				int numIndividualsForOnParents = 
-						allIndsForOnParentsBM == null ? 
-								totalInds : allIndsForOnParentsBM.cardinality();
-				double conditionalProbability = 
-						numIndividualsForChild / (double) numIndividualsForOnParents;
-				if (numOff > 0) {
-					// hardcode probability of false negative
-					conditionalProbability *= Math.pow(0.01, numOff);
+				double conditionalProbabilityChildIsOn;
+				double conditionalProbabilityChildIsOff;
+				if (hasParentThatIsOff) {
+					conditionalProbabilityChildIsOn = 0;
+					conditionalProbabilityChildIsOff = 1.0;
 				}
-				LOG.debug("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbability);
-				setConditionalProbabilityTableRow(cix, parentSetStateIx, 
-						numStates, conditionalProbability);
+				else {
+					conditionalProbabilityChildIsOff = 0.0; // TODO
+
+					int numIndividualsForOnParents = 
+							allIndsForOnParentsBM == null ? 
+									totalInds : allIndsForOnParentsBM.cardinality();
+
+					int numOff = 0;
+					EWAHCompressedBitmap cSupersBM = kb.getSuperClassesBM(cix);
+					if (allIndsForOnParentsBM != null) {
+						// todo: check efficiency
+						for (int jix : allIndsForOnParentsBM.getPositions()) {
+							String j = kb.getIndividualId(jix);
+							if (kb.getDirectNegatedTypesBM(j).andCardinality(cSupersBM) > 0) {
+								numOff++;
+							}
+						}
+						//LOG.info("cp(OFF)="+numOff + " / "+numIndividualsForOnParents);
+						conditionalProbabilityChildIsOff = numOff / (double) numIndividualsForOnParents;
+					}
+					else {
+						// TODO: make this efficient; use a getDirectIndividuals method
+						for (String j : individualsWithNegatedTypes) {
+							if (kb.getDirectNegatedTypesBM(j).andCardinality(cSupersBM) > 0) {
+								numOff++;
+							}
+						}
+						//LOG.info("cp(OFF)="+numOff + " / "+numIndividualsForOnParents);
+						conditionalProbabilityChildIsOff = numOff / (double) totalInds;
+						
+					}
+					conditionalProbabilityChildIsOn = 
+							numIndividualsForChild / (double) numIndividualsForOnParents;
+					//LOG.info("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbabilityChildIsOn);
+					if (conditionalProbabilityChildIsOff + conditionalProbabilityChildIsOn > 1.0) {
+						LOG.error("OOPS:"+conditionalProbabilityChildIsOff + " + " + conditionalProbabilityChildIsOn);
+					}
+				}
+				
+				NodeProbabilities prd = new NodeProbabilities(conditionalProbabilityChildIsOn, 
+						conditionalProbabilityChildIsOff);
+				//LOG.info("Setting PRD="+prd+" for "+cid+" PComboIx="+parentSetStateIx);
+				setConditionalProbabilityDistribution(cix, parentSetStateIx, numStates, prd);
+				
 				parentStateMapByIndex[cix][parentSetStateIx] = parentStateMap;
 			}
 
 		}
-		LOG.info("DONE Calculating all CPTs");
+		long t2 = System.currentTimeMillis();
+		long td = t2-t1;
+		LOG.info("DONE Calculating all CPTs. Time: "+td);
 
 	}
+	@Override
+	public Double getConditionalProbabilityChildIsOn(int clsIndex,
+			int parentsStatesIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	
 
 }

@@ -34,7 +34,7 @@ public class PhenodigmMatcherAllByAllPerfIT extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testPhenodigmAllByAll() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmAllByAll() throws Exception {
 		load();
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		CompareAllByAll c = new CompareAllByAll(profileMatcher);

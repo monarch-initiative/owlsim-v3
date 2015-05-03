@@ -105,4 +105,14 @@ Individual: ind-brain
 Individual: ind-bone
  Types: bone-morphology
 
+##Individual: ind-no-phenotype
+## Types: not phenotype
+
+Individual: ind-unstated-phenotype
+ Types: phenotype
+
+Individual: ind-no-brain-phenotype
+ Types: phenotype
+ Types: not brain-morphology
+
 

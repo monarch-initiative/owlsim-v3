@@ -29,7 +29,7 @@ public class ProfileMatcherComparisonMPTest extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testPhenodigmVsGrid() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmVsGrid() throws Exception {
 		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher1 = PhenodigmICProfileMatcher.create(kb);
@@ -42,7 +42,7 @@ public class ProfileMatcherComparisonMPTest extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testPhenodigmVsBN() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmVsBN() throws Exception {
 		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher1 = PhenodigmICProfileMatcher.create(kb);
@@ -55,7 +55,7 @@ public class ProfileMatcherComparisonMPTest extends AbstractProfileMatcherTest {
 	}
 	
 	@Test
-	public void testAll() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testAll() throws Exception {
 		load();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		Set<ProfileMatcher> pms = new HashSet<ProfileMatcher>();

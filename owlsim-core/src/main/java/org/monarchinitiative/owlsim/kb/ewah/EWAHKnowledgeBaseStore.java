@@ -32,6 +32,7 @@ public class EWAHKnowledgeBaseStore {
 	private EWAHCompressedBitmap[] storedTypes;               // by ind
 	private EWAHCompressedBitmap[] storedDirectTypes;         // by ind
 	private EWAHCompressedBitmap[] storedNegatedTypes;        // by ind
+	private EWAHCompressedBitmap[] storedDirectNegatedTypes;        // by ind
 	private EWAHCompressedBitmap[] storedDirectIndividuals;   // by class
 	
 	/**
@@ -50,6 +51,7 @@ public class EWAHKnowledgeBaseStore {
 		storedTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedDirectTypes = new EWAHCompressedBitmap[numberOfIndividuals];
 		storedNegatedTypes =  new EWAHCompressedBitmap[numberOfIndividuals];
+		storedDirectNegatedTypes =  new EWAHCompressedBitmap[numberOfIndividuals];
 		storedDirectIndividuals =  new EWAHCompressedBitmap[numberOfClasses];
 	}
 
@@ -163,12 +165,21 @@ public class EWAHKnowledgeBaseStore {
 
 	/**
 	 * @param individualIndex
-	 * @return all classes negatively associated with individual
+	 * @return all classes negatively associated (directly or indirectly) with individual
 	 */
 	public EWAHCompressedBitmap getNegatedTypes(int individualIndex) {
 		return storedNegatedTypes[individualIndex];
 	}
-
+	
+	/**
+	 * @param individualIndex
+	 * @return all classes negatively associated with individual
+	 */
+	public EWAHCompressedBitmap getDirectNegatedTypes(int individualIndex) {
+		return storedDirectNegatedTypes[individualIndex];
+	}
+	
+	
 	/**
 	 * @param individualIndex
 	 * @param isDirect 
@@ -280,6 +291,15 @@ public class EWAHKnowledgeBaseStore {
 	public void setNegatedTypes(int individualIndex, Set<Integer> types) {
 		 storedNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
 	}
+	
+	/**
+	 * @param individualIndex
+	 * @param types
+	 */
+	public void setDirectNegatedTypes(int individualIndex, Set<Integer> types) {
+		 storedDirectNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+	}
+
 	
 	/**
 	 * individuals that directly instantiate a class

@@ -26,7 +26,7 @@ public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatche
 	}
 
 	@Test
-	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testBasic() throws Exception {
 		loadSpecies();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);

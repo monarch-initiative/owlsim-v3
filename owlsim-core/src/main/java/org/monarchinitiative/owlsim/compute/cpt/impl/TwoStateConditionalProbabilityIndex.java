@@ -72,7 +72,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 		return new TwoStateConditionalProbabilityIndex(size);
 	}
 
-	public Double getConditionalProbability(int clsIndex, int parentsState) {
+	public Double getConditionalProbabilityChildIsOn(int clsIndex, int parentsState) {
 		return conditionalProbabilityByChildParentState[clsIndex][parentsState];
 	}
 	public Map<Integer, Character> getParentsToStateMapping(int clsIndex, int parentsState) {
@@ -83,7 +83,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 				0 : parentStateMapByIndex[clsIndex].length;
 	}
 	
-	public void setConditionalProbabilityTableRow(int childClassIndex, int parentsState, int numStates, double cp) throws IncoherentStateException {
+	public void setConditionalProbabilityChildIsOn(int childClassIndex, int parentsState, int numStates, double cp) throws IncoherentStateException {
 		if (conditionalProbabilityByChildParentState[childClassIndex] == null)
 			conditionalProbabilityByChildParentState[childClassIndex] = new Double[numStates];
 		if (cp < 0.0) {
@@ -145,7 +145,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 				double conditionalProbability = 
 						numIndividualsForChild / (double) numIndividualsForOnParents;
 				LOG.debug("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbability);
-				setConditionalProbabilityTableRow(cix, parentState, 
+				setConditionalProbabilityChildIsOn(cix, parentState, 
 						numStates, conditionalProbability);
 				parentStateMapByIndex[cix][parentState] = parentStateMap;
 			}

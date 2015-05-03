@@ -1,36 +1,31 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import java.io.FileNotFoundException;
-
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.ThreeStateBayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 /**
- * Tests bayesian network matcher, making use of both negative queries and negative
+ * Tests 3-state bayesian network matcher, making use of both negative queries and negative
  * associations
  * 
  * @author cjm
  *
  */
-public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
+public class FlatThreeStateBayesianNetworkProfileMatcherTest extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(PhenodigmICProfileMatcherTest.class);
+	private Logger LOG = Logger.getLogger(FlatThreeStateBayesianNetworkProfileMatcherTest.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return PhenodigmICProfileMatcher.create(kb);
+		return ThreeStateBayesianNetworkProfileMatcher.create(kb);
 	}
 
 	@Test
 	public void testBasic() throws Exception {
-		loadSimplePhenoWithNegation();
+		load("no-hierarchy-negation-test.owl");
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		
@@ -40,15 +35,15 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 			ProfileQuery pq = profileMatcher.createProfileQuery(i);
 			TestQuery tq =  new TestQuery(pq, i, 1); // self should always be ranked first
 			String fn = i.replaceAll(".*/", "");
-			eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
+			eval.writeJsonTo("target/flat-bn3-test-results-"+fn+".json");
 			Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 			
-			if (i.equals("http://x.org/ind-dec-all")) {
-				Assert.assertTrue(isRankedLast("http://x.org/ind-brain", tq.matchSet));
+			if (i.equals("http://x.org/i1")) {
+				Assert.assertTrue(isRankedLast("http://x.org/ni1", tq.matchSet));
 				nOk++;
 			}
-			if (i.equals("http://x.org/ind-small-heart-big-brain")) {
-				Assert.assertTrue(isRankedLast("http://x.org/ind-bone", tq.matchSet));
+			if (i.equals("http://x.org/ni1")) {
+				Assert.assertTrue(isRankedLast("http://x.org/i1", tq.matchSet));
 				nOk++;
 			}
 			

@@ -69,7 +69,7 @@ public class MultiMatcherSpeciesTest {
 	}
 	
 	@Test
-	public void test1() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	public void test1() throws Exception {
 		load("species.owl");
 		setQueries();
 		LOG.info("CLASSES: "+kb.getClassIdsInSignature());
@@ -80,7 +80,7 @@ public class MultiMatcherSpeciesTest {
 	}
 
 	@Test
-	public void testGM() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	public void testGM() throws Exception {
 		load("species.owl");
 		setQueries();
 		LOG.info("CLASSES: "+kb.getClassIdsInSignature());
@@ -140,7 +140,7 @@ public class MultiMatcherSpeciesTest {
 		return ProfileQueryImpl.create(qids);
 	}
 	
-	private void testMatcher(ProfileMatcher profileMatcher) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	private void testMatcher(ProfileMatcher profileMatcher) throws Exception {
 
 		for (TestQuery tq : testQueries) {
 			ProfileQuery q = tq.query;

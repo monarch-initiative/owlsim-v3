@@ -16,7 +16,7 @@ public class JaccardSimilarityProfileMatcherMPTest extends AbstractProfileMatche
 	}
 
 	@Override
-	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	public void testSgDiseaseExact() throws Exception {
 		testSgDiseaseExact(DISEASE.sg, null);
 
 	}

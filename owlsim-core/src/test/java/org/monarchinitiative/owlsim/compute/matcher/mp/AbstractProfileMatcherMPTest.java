@@ -74,7 +74,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	@Test
 	public abstract void testSgDiseaseExact() throws Exception;
 
-	protected void testSgDiseaseExact(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testSgDiseaseExact(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"absent gametes", 
 				"small gonad"
@@ -96,7 +96,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testSgDiseaseLeaveOneOut() throws Exception;
-	protected void testSgDiseaseLeaveOneOut(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testSgDiseaseLeaveOneOut(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"small gonad"
 				),
@@ -112,7 +112,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testMultiPhenotypeDisease() throws Exception;
-	protected void testMultiPhenotypeDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testMultiPhenotypeDisease(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"reproductive system phenotype",   // present in sg
 				"abnormal cerebellum development",  // superclass of phenotype in pd and foo
@@ -138,7 +138,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testEpDiseaseFuzzy() throws Exception;
-	protected void testEpDiseaseFuzzy(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testEpDiseaseFuzzy(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"reproductive system phenotype",  // not in disease profile
 				"abnormal behavior",
@@ -156,7 +156,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testNervousSystemDisease() throws Exception;
-	protected void testNervousSystemDisease(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testNervousSystemDisease(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"nervous system phenotype"  // foo, pd and ep all have this
 				),
@@ -175,7 +175,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	 */
 	@Test
 	public abstract void testPdDisease() throws Exception;
-	protected void testPd(DISEASE d, Number expectedScore) throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	protected void testPd(DISEASE d, Number expectedScore) throws Exception {
 		testQuery(Sets.newHashSet(
 				"abnormal basal ganglion morphology", 
 				"abnormal cerebellum external granule cell layer morphology",
@@ -188,7 +188,7 @@ public abstract class AbstractProfileMatcherMPTest {
 
 	private void testQuery(Set<String> queryClassLabels, 
 			DISEASE expectedDisease, 
-			Number expectedScore) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+			Number expectedScore) throws Exception {
 
 		String expectedDiseaseFrag = expectedDisease == null ? null : expectedDisease.toString();
 		load("mp-subset.ttl");

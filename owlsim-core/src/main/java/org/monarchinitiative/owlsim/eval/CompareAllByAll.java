@@ -3,6 +3,7 @@ package org.monarchinitiative.owlsim.eval;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -40,7 +41,7 @@ public class CompareAllByAll {
 		this.profileMatcher = profileMatcher;
 	}
 
-	public int[][] compareAllByAll() {
+	public int[][] compareAllByAll() throws UnknownFilterException, IncoherentStateException {
 		BMKnowledgeBase kb = profileMatcher.getKnowledgeBase();
 		Set<String> indIds = kb.getIndividualIdsInSignature();
 		int n = indIds.size();

@@ -449,6 +449,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 			// Treat CLassAssertion( ComplementOf(c) i) as a negative assertion
 			Set<Integer> ncs = new HashSet<Integer>();
+			Set<Integer> ncsDirect = new HashSet<Integer>();
 			for (OWLClassAssertionAxiom cx : owlOntology.getClassAssertionAxioms(i)) {
 				// TODO: investigate efficiency - number of items set may be high
 				if (cx.getClassExpression() instanceof OWLObjectComplementOf) {
@@ -456,6 +457,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					OWLClassExpression nc = nx.getOperand();
 					ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(nc, false)));
 					ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(nc)));
+					ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(nc)));
 				}
 			}
 			
@@ -467,10 +469,12 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 						LOG.info(i+" Type: "+c+" DisjointWith: "+dc);
 						ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(dc, false)));					
 						ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+						ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
 					}
 				}
 			}
-			ontoEWAHStore.setNegatedTypes(individualIndex, ncs);
+			ontoEWAHStore.setNegatedTypes(individualIndex, ncs); // TODO - determine if storing all inferred negated types is too inefficient
+			ontoEWAHStore.setDirectNegatedTypes(individualIndex, ncsDirect);
 		}
 
 	}
@@ -787,11 +791,20 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	/**
 	 * @param id
-	 * @return bitmap representation of all (direct and indirect) classes known to be not instantiated
+	 * @return bitmap representation of all (direct and indirect) classes known to be NOT instantiated
 	 */
 	public EWAHCompressedBitmap getNegatedTypesBM(String id) {
 		Preconditions.checkNotNull(id);
 		return ontoEWAHStore.getNegatedTypes(getIndividualIndex(id));
+	}
+
+	/**
+	 * @param id
+	 * @return bitmap representation of all (direct and indirect) classes known to be NOT instantiated
+	 */
+	public EWAHCompressedBitmap getDirectNegatedTypesBM(String id) {
+		Preconditions.checkNotNull(id);
+		return ontoEWAHStore.getDirectNegatedTypes(getIndividualIndex(id));
 	}
 
 

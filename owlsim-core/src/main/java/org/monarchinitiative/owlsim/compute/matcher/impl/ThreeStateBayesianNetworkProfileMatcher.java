@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
+import org.monarchinitiative.owlsim.compute.cpt.impl.NodeProbabilities;
 import org.monarchinitiative.owlsim.compute.cpt.impl.ThreeStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
@@ -25,6 +26,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
 /**
  * INCOMPLETE
  * 
+ * Pr(Child = on | P) = SUM[0<i<3^|P|] { Pr(Child=on | Si) * Pr(Si)   } 
  * 
  * 
  * @author cjm
@@ -34,7 +36,7 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 
 	private Logger LOG = Logger.getLogger(ThreeStateBayesianNetworkProfileMatcher.class);
 
-	ConditionalProbabilityIndex cpi;
+	ThreeStateConditionalProbabilityIndex cpi;
 
 	@Inject
 	private ThreeStateBayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
@@ -72,14 +74,16 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 	/**
 	 * @param q
 	 * @return match profile containing probabilities of each individual
+	 * @throws IncoherentStateException 
 	 */
-	public MatchSet findMatchProfileImpl(ProfileQuery q) {
+	public MatchSet findMatchProfileImpl(ProfileQuery q) throws IncoherentStateException {
 
 		boolean isUseNegation = q instanceof QueryWithNegation;
 		if (!isUseNegation) {
 			LOG.error("Consider using TwoState BN, this will be inefficient");
 		}
-		EWAHCompressedBitmap negatedQueryProfileBM;
+		EWAHCompressedBitmap negatedQueryProfileBM = null;
+		Set<String> negatedQueryClassIds = null;
 
 		//double fpr = getFalsePositiveRate();
 		//double fnr = getFalseNegativeRate();
@@ -87,13 +91,18 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		//int numClasses = knowledgeBase.getClassIdsInSignature().size();
 		//EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		//		EWAHCompressedBitmap negatedQueryProfileBM = null;
-		LOG.info("Using negation*******");
-		QueryWithNegation nq = (QueryWithNegation)q;
-		negatedQueryProfileBM = getNegatedProfileBM(nq);
-		LOG.info("nqp=" + negatedQueryProfileBM);
+		if (isUseNegation) {
+			LOG.info("Using QueryWithNegation");
+			QueryWithNegation nq = (QueryWithNegation)q;
+			negatedQueryProfileBM = getDirectNegatedProfileBM(nq);
+			negatedQueryClassIds = knowledgeBase.getClassIds(negatedQueryProfileBM);
+			LOG.info("nqp=" + negatedQueryProfileBM);
+		}
+		else {
+			LOG.info("Not using QueryWithNegation");
+		}
 
 		Set<String> queryClassIds = q.getQueryClassIds();
-		Set<String> negatedQueryClassIds = nq.getQueryClassIds();
 		MatchSet mp = MatchSetImpl.create(q); // TODO
 
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
@@ -127,6 +136,7 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		return mp;
 	}
 
+
 	/**
 	 * We wrap calculation within a class to allow for cacheing relative to
 	 * a particular targetProfile
@@ -137,12 +147,13 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 	public class Calculator {
 		EWAHCompressedBitmap targetProfileBM;
 		EWAHCompressedBitmap negatedTargetProfileBM;
-		Double[] probCache;
+		NodeProbabilities[] probCache;
 
 		public Calculator(EWAHCompressedBitmap targetProfileBM, EWAHCompressedBitmap negatedTargetProfileBM) {
 			super();
 			this.targetProfileBM = targetProfileBM;
-			probCache = new Double[getKnowledgeBase().getNumClassNodes()];
+			this.negatedTargetProfileBM = negatedTargetProfileBM;
+			probCache = new NodeProbabilities[getKnowledgeBase().getNumClassNodes()];
 		}
 
 		/**
@@ -159,9 +170,10 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		 * @param negatedQueryClassIds 
 		 * @param targetProfileBM
 		 * @return probability
+		 * @throws IncoherentStateException 
 		 */
 		public double calculateProbability(Set<String> queryClassIds, 
-				Set<String> negatedQueryClassIds) {
+				Set<String> negatedQueryClassIds) throws IncoherentStateException {
 			double cump = 1.0;
 
 			// treat set of query class Ids as a leaf node that is the
@@ -170,12 +182,18 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 			//  Pr=1.0, if all parents=1
 			//  Pr=0.0 otherwise
 			for (String queryClassId : queryClassIds) {
-				double p = calculateProbability(true, queryClassId);
+				//LOG.info("+Q"+queryClassId);
+				double p = calculateProbability(queryClassId).prOn;
 				cump *= p;
 			}
-			for (String negatedQueryClassId : negatedQueryClassIds) {
-				double p = calculateProbability(false, negatedQueryClassId);
-				cump *= p;
+			if (negatedQueryClassIds != null) {
+				// TODO: prOff=0
+				for (String negatedQueryClassId : negatedQueryClassIds) {
+					LOG.info("-Q"+negatedQueryClassId);
+					double p = calculateProbability(negatedQueryClassId).prOff;
+					LOG.info("   prOff="+p);
+					cump *= p;
+				}
 			}
 			return cump;
 		}
@@ -186,14 +204,23 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		 * @param queryClassId
 		 * @param targetProfileBM
 		 * @return probability
+		 * @throws IncoherentStateException 
 		 */
-		private double calculateProbability(boolean isOn, String queryClassId) {
+		private NodeProbabilities calculateProbability(String queryClassId) throws IncoherentStateException {
 			BMKnowledgeBase kb = getKnowledgeBase();
 			int qcix = kb.getClassIndex(queryClassId);
-			return calculateProbability(isOn, qcix);
+			return calculateProbability(qcix); 
 		}
 
-		private double calculateProbability(boolean isOn, int qcix) {
+
+		/**
+		 * Pr(Child = on | P) = SUM[0<i<3^|P|] { Pr(Si) | Pr(Child=on | Si)   }
+		 * 
+		 * @param qcix
+		 * @return
+		 * @throws IncoherentStateException 
+		 */
+		private NodeProbabilities calculateProbability(int qcix) throws IncoherentStateException {
 			if (probCache[qcix] != null) {
 				LOG.debug("Using cached for "+qcix);
 				return probCache[qcix];
@@ -202,55 +229,85 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 			BMKnowledgeBase kb = getKnowledgeBase();
 			LOG.debug("Calculating probability for "+qcix+" ie "+kb.getClassId(qcix));
 
-			double returnProb;
+			NodeProbabilities prdChild;
 			// TODO - determine efficiency of using get(ix) vs other methods
 			if (targetProfileBM.get(qcix)) {
-				LOG.debug("Q is in target profile");
-				returnProb = 0.95; // TODO - do not hardcode
+				LOG.info("Q is in target profile");
+				prdChild = new NodeProbabilities(0.95, 0.01); // TODO - do not hardcode
+			}
+			else if (negatedTargetProfileBM != null &&
+					negatedTargetProfileBM.get(qcix)) {
+				LOG.info("Q is in negative target profile");
+				prdChild = new NodeProbabilities(0.01, 0.99); // TODO - do not hardcode
 			}
 			else {
 				List<Integer> pixs = kb.getDirectSuperClassesBM(qcix).getPositions();
-				double[] parentProbs = new double[pixs.size()];
+				NodeProbabilities[] parentOnProbs = new NodeProbabilities[pixs.size()];
 				LOG.debug("calculating for parents");
 				for (int i=0; i<pixs.size(); i++) {
 					// TODO - cache, to avoid repeated calculations
 					// recursive call
-					parentProbs[i] = 
-							calculateProbability(isOn, pixs.get(i));
+					parentOnProbs[i] = 
+							calculateProbability(pixs.get(i));
 				}
 
 				int numParents = pixs.size();
-				// assume two states for now: will be extendable to yes, no, unknown
-				int numStates = (int) Math.pow(2, numParents);
+				int numStates = (int) Math.pow(3, numParents);
 
 				// sum of probabilities
-				double sump = 0; // TODO: use logs
+				double sumParentOnProbs = 0; // TODO: use logs
+				double sumParentOffProbs = 0; // TODO: use logs
 
 				// Pr(Q | Parents) = sum of { Pr(Q | off, off, ..., off), ... } 
-				for (int parentState=0; parentState<numStates; parentState++) {
-					double cp = cpi.getConditionalProbability(qcix, parentState);
-					LOG.debug(" cp="+cp+" for states="+parentState);
-					Map<Integer, Character> psm = cpi.getParentsToStateMapping(qcix, parentState);
-					Set<Integer> onPixs = new HashSet<Integer>();
+				for (int parentsStateComboIx=0; parentsStateComboIx<numStates; parentsStateComboIx++) {
+					NodeProbabilities cprd = 
+							cpi.getConditionalProbabilityDistribution(qcix, parentsStateComboIx);
+					//LOG.debug(" cp="+cpOn+" for states="+parentsStateComboIx);
+					Map<Integer, Character> psm = cpi.getParentsToStateMapping(qcix, parentsStateComboIx);
+					Set<Integer> onPixs = new HashSet<Integer>(); // set of parents in On state
 					for (int pix : psm.keySet()) {
 						if (psm.get(pix) == 't') {
 							onPixs.add(pix);
 						}
 					}
 					LOG.debug("   onPixs="+onPixs);
-					double p = 1.0;
+					double prParentStateCombo = 1.0;
 					for (int i=0; i<pixs.size(); i++) {
 						int pix = pixs.get(i);
-						p *= onPixs.contains(pix) ? parentProbs[i] : 1-parentProbs[i];
-					}
-					sump += p * cp;
-				}
-				LOG.debug("Calculated probability for "+qcix+" ie "+kb.getClassId(qcix)+" = "+sump);
+						Character parentState = psm.get(pix);
+						NodeProbabilities prdParent = parentOnProbs[i];
 
-				returnProb = sump;
+						// TODO - fix this for 3-state
+						double prParentInState;
+						if (parentState == 't') {
+							prParentInState = prdParent.prOn;
+						}
+						else if (parentState == 'f') {
+							prParentInState = prdParent.prOff;
+						}
+						else if (parentState == 'u') {
+							prParentInState = prdParent.prUnknown;
+						}
+						else {
+							throw new IncoherentStateException("Invalid state: "+parentState);
+						}
+						if (prParentInState < 0) {
+							throw new IncoherentStateException("Invalid probability of "+
+									parentState+" = "+prParentInState);
+						}
+
+						prParentStateCombo *= prParentInState;
+					}
+					sumParentOnProbs += prParentStateCombo * cprd.prOn;
+					sumParentOffProbs += prParentStateCombo * cprd.prOff;
+				}
+				LOG.info("Calculated probability for "+qcix+" ie "+kb.getClassId(qcix)+
+						" On= "+sumParentOnProbs+" Off= "+sumParentOffProbs);
+
+				prdChild = new NodeProbabilities(sumParentOnProbs, sumParentOffProbs);
 			}
-			probCache[qcix] = returnProb;
-			return returnProb;
+			probCache[qcix] = prdChild;
+			return prdChild;
 		}
 
 

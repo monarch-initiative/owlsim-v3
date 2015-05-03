@@ -1,0 +1,36 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org/abc-linear-neg.owl>
+
+## Ontology: a -> b -> c
+## Propagation of probabilities: c -> b -> a
+## Pr(c) = 1.0
+## Pr(b) = 0.66
+## Pr(a) = 0.33
+## Pr(a|b=on) = 0.5
+## Pr(a|b=unknown) = 0.33
+## Pr(b|c=on) = 0.67
+## Pr(a|c=unknown) = 0.67
+
+
+Class: a
+ SubClassOf: b
+Class: b
+ SubClassOf: c
+Class: c
+ 
+Individual: ia1 Types: a
+Individual: ib1 Types: b
+Individual: ic1 Types: c
+
+Individual: ia2 Types: a
+Individual: ib2 Types: b
+Individual: ic2 Types: c
+
+Individual: nia1 Types: a
+Individual: nib1 Types: b, not a
+Individual: nic1 Types: c, not b
+
+Individual: ix1 Types: a
+Individual: nix1 Types: not a
+Individual: nix2 Types: not b

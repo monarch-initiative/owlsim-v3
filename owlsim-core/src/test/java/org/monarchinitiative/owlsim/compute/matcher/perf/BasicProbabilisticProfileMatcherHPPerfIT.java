@@ -26,7 +26,7 @@ public class BasicProbabilisticProfileMatcherHPPerfIT extends AbstractProfileMat
 	}
 
 	@Test
-	public void testBasic() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testBasic() throws Exception {
 		loadHP();
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);

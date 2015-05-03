@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.ThreeStateBayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -26,12 +26,12 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * @author cjm
  *
  */
-public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherTest {
+public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcherPerfIT.class);
+	private Logger LOG = Logger.getLogger(ThreeStateBayesianNetworkProfileMatcherPerfIT.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return BayesianNetworkProfileMatcher.create(kb);
+		return ThreeStateBayesianNetworkProfileMatcher.create(kb);
 	}
 
 
@@ -56,7 +56,7 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn-it-results-sjs.json");
+		eval.writeJsonTo("target/bn3-it-results-sjs.json");
 		String d = "Schwartz-Jampel Syndrome, Type 1";
 		TestQuery tq = eval.constructTestQueryAgainstIndividual(
 				kb,
@@ -81,7 +81,7 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn-it-results-rdms.json");
+		eval.writeJsonTo("target/bn3-it-results-rdms.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Smith-Lemli-Opitz Syndrome",
 				16,
@@ -101,27 +101,28 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 		Logger.getRootLogger().setLevel(level);
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn-it-results-multi.json");
+		eval.writeJsonTo("target/bn3-it-results-multi.json");
 		String dq = "Schwartz-Jampel Syndrome, Type 1";
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
-					"Schwartz-Jampel Syndrome (Orphanet)",
-					3,
-					dq)));
-		TestQuery tq = eval.constructTestQueryAgainstIndividual(
-				kb,
-				labelMapper,
-				"Arthrogryposis, Distal, Type 2a",
-				6,
-				dq);
-		tq.maxTimeMs = 10000;
+					"Microcephalic Osteodysplastic Primordial Dwarfism, Type I",
+					16,
+					dq)));		
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
-			     tq));		
+			     eval.constructTestQueryAgainstIndividual(
+					kb,
+					labelMapper,
+					"Arthrogryposis, Distal, Type 2a",
+					6,
+					dq)));		
 	}
+	
+	// TODO: incorporate disjointness
 	private void load() throws OWLOntologyCreationException {
-		load("/ontologies/hp.obo", "/data/Homo_sapiens-data.owl");		
+		load("/ontologies/hp.obo",  "/data/Homo_sapiens-data.owl");		
+		//load("/ontologies/hp.obo", "/ontologies/hp-disjoints.owl", "/data/Homo_sapiens-data.owl");		
 	}
 
 }

@@ -13,6 +13,8 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
  * 
+ * Note: currently only used by 3-state implementation
+ * 
  * @author cjm
  *
  */
@@ -22,7 +24,6 @@ public abstract class AbstractConditionalProbabilityIndex implements Conditional
 	BMKnowledgeBase kb;
 	
 
-	Double[][] conditionalProbabilityByChildParentState;
 	Map<Integer,Character>[][] parentStateMapByIndex;
 	
 	/**
@@ -40,15 +41,8 @@ public abstract class AbstractConditionalProbabilityIndex implements Conditional
 		this.kb = kb;
 		init(kb.getNumClassNodes());
 	}
-	private void init(int size) {
-		conditionalProbabilityByChildParentState = new Double[size][];
-		parentStateMapByIndex = 
-				 (Map<Integer,Character>[][])new Map[size][];
-	}
+	protected abstract void init(int size);
 	
-	public Double getConditionalProbability(int clsIndex, int parentsState) {
-		return conditionalProbabilityByChildParentState[clsIndex][parentsState];
-	}
 	public Map<Integer, Character> getParentsToStateMapping(int clsIndex, int parentsState) {
 		return parentStateMapByIndex[clsIndex][parentsState];
 	}
@@ -57,17 +51,7 @@ public abstract class AbstractConditionalProbabilityIndex implements Conditional
 				0 : parentStateMapByIndex[clsIndex].length;
 	}
 	
-	public void setConditionalProbabilityTableRow(int childClassIndex, int parentsState, int numStates, double cp) throws IncoherentStateException {
-		if (conditionalProbabilityByChildParentState[childClassIndex] == null)
-			conditionalProbabilityByChildParentState[childClassIndex] = new Double[numStates];
-		if (cp < 0.0) {
-			throw new IncoherentStateException("Pr(C|Parents)="+cp);
-		}
-		if (cp > 1.0) {
-			throw new IncoherentStateException("Pr(C|Parents)="+cp);
-		}
-		conditionalProbabilityByChildParentState[childClassIndex][parentsState] = cp;
-	}
+
 
 	public abstract void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException;
 

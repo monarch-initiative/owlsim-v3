@@ -16,7 +16,7 @@ public class MaximumInformationContentSimilarityProfileMatcherMPTest extends Abs
 	}
 
 	@Override
-	public void testSgDiseaseExact() throws OWLOntologyCreationException, FileNotFoundException, NonUniqueLabelException, UnknownFilterException {
+	public void testSgDiseaseExact() throws Exception {
 		testSgDiseaseExact(DISEASE.sg, null);
 
 	}

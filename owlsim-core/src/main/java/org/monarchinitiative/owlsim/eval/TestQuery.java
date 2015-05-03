@@ -14,6 +14,7 @@ public class TestQuery {
 	public String expectedId;
 	public int maxRank = 1;
 	public MatchSet matchSet;
+	public Integer maxTimeMs = null;
 	
 	public TestQuery(ProfileQuery query, String expectedId) {
 		super();

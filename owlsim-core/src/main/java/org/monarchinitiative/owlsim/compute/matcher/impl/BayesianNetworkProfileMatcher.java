@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
+import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -54,7 +55,7 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * @author cjm
  *
  */
-public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implements ProfileMatcher {
+public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implements NegationAwareProfileMatcher {
 
 	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcher.class);
 
@@ -111,9 +112,9 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		if (isUseNegation) {
 			LOG.info("Using QueryWithNegation");
 			QueryWithNegation nq = (QueryWithNegation)q;
-			negatedQueryProfileBM = getNegatedProfileBM(nq);
+			negatedQueryProfileBM = getDirectNegatedProfileBM(nq);
 			negatedQueryClassIds = knowledgeBase.getClassIds(negatedQueryProfileBM);
-			LOG.info("nqp=" + negatedQueryProfileBM);
+			LOG.info("nqp=" + negatedQueryProfileBM+" // "+negatedQueryClassIds);
 		}
 		else {
 			LOG.info("Not using QueryWithNegation");
@@ -130,8 +131,8 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
 			EWAHCompressedBitmap negatedTargetProfileBM = knowledgeBase.getNegatedTypesBM(itemId);
-			LOG.debug("TARGET PROFILE for "+itemId+" "+targetProfileBM);
-			LOG.debug("NEGATIVE TARGET PROFILE for "+itemId+" "+negatedTargetProfileBM);
+			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
+			LOG.info("NEGATIVE TARGET PROFILE for "+itemId+" "+negatedTargetProfileBM);
 
 			Calculator calc = new Calculator(targetProfileBM, negatedTargetProfileBM);
 			//double p = calculateProbability(queryClassIds, targetProfileBM);
@@ -139,7 +140,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 
 			if (negatedQueryProfileBM != null) {
 				double np = 1 - calc.calculateProbability(negatedQueryClassIds);
-				LOG.info("Combined Probability = "+p+" * "+np);
+				LOG.info("Combined Probability = (POS) "+p+" * (NEG) "+np);
 				p = p*np;
 			}
 			
@@ -147,7 +148,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 			indArr[n] = itemId;
 			sumOfProbs += p;
 			n++;
-			LOG.info("p for "+itemId+" = "+p);
+			//LOG.info("p for "+itemId+" = "+p);
 		}
 		for (n = 0; n<pvector.length; n++) {
 			double p = pvector[n] / sumOfProbs;
@@ -205,7 +206,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 				if (negatedTargetProfileBM != null) {
 					if (knowledgeBase.getSuperClassesBM(queryClassId).andCardinality(negatedTargetProfileBM) > 0) {
 						LOG.info("NEGATIVE EVIDENCE for "+queryClassId);
-						p *= 0.001;  // TODO - do not hardcode false negative
+						p *= 0.01;  // TODO - do not hardcode false negative
 					}
 				}
 
@@ -264,7 +265,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 
 				// Pr(Q | Parents) = sum of { Pr(Q | off, off, ..., off), ... } 
 				for (int parentsStateComboIx=0; parentsStateComboIx<numStateCombinations; parentsStateComboIx++) {
-					double cp = cpi.getConditionalProbability(qcix, parentsStateComboIx);
+					double cp = cpi.getConditionalProbabilityChildIsOn(qcix, parentsStateComboIx);
 					LOG.debug(" cp="+cp+" for states="+parentsStateComboIx);
 					Map<Integer, Character> psm = cpi.getParentsToStateMapping(qcix, parentsStateComboIx);
 					Set<Integer> onPixs = new HashSet<Integer>();

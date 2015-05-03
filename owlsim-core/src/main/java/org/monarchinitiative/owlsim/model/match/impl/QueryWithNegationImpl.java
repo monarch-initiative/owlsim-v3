@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
@@ -31,6 +32,12 @@ public class QueryWithNegationImpl extends ProfileQueryImpl implements QueryWith
 
 	public void setQueryNegatedClassIds(Set<String> queryNegatedClassIds) {
 		this.queryNegatedClassIds = queryNegatedClassIds;
+	}
+	
+	public void addQueryNegatedClassId(String queryNegatedClassId) {
+		if (queryNegatedClassIds == null)
+			queryNegatedClassIds = new HashSet<String>();
+		queryNegatedClassIds.add(queryNegatedClassId);
 	}
 	
 	@Override

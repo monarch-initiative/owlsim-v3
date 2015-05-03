@@ -35,7 +35,7 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testPhenodigmSingleProfileQuery() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmSingleProfileQuery() throws Exception {
 		load();
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
@@ -67,7 +67,7 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 	 * @throws UnknownFilterException
 	 */
 	@Test
-	public void testPhenodigmQueryWithSelf() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmQueryWithSelf() throws Exception {
 		load();
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
@@ -92,7 +92,7 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 	}
 
 	@Test
-	public void testPhenodigmQueryMultiple() throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	public void testPhenodigmQueryMultiple() throws Exception {
 		load();
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();

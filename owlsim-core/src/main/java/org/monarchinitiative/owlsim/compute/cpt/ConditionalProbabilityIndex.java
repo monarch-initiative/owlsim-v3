@@ -29,7 +29,7 @@ public interface ConditionalProbabilityIndex {
 	 * @param parentsStatesIndex - integer encoding P1=S1...Pn=Sn
 	 * @return Pr(C | P1=S1, P2=S2, ..., Pn=Sn)
 	 */
-	public Double getConditionalProbability(int clsIndex, int parentsStatesIndex);
+	public Double getConditionalProbabilityChildIsOn(int clsIndex, int parentsStatesIndex);
 	
 	/**
 	 * @param childClassIndex
@@ -38,8 +38,8 @@ public interface ConditionalProbabilityIndex {
 	 * @param cp
 	 * @throws IncoherentStateException
 	 */
-	public void setConditionalProbabilityTableRow(int childClassIndex, int parentsStatesIndex, int numStates, 
-			double cp) throws IncoherentStateException;
+	//public void setConditionalProbabilityChildIsOn(int childClassIndex, int parentsStatesIndex, int numStates, 
+	//		double cp) throws IncoherentStateException;
 	
 	/**
 	 * Called to set all CPs

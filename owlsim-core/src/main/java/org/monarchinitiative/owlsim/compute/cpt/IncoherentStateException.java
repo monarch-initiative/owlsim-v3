@@ -20,7 +20,7 @@ public class IncoherentStateException extends Exception {
 	 * @param label
 	 */
 	public IncoherentStateException(String label) {
-		// TODO Auto-generated constructor stub
+		super(label);
 	}
 
 }

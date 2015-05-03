@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.inference.TestUtils;
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
@@ -93,11 +94,22 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	}
 
 	// a negated profile implicitly includes subclasses
+	@Deprecated
 	protected EWAHCompressedBitmap getNegatedProfileBM(QueryWithNegation q) {
 		Set<Integer> bits = new HashSet<Integer>();
 		for (String id : q.getQueryNegatedClassIds()) {
 			int ci = knowledgeBase.getClassIndex(id);
 			bits.addAll( knowledgeBase.getSubClasses(ci).getPositions() );
+		}
+		return EWAHUtils.converIndexSetToBitmap(bits);
+	}
+
+	protected EWAHCompressedBitmap getDirectNegatedProfileBM(QueryWithNegation q) {
+		Set<Integer> bits = new HashSet<Integer>();
+		// TODO: less dumb implementation...
+		for (String id : q.getQueryNegatedClassIds()) {
+			int ci = knowledgeBase.getClassIndex(id);
+			bits.add(ci);
 		}
 		return EWAHUtils.converIndexSetToBitmap(bits);
 	}
@@ -110,9 +122,12 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return filterEngine.applyFilter(filter);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher#createProfileQuery(java.lang.String)
+	 */
 	public ProfileQuery createProfileQuery(String individualId) {
-		EWAHCompressedBitmap bmi = knowledgeBase.getTypesBM(individualId);
-		EWAHCompressedBitmap nbmi = knowledgeBase.getNegatedTypesBM(individualId);
+		EWAHCompressedBitmap bmi = knowledgeBase.getDirectTypesBM(individualId);
+		EWAHCompressedBitmap nbmi = knowledgeBase.getDirectNegatedTypesBM(individualId);
 		Set<String> qcids = knowledgeBase.getClassIds(bmi);
 		Set<String> nqcids = knowledgeBase.getClassIds(nbmi);
 		ProfileQuery q;
@@ -125,13 +140,13 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return q;
 	}
 
-	public MatchSet findMatchProfile(String individualId) {
+	public MatchSet findMatchProfile(String individualId) throws IncoherentStateException {
 		ProfileQuery q = createProfileQuery(individualId);
 		return findMatchProfile(q);
 	}
 	
 
-	public MatchSet findMatchProfile(ProfileQuery q) {
+	public MatchSet findMatchProfile(ProfileQuery q) throws IncoherentStateException {
 		MatchSet ms = findMatchProfileAll(q);
 		int limit = q.getLimit() == null ? 200 : q.getLimit();
 		if (limit > -1) {
@@ -140,7 +155,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return ms;
 	}
 	
-	public MatchSet findMatchProfile(ProfileQuery q, double alpha) {
+	public MatchSet findMatchProfile(ProfileQuery q, double alpha) throws IncoherentStateException {
 		MatchSet ms = findMatchProfileAll(q);
 
 		//use all matches as "background"
@@ -159,7 +174,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	}
 	
 	// additional layer of indirection above Impl, adds standard metadata
-	private MatchSet findMatchProfileAll(ProfileQuery q) {
+	private MatchSet findMatchProfileAll(ProfileQuery q) throws IncoherentStateException {
 		long t1 = System.currentTimeMillis();
 		MatchSet ms = findMatchProfileImpl(q); // implementing class
 		long t2 = System.currentTimeMillis();
@@ -171,5 +186,5 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return ms;
 	}
 
-	protected abstract MatchSet findMatchProfileImpl(ProfileQuery q);
+	protected abstract MatchSet findMatchProfileImpl(ProfileQuery q) throws IncoherentStateException;
 }

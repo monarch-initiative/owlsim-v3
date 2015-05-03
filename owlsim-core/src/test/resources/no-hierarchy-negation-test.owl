@@ -1,0 +1,35 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org/nh>
+
+Class: c1
+Class: c2
+Class: c3
+Class: c4
+Class: z
+
+Individual: i1
+ Types: z, c1
+
+Individual: i2
+ Types: z, c2
+
+Individual: i3
+ Types: z, c3
+
+Individual: i4
+ Types: z, c4
+
+Individual: ni1
+ Types: z, not c1
+
+Individual: ni2
+ Types: z, not c2
+
+Individual: ni3
+ Types: z, not c3
+
+Individual: ni4
+ Types: z, not c4
+
+

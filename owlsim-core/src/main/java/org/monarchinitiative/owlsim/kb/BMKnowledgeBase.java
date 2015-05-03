@@ -162,7 +162,17 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getDirectTypesBM(String id);
 	
+	/**
+	 * @param itemId
+	 * @return types as bitmap
+	 */
 	public EWAHCompressedBitmap getNegatedTypesBM(String itemId);
+
+	/**
+	 * @param itemId
+	 * @return types as bitmap
+	 */
+	public EWAHCompressedBitmap getDirectNegatedTypesBM(String itemId);
 
 	/**
 	 * @param id - individual ID

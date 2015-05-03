@@ -3,6 +3,7 @@ package org.monarchinitiative.owlsim.eval;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -31,15 +32,15 @@ import java.util.Set;
  *
  */
 public class ProfileMatchEvaluator {
-	
+
 	private Logger LOG = Logger.getLogger(ProfileMatchEvaluator.class);
 	private boolean writeToStdout = true;
 	private JSONWriter jsonWriter;
-	
+
 	public void writeJsonTo(String fileName) throws FileNotFoundException {
 		jsonWriter = new JSONWriter(fileName);
 	}
-	
+
 	public void writeJson(Object obj) {
 		jsonWriter.write(obj);
 	}
@@ -56,8 +57,9 @@ public class ProfileMatchEvaluator {
 	 * @throws OWLOntologyCreationException
 	 * @throws NonUniqueLabelException
 	 * @throws UnknownFilterException
+	 * @throws IncoherentStateException 
 	 */
-	public boolean evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, UnknownFilterException {
+	public boolean evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, UnknownFilterException, IncoherentStateException {
 
 		ProfileQuery q = tq.query;
 		LOG.info("Q="+q);
@@ -71,7 +73,7 @@ public class ProfileMatchEvaluator {
 
 		mp.calculateMatchSignificance(mp.getScores());
 		LOG.info("first match:"+mp.getMatches().get(0));
-		
+
 		if (jsonWriter != null) {
 			LOG.info("Writing MatchSet using "+jsonWriter+" results will appear in "+jsonWriter);
 			jsonWriter.write(mp);
@@ -89,8 +91,18 @@ public class ProfileMatchEvaluator {
 			}
 		}
 		LOG.info("Rank of "+tq.expectedId+" == "+actualRank+" when using "+profileMatcher);
-
-		return actualRank <= tq.maxRank && actualRank > 0;
+		LOG.info("Duration "+mp.getExecutionMetadata().getDuration()+" Expected < "+
+				tq.maxTimeMs);
+		boolean inTime = true;
+		if (tq.maxTimeMs != null) {
+			if (mp.getExecutionMetadata().getDuration() > tq.maxTimeMs) {
+				LOG.error("Execution took too long: " + 
+						mp.getExecutionMetadata().getDuration()  + " > " + 
+						tq.maxTimeMs);
+				inTime = false;
+			}
+		}
+		return actualRank <= tq.maxRank && actualRank > 0 && inTime;
 
 	}
 
@@ -128,7 +140,7 @@ public class ProfileMatchEvaluator {
 		TestQuery tq = new TestQuery(q, expectedId, maxRank);
 		return tq;
 	}
-	
+
 	/**
 	 * Constructs a test query given a set of class labels constituting the query profile
 	 * 
@@ -169,7 +181,7 @@ public class ProfileMatchEvaluator {
 			LOG.info("NQIDS="+nqids);
 			q = QueryWithNegationImpl.create(qids, nqids);
 		}
-		
+
 		// expected may be passed in as ID or as label
 		Set<String> ids = labelMapper.lookupByLabel(expectedMatchLabel);
 		if (ids.size() > 0) {
@@ -185,12 +197,12 @@ public class ProfileMatchEvaluator {
 			String expectedMatchLabel,
 			int maxRank,
 			String individualLabel) throws NonUniqueLabelException {
-		
+
 		String iid = labelMapper.lookupByUniqueLabel(individualLabel);
-		Set<String> qids = kb.getClassIds(kb.getTypesBM(iid));
+		Set<String> qids = kb.getClassIds(kb.getDirectTypesBM(iid));
 		LOG.info("QIDS="+qids);
 		ProfileQuery q = ProfileQueryImpl.create(qids);
-		
+
 		// expected may be passed in as ID or as label
 		Set<String> ids = labelMapper.lookupByLabel(expectedMatchLabel);
 		if (ids.size() > 0) {
@@ -224,7 +236,7 @@ public class ProfileMatchEvaluator {
 		double avgRankDiff = totalRankDiff / (double)n;
 		return avgRankDiff;
 	}
-	
+
 	public double compareMatchSetP(MatchSet ms1, MatchSet ms2) {
 		int totalpdiff = 0;
 		int n=0;
@@ -238,7 +250,7 @@ public class ProfileMatchEvaluator {
 		double avgPDiff = totalpdiff / (double)n;
 		return avgPDiff;
 	}
-	
+
 	/**
 	 * Compare two profile matchers using all individuals in a KB
 	 * 
@@ -247,8 +259,10 @@ public class ProfileMatchEvaluator {
 	 * @param pm1
 	 * @param pm2
 	 * @return average average difference in ranking
+	 * @throws IncoherentStateException 
+	 * @throws UnknownFilterException 
 	 */
-	public MatcherComparisonResult compareMatchers(ProfileMatcher pm1, ProfileMatcher pm2) {
+	public MatcherComparisonResult compareMatchers(ProfileMatcher pm1, ProfileMatcher pm2) throws UnknownFilterException, IncoherentStateException {
 		BMKnowledgeBase kb = pm1.getKnowledgeBase();
 		Set<String> inds = kb.getIndividualIdsInSignature();
 		double tdiff = 0;
@@ -259,11 +273,11 @@ public class ProfileMatchEvaluator {
 		for (String ind : inds) {
 			EWAHCompressedBitmap typesBM = kb.getTypesBM(ind);
 			// TODO - add to utils
-//			Set<String> qids = new HashSet<String>();
-//			for (int ix : typesBM.getPositions()) {
-//				qids.add(kb.getClassId(ix));
-//			}
-//			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
+			//			Set<String> qids = new HashSet<String>();
+			//			for (int ix : typesBM.getPositions()) {
+			//				qids.add(kb.getClassId(ix));
+			//			}
+			//			ProfileQuery q = ProfileQueryFactory.createQuery(qids);
 			MatchSet ms1 = pm1.findMatchProfile(ind);
 			MatchSet ms2 = pm2.findMatchProfile(ind);
 			LOG.info("Comparing matchers on "+ind);
@@ -280,9 +294,9 @@ public class ProfileMatchEvaluator {
 		double distance = tdiff / (double)n;
 		return new MatcherComparisonResult(pm1.getShortName(), pm2.getShortName(), distance);
 	}
-	
+
 	public class MatcherComparisonResult {
-		
+
 		public class RankPair {
 			public int rank1;
 			public int rank2;
@@ -291,33 +305,33 @@ public class ProfileMatchEvaluator {
 				this.rank1 = rank1;
 				this.rank2 = rank2;
 			}
-			
-			
+
+
 		}
-		
+
 		public String matcher1Type;
 		public String matcher2Type;
 		public Double distance;
 		public Map<String,RankPair> individualToMapPairMap;
-		
+
 		public MatcherComparisonResult(String matcher1Type,
 				String matcher2Type, Double distance) {
 			super();
 			this.matcher1Type = matcher1Type;
 			this.matcher2Type = matcher2Type;
 			this.distance = distance;
-			
+
 			individualToMapPairMap = new HashMap<String,RankPair>();
 		}
-		
+
 		public void addDiff(String ind, int rank1, int rank2) {
 			individualToMapPairMap.put(ind, new RankPair(rank1, rank2));
 		}
-		
-		
+
+
 	}
 
-	public List<MatcherComparisonResult> compareAllMatchers(Set<ProfileMatcher> pms) {
+	public List<MatcherComparisonResult> compareAllMatchers(Set<ProfileMatcher> pms) throws UnknownFilterException, IncoherentStateException {
 		List<MatcherComparisonResult> results = new ArrayList<MatcherComparisonResult>();
 		for (ProfileMatcher pm1 : pms) {
 			for (ProfileMatcher pm2 : pms) {
@@ -327,6 +341,6 @@ public class ProfileMatchEvaluator {
 			}			
 		}
 		return results;
-	
+
 	}
 }

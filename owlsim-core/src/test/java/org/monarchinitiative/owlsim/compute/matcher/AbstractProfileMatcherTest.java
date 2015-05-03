@@ -97,14 +97,14 @@ public class AbstractProfileMatcherTest {
 	 * Load ontology plus data ontologies
 	 * 
 	 * @param fn
-	 * @param datafns
+	 * @param ontfns
 	 * @throws OWLOntologyCreationException
 	 */
-	protected void load(String fn, String... datafns) throws OWLOntologyCreationException {
+	protected void load(String fn, String... ontfns) throws OWLOntologyCreationException {
 		OWLLoader loader = new OWLLoader();
 		LOG.info("R="+fn);
 		loader.load(getClass().getResource(fn).getFile());
-		for (String datafn : datafns) {
+		for (String datafn : ontfns) {
 			LOG.info("R="+datafn);
 			URL res = getClass().getResource(datafn);
 			LOG.info("RES="+res);
@@ -121,7 +121,7 @@ public class AbstractProfileMatcherTest {
 	@Deprecated
 	protected void search(ProfileMatcher profileMatcher,
 			String expectedId, int maxRank,
-			String... labels) throws NonUniqueLabelException, OWLOntologyCreationException, FileNotFoundException, UnknownFilterException {
+			String... labels) throws UnknownFilterException, Exception {
 		TestQuery tq = constructTestQuery(expectedId, maxRank, labels);
 		evaluateTestQuery(profileMatcher, tq);
 	}	
@@ -163,7 +163,7 @@ public class AbstractProfileMatcherTest {
 	 * @throws FileNotFoundException
 	 * @throws UnknownFilterException
 	 */
-	protected void evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws OWLOntologyCreationException, NonUniqueLabelException, FileNotFoundException, UnknownFilterException {
+	protected void evaluateTestQuery(ProfileMatcher profileMatcher, TestQuery tq) throws Exception {
 
 		Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 

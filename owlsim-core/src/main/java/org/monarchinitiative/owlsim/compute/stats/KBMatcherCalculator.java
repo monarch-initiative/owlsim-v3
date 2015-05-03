@@ -3,10 +3,12 @@ package org.monarchinitiative.owlsim.compute.stats;
 import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.IdFilter;
+import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.ProfileQueryFactory;
@@ -40,8 +42,10 @@ public class KBMatcherCalculator {
 	 * individuals.  Since all individuals are being
 	 * compared, and will be necessary for evaluating statistics
 	 * we will store in an array.
+	 * @throws IncoherentStateException 
+	 * @throws UnknownFilterException 
 	 */
-	public void computeIxI() {
+	public void computeIxI() throws UnknownFilterException, IncoherentStateException {
 		Set<String> individualIds = kb.getIndividualIdsInSignature();
 		for (String iid : individualIds) {
 			int ibit = kb.getIndividualIndex(iid);
@@ -58,8 +62,10 @@ public class KBMatcherCalculator {
 	/**
 	 * Calculate the comparison of all x all
 	 * for a selected subset of individuals.
+	 * @throws IncoherentStateException 
+	 * @throws UnknownFilterException 
 	 */
-	public void computeIxI(Set<String> individualIds) {
+	public void computeIxI(Set<String> individualIds) throws UnknownFilterException, IncoherentStateException {
 		Filter idFilter = new IdFilter(individualIds);
 		
 		for (String iid : individualIds) {
