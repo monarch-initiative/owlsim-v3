@@ -100,10 +100,13 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	}
 
 	// a negated profile implicitly includes subclasses
-	@Deprecated
-	protected EWAHCompressedBitmap getNegatedProfileBM(QueryWithNegation q) {
+	protected EWAHCompressedBitmap getNegatedProfileBM(ProfileQuery q) {
+		if (!(q instanceof QueryWithNegation)) {
+			return new EWAHCompressedBitmap();
+		}
+		QueryWithNegation nq = (QueryWithNegation)q;
 		Set<Integer> bits = new HashSet<Integer>();
-		for (String id : q.getQueryNegatedClassIds()) {
+		for (String id : nq.getQueryNegatedClassIds()) {
 			int ci = knowledgeBase.getClassIndex(id);
 			bits.addAll( knowledgeBase.getSubClasses(ci).getPositions() );
 		}

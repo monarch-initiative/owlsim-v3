@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -22,7 +22,7 @@ public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatche
 	private Logger LOG = Logger.getLogger(ProfileMatcherWithNegationSpeciesTest.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return NaiveBayesFixedWeightProfileMatcher.create(kb);
+		return NaiveBayesFixedWeightTwoStateProfileMatcher.create(kb);
 	}
 
 	@Test

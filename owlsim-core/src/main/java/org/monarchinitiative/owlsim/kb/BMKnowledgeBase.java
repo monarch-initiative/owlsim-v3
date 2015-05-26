@@ -168,7 +168,7 @@ public interface BMKnowledgeBase {
 	
 	/**
 	 * @param itemId
-	 * @return types as bitmap
+	 * @return bitmap representation of all (direct and indirect) classes known to be NOT instantiated
 	 */
 	public EWAHCompressedBitmap getNegatedTypesBM(String itemId);
 

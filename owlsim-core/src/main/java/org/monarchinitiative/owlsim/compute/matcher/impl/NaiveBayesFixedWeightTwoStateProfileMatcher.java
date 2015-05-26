@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -34,9 +34,9 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * @author cjm
  *
  */
-public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher implements NegationAwareProfileMatcher {
+public class NaiveBayesFixedWeightTwoStateProfileMatcher extends AbstractProfileMatcher implements ProfileMatcher {
 
-	private Logger LOG = Logger.getLogger(NaiveBayesFixedWeightProfileMatcher.class);
+	private Logger LOG = Logger.getLogger(NaiveBayesFixedWeightTwoStateProfileMatcher.class);
 
 	@Deprecated
 	private double defaultFalsePositiveRate = 0.002; // alpha
@@ -51,7 +51,7 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 	private double[] defaultFalseNegativeRateArr = new double[] {1e-10,0.005,0.01,0.05,0.1,0.2,0.4,0.8,0.9};
 
 	@Inject
-	private NaiveBayesFixedWeightProfileMatcher(BMKnowledgeBase kb) {
+	private NaiveBayesFixedWeightTwoStateProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
 
@@ -59,13 +59,13 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 	 * @param kb
 	 * @return new instance
 	 */
-	public static NaiveBayesFixedWeightProfileMatcher create(BMKnowledgeBase kb) {
-		return new NaiveBayesFixedWeightProfileMatcher(kb);
+	public static NaiveBayesFixedWeightTwoStateProfileMatcher create(BMKnowledgeBase kb) {
+		return new NaiveBayesFixedWeightTwoStateProfileMatcher(kb);
 	}
 
 	@Override
 	public String getShortName() {
-		return "bayes-fixed";
+		return "naive-bayes-fixed-weight-two-state";
 	}
 
 	private EWAHCompressedBitmap getQueryBlanketBM(ProfileQuery q) {
@@ -92,8 +92,6 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 	 */
 	public MatchSet findMatchProfileImpl(ProfileQuery q) {
 
-		boolean isUseNegation = q instanceof QueryWithNegation;
-
 		//double fpr = getFalsePositiveRate();
 		//double fnr = getFalseNegativeRate();
 		double sumOfProbs = 0.0;
@@ -107,12 +105,6 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 		int numClassesConsidered = queryBlanketProfileBM.cardinality();
 
 		EWAHCompressedBitmap negatedQueryProfileBM = null;
-		if (isUseNegation) {
-			LOG.info("Using negation*******");
-			QueryWithNegation nq = (QueryWithNegation)q;
-			negatedQueryProfileBM = getNegatedProfileBM(nq);
-			LOG.info("nqp=" + negatedQueryProfileBM);
-		}
 
 		MatchSet mp = MatchSetImpl.create(q);
 
@@ -127,51 +119,14 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 			targetProfileBM = targetProfileBM.and(queryBlanketProfileBM);
 			LOG.debug("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 
-			int numInQueryAndInTarget;
-			int numInQueryAndNOTInTarget;
-			int numNOTInQueryAndInTarget;
-			int numNOTInQueryAndNOTInTarget;
 
-			// the following are only used if negation is used 
-			int numNegatedInQueryAndInTarget = 0;
-			int numInQueryAndNegatedInTarget = 0;
-			int numNegatedInQueryAndNegatedInTarget = 0;
-			
-			
-			if (!isUseNegation) {
-				// two state model.
-				numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
-				numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
-				numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
-				numNOTInQueryAndNOTInTarget = 
-						numClassesConsidered - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
-			}
-			else {
-				// three state model
-				// TODO: fixme
+			// two state model.
+			int numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
+			int numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
+			int numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
+			int numNOTInQueryAndNOTInTarget = 
+					numClassesConsidered - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
 
-				// TODO. Investigate efficiency for storing all descendants of
-				// a negated class as a bitmap
-				EWAHCompressedBitmap negatedTargetProfileBM = knowledgeBase.getNegatedTypesBM(itemId);
-				numNegatedInQueryAndInTarget = negatedQueryProfileBM.andCardinality(targetProfileBM);
-				numInQueryAndNegatedInTarget = queryProfileBM.andCardinality(negatedTargetProfileBM);
-				numNegatedInQueryAndNegatedInTarget = negatedQueryProfileBM.andCardinality(negatedTargetProfileBM);
-
-				// TODO - check for inconsistency (Q cannot be positive and negated)
-
-				numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
-				numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
-				numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
-				numNOTInQueryAndNOTInTarget = 
-						numClassesConsidered - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
-
-				// if negation mode is on, then we treat NOTInX as being UnknownInX,
-				// thus with 7 mutually exclusive states
-				numNOTInQueryAndInTarget -= numNegatedInQueryAndInTarget;
-				
-				numInQueryAndNOTInTarget -= numInQueryAndNegatedInTarget;
-				numNOTInQueryAndNOTInTarget -= numNegatedInQueryAndNegatedInTarget;
-			}
 			double p = 0.0;
 			// integrate over a Dirichlet prior for alpha & beta, rather than gridsearch
 			// this can be done closed-form
@@ -183,42 +138,16 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 					double pQ1T0 = Math.pow(fpr,  numInQueryAndNOTInTarget);
 					double pQ0T0 = Math.pow(1-fpr,  numNOTInQueryAndNOTInTarget);
 
-					if (isUseNegation) {
-						LOG.debug("ITEM="+itemId);
-						LOG.debug("pQ1T1 = "+(1-fnr)+" ^ "+ numInQueryAndInTarget+" = "+pQ1T1);
-						LOG.debug("pQ0T1 = "+(fnr)+" ^ "+ numNOTInQueryAndInTarget+" = "+pQ0T1);
-						LOG.debug("pQ1T0 = "+(fpr)+" ^ "+ numInQueryAndNOTInTarget+" = "+pQ1T0);
-						LOG.debug("pQ0T0 = "+(1-fpr)+" ^ "+ numNOTInQueryAndNOTInTarget+" = "+pQ0T0);
 
-						// TODO - do not hardcode negation factor
-						// for now we assume false negatives and positives are considerably
-						// less likely, but above zero
-						// TODO - works less well when we are summing over alphas and betas....
-						double pQNT1 = Math.pow((fnr*fnr)/500,  numNegatedInQueryAndInTarget);
-						double pQ1TN = Math.pow((fpr*fpr)/500,  numInQueryAndNegatedInTarget);
-						//double pQNT1 = Math.pow(0,  numNegatedInQueryAndInTarget);
-						//double pQ1TN = Math.pow(0,  numInQueryAndNegatedInTarget);
-						double pQNTN = Math.pow(1-(fpr/50),  numNegatedInQueryAndNegatedInTarget);
 
-						LOG.debug("pQNT1 = "+(fnr)+"/10 ^ "+ numNegatedInQueryAndInTarget+" = "+pQNT1);
-						LOG.debug("pQ1TN = "+(fpr)+"/10 ^ "+ numInQueryAndNegatedInTarget+" = "+pQ1TN);
-						LOG.debug("pQNTN = 1-"+(fpr)+"/10 ^ "+ numNegatedInQueryAndNegatedInTarget+" = "+pQNTN);
+					//LOG.debug("pQ1T1 = "+(1-fnr)+" ^ "+ numInQueryAndInTarget+" = "+pQ1T1);
+					//LOG.debug("pQ0T1 = "+(fnr)+" ^ "+ numNOTInQueryAndInTarget+" = "+pQ0T1);
+					//LOG.debug("pQ1T0 = "+(fpr)+" ^ "+ numInQueryAndNOTInTarget+" = "+pQ1T0);
+					//LOG.debug("pQ0T0 = "+(1-fpr)+" ^ "+ numNOTInQueryAndNOTInTarget+" = "+pQ0T0);
+					//TODO: optimization
+					p += 
+							Math.exp(Math.log(pQ1T1) + Math.log(pQ0T1) + Math.log(pQ1T0) + Math.log(pQ0T0));
 
-						p += 
-								Math.exp(Math.log(pQ1T1) + Math.log(pQ0T1) + Math.log(pQ1T0) + Math.log(pQ0T0) +
-										Math.log(pQNT1) +Math.log(pQ1TN) + Math.log(pQNTN));
-
-					}
-					else {
-
-						//LOG.debug("pQ1T1 = "+(1-fnr)+" ^ "+ numInQueryAndInTarget+" = "+pQ1T1);
-						//LOG.debug("pQ0T1 = "+(fnr)+" ^ "+ numNOTInQueryAndInTarget+" = "+pQ0T1);
-						//LOG.debug("pQ1T0 = "+(fpr)+" ^ "+ numInQueryAndNOTInTarget+" = "+pQ1T0);
-						//LOG.debug("pQ0T0 = "+(1-fpr)+" ^ "+ numNOTInQueryAndNOTInTarget+" = "+pQ0T0);
-						//TODO: optimization
-						p += 
-								Math.exp(Math.log(pQ1T1) + Math.log(pQ0T1) + Math.log(pQ1T0) + Math.log(pQ0T0));
-					}
 				}
 			}
 			pvector[n] = p;

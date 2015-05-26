@@ -11,7 +11,7 @@ import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.GridProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator.MatcherComparisonResult;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -62,7 +62,7 @@ public class ProfileMatcherComparisonMPTest extends AbstractProfileMatcherTest {
 		pms.add(GridProfileMatcher.create(kb));
 		pms.add(PhenodigmICProfileMatcher.create(kb));
 		pms.add(BayesianNetworkProfileMatcher.create(kb));
-		pms.add(NaiveBayesFixedWeightProfileMatcher.create(kb));
+		pms.add(NaiveBayesFixedWeightTwoStateProfileMatcher.create(kb));
 
 		List<MatcherComparisonResult> results = eval.compareAllMatchers(pms);
 		for (MatcherComparisonResult r : results) {
