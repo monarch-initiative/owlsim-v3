@@ -36,7 +36,12 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 		
 		int nOk = 0;
 		for (String i : kb.getIndividualIdsInSignature()) {
-			
+			if (i.equals("http://x.org/ind-no-brain-phenotype")) {
+				continue;
+			}
+			if (i.equals("http://x.org/ind-unstated-phenotype")) {
+				continue;
+			}
 			ProfileQuery pq = profileMatcher.createProfileQuery(i);
 			TestQuery tq =  new TestQuery(pq, i, 1); // self should always be ranked first
 			String fn = i.replaceAll(".*/", "");
@@ -44,7 +49,7 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 			Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 			
 			if (i.equals("http://x.org/ind-dec-all")) {
-				Assert.assertTrue(isRankedLast("http://x.org/ind-brain", tq.matchSet));
+				Assert.assertTrue(isRankedLast("http://x.org/ind-unstated-phenotype", tq.matchSet));
 				nOk++;
 			}
 			if (i.equals("http://x.org/ind-small-heart-big-brain")) {

@@ -34,7 +34,7 @@ public class ProfileMatcherWithNegationMPTest extends AbstractProfileMatcherTest
 		eval.writeJsonTo("target/wn-out.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Epilepsy (fake for testing)",
-				1,
+				2,
 				"nervous system phenotype",    // ep
 				"not reproductive system phenotype",   // rules out sg
 				"not abnormal cerebellum development"  // rules out pd and foo
