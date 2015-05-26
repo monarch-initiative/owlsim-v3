@@ -1,0 +1,121 @@
+Prefix: : <http://x.org/>
+Prefix: opposite-of: <http://purl.obolibrary.org/obo/RO_0002604>
+
+Ontology: <http://x.org>
+
+AnnotationProperty: opposite-of:
+
+Class: phenotype
+
+Class: neuro-phenotype
+  SubClassOf: phenotype
+Class: skeletal-phenotype
+  SubClassOf: phenotype
+Class: circulatory-phenotype
+  SubClassOf: phenotype
+
+Class: brain-morphology
+  SubClassOf: neuro-phenotype
+Class: brain-size
+  SubClassOf: brain-morphology  
+Class: brain-shape
+  SubClassOf: brain-morphology  
+Class: inc-brain-size
+  SubClassOf: brain-size
+Class: dec-brain-size
+  SubClassOf: brain-size
+  Annotations: opposite-of:  inc-brain-size
+
+Class: bone-morphology
+  SubClassOf: skeletal-phenotype
+Class: bone-shape
+  SubClassOf: bone-morphology
+Class: bone-length
+  SubClassOf: bone-morphology
+Class: inc-bone-length
+  SubClassOf: bone-length
+Class: dec-bone-length
+  SubClassOf: bone-length
+  Annotations: opposite-of:  inc-bone-length
+Class: inc-femur-length
+  SubClassOf: inc-bone-length
+Class: dec-femur-length
+  SubClassOf: dec-bone-length
+  Annotations: opposite-of:  inc-femur-length
+
+Class: heart-morphology
+  SubClassOf: circulatory-phenotype
+Class: heart-size
+  SubClassOf: heart-morphology
+Class: heart-shape
+  SubClassOf: heart-morphology
+Class: hypoplastic-heart
+  SubClassOf: heart-size
+Class: hyperplastic-heart
+  SubClassOf: heart-size
+  Annotations: opposite-of:  hypoplastic-heart
+Class: absent-heart
+  SubClassOf: hypoplastic-heart
+
+Individual: ind-inc-all
+ Types: inc-brain-size
+ Types: inc-bone-length
+ Types: hyperplastic-heart
+
+Individual: ind-dec-all
+ Types: dec-brain-size
+ Types: dec-bone-length
+ Types: hypoplastic-heart
+
+Individual: ind-big-femur
+ Types: inc-femur-length
+
+Individual: ind-small-femur
+ Types: dec-femur-length
+
+Individual: ind-big-heart-small-brain
+ Types: hyperplastic-heart
+ Types: dec-brain-size
+
+Individual: ind-small-heart-big-brain
+ Types: hypoplastic-heart
+ Types: inc-brain-size
+
+Individual: ind-big-heart-big-brain
+ Types: hyperplastic-heart
+ Types: inc-brain-size
+
+Individual: ind-small-heart-small-brain
+ Types: hypoplastic-heart
+ Types: dec-brain-size
+
+Individual: ind-heart-brain
+ Types: heart-morphology
+ Types: brain-morphology
+
+Individual: ind-heart-brain-bone
+ Types: heart-morphology
+ Types: brain-morphology
+ Types: bone-morphology
+
+Individual: ind-heart-bone
+ Types: heart-morphology
+ Types: bone-morphology
+
+Individual: ind-brain
+ Types: brain-morphology
+
+Individual: ind-bone
+ Types: bone-morphology
+
+##Individual: ind-no-phenotype
+## Types: not phenotype
+
+Individual: ind-unstated-phenotype
+ Types: phenotype
+
+Individual: ind-no-brain-phenotype
+ Types: phenotype
+ Types: not brain-morphology
+
+
