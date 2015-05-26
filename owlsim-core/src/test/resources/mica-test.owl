@@ -1,0 +1,31 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org>
+
+Class: root
+Class: a1 SubClassOf: root
+Class: a2 SubClassOf: root
+Class: ca1a SubClassOf: a1
+Class: ca1b SubClassOf: a1
+Class: ca1c SubClassOf: a1
+Class: ca1d SubClassOf: a1
+Class: ca2a SubClassOf: a2
+Class: ca2b SubClassOf: a2
+Class: ca2c SubClassOf: a2
+Class: ca2d SubClassOf: a2
+
+Class: x1 SubClassOf: ca1a, ca1b, ca1c, ca1d, ca2a, ca2b, ca2c, ca2d
+Class: x2 SubClassOf: ca1a, ca1b, ca1c, ca1d, ca2a, ca2b, ca2c, ca2d
+Class: x3 SubClassOf: ca1a, ca1b, ca1c, ca1d, ca2a, ca2b, ca2c, ca2d
+Class: x4 SubClassOf: ca1a, ca1b, ca1c, ca1d, ca2a, ca2b, ca2c, ca2d
+
+Individual: i1 Types: x1
+Individual: i2 Types: x2
+Individual: i3 Types: x3
+Individual: i4 Types: x4
+
+## Note: we game things such that ca2a, ca2b have lowest freq
+Individual: j1 
+  Types: ca1a, ca1b, ca1c, ca1d
+  Types: ca2c, ca2d
+
