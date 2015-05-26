@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
+import org.monarchinitiative.owlsim.compute.mica.MICAStore;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator;
 import org.monarchinitiative.owlsim.io.OWLLoader;
@@ -26,7 +26,7 @@ public abstract class AbstractFilterEngineTest {
 
 	protected BMKnowledgeBase kb;
 	protected FilterEngine filterEngine;
-	protected MICAStoreImpl micaStore;
+	protected MICAStore micaStore;
 	private Logger LOG = Logger.getLogger(AbstractFilterEngineTest.class);
 	protected boolean writeToStdout = false;
 	KBStatsCalculator kbsc;

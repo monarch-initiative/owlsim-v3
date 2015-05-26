@@ -2,7 +2,12 @@ package org.monarchinitiative.owlsim.model.match;
 
 
 /**
- * Representation of a match between a Query and some individual (aka item, element, label)
+ * Representation of a hit to some target
+ * 
+ * Note this object does not store the initial query
+ * 
+ * TODO: decide whether this should be generic and covert both I-I and C-C matches,
+ * or whether to have a distinct class
  * 
  * @author cjm
  *

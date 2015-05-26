@@ -36,9 +36,13 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * Note that classes and individuals are mutually exclusive, so the ID to Index mapping
  * is dependent on the datatype
  * 
- * Note: the ordering of bits in the class bitmap is guaranteed to be descending according to
- * frequency of individuals for that term. This means that an iterator starts with classes
- * with the lowest probability (and highest information content).
+ * <b>Guarantee:</b>Note that the index assigned to a class node is ordered according to
+ * informativeness. if Ix(C1) < Ix(C2), then Informativeness(C1) =< Informativeness(C2).
+ * Here Informativeness is the IC (with ties broken according to number of ancestors,
+ * with more ancestors being more informative).
+ * This means that an iterator starts with the classes
+ * with the lowest probability (and highest information content), allowing for
+ * fast MICA implementations.
  *  
  * The JavaEWAH library is used for fast bitmap operations.
  * <h4>Usage notes</h4>

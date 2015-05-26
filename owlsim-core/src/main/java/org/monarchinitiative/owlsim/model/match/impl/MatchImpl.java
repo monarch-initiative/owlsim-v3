@@ -1,5 +1,8 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
+import java.util.List;
+
+import org.monarchinitiative.owlsim.model.match.ClassMatch;
 import org.monarchinitiative.owlsim.model.match.Match;
 
 /**
@@ -15,6 +18,7 @@ public class MatchImpl implements Match {
 	private double rawScore;
 	private Integer rank;
 	private Double p;
+	private List<ClassMatch> classMatches;
 	
 	/**
 	 * @param matchId

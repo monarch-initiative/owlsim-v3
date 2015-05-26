@@ -290,6 +290,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		individualNodeToIntegerMap = new HashMap<Node<OWLNamedIndividual>, Integer>();
 		propertyValueMapMap = new HashMap<String,Map<String,Set<Object>>>();
 		final HashMap<Node<OWLClass>, Integer> classNodeToFrequencyMap = new HashMap<Node<OWLClass>, Integer>();
+		final HashMap<Node<OWLClass>, Double> classNodeToFreqDepthMap = new HashMap<Node<OWLClass>, Double>();
 		for (OWLClass c : classesInSignature) {
 			if (owlReasoner.getInstances(c, false).isEmpty()) {
 				//TODO: deal with subclasses
@@ -303,7 +304,21 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			}
 			classNodes.add(node);
 			classToNodeMap.put(c, node);
-			classNodeToFrequencyMap.put(node, owlReasoner.getInstances(c, false).getNodes().size());
+			int numAncNodes = owlReasoner.getSuperClasses(c, false).getNodes().size();
+			int freq = owlReasoner.getInstances(c, false).getNodes().size();
+			classNodeToFrequencyMap.put(node, freq);
+			
+			// freq depth is inversely correlated informativeness;
+			// frequency is primary measure (high freq = low informativeness);
+			// if frequency is tied, then tie is broken by number of ancestors
+			// (high ancestors = high informativeness)
+			// note that if frequency is not tied, then depth/ancestors should make
+			// no overall difference - we ensure this by taking the proportion of
+			// ancestor nodes divided by number of classes (there are always equal
+			// or more classes than nodes)
+			double freqDepth = freq + 1 - (numAncNodes / (double) classesInSignature.size());
+			//LOG.info("freqDepth = "+freq+" "+freqDepth);
+			classNodeToFreqDepthMap.put(node, freqDepth);
 		}
 
 		for (OWLNamedIndividual i : individualsInSignature) {
@@ -314,15 +329,16 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			if (owlDataOntology != null)
 				setPropertyValues(owlDataOntology,i);
 		}
-		// TODO - for bitmap operation optimization,
-		//        consider ordering nodes such that most common ones have low indices; OR
-		//        rarest (lowest freq) ones have low indices (for fast LCS calculation)
+		
+		// Order class nodes such that LOW frequencies (HIGH Information Content)
+		// nodes are have LOWER indices
+		// TODO: use depth as a tie breaker
 		List<Node<OWLClass>> classNodesSorted = new ArrayList<Node<OWLClass>>(classNodes);
 		Collections.sort(classNodesSorted, 
 				new Comparator<Node<OWLClass>>() {
 			public int compare(Node<OWLClass> n1, Node<OWLClass> n2) {
-				int f1 = classNodeToFrequencyMap.get(n1);
-				int f2 = classNodeToFrequencyMap.get(n2);
+				double f1 = classNodeToFreqDepthMap.get(n1);
+				double f2 = classNodeToFreqDepthMap.get(n2);
 				if (f1 < f2) return -1;
 				if (f1 > f2) return 1;
 				return 0;

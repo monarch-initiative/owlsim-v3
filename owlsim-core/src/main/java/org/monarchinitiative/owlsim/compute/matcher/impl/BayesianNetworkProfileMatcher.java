@@ -26,9 +26,11 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * Calculate of observing query given target as evidence.
  * 
  * Note this first implementation does not use NOTs; it uses a {@link TwoStateConditionalProbabilityIndex}.
+ * The two states are ON (true/observed) and OFF (unknown/not observed)
+ * - note the open world assumptions: that the off state means there is no
+ * information about the truth of the node, it does not mean the node is false.
  * 
- * Probabilities propagate to a child from its parents. Each node can have two states in
- * this model.
+ * Probabilities propagate TO a child FROM its parents. 
  * 
  * The probability of a child node being on C=on is dependent on the state of its
  * parents:

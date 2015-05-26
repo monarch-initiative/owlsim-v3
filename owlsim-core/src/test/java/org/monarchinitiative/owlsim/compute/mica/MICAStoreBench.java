@@ -24,7 +24,7 @@ import com.google.caliper.Benchmark;
 public class MICAStoreBench extends Benchmark {
 
 	protected BMKnowledgeBase kb;
-	protected MICAStoreImpl micaStore;
+	protected MICAStore micaStore;
 	private Logger LOG = Logger.getLogger(MICAStoreBench.class);
 	protected boolean writeToStdout = false;
 
@@ -57,7 +57,7 @@ public class MICAStoreBench extends Benchmark {
 		OWLReasonerFactory rf = new ElkReasonerFactory();
 		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
 		LOG.info("creating MICAStore");
-		MICAStoreImpl micaStore = new MICAStoreImpl(kb);
+		MICAStore micaStore = new MICAStoreImpl(kb);
 		LOG.info("created MICAStore");
 
 

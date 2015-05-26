@@ -39,6 +39,8 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 	/**
 	 * Tests that self is the top hit for Schwartz-Jampel Syndrome
 	 * 
+	 * Current time for execution is around 5 mins, need to speed this up
+	 * 
 	 * @throws OWLOntologyCreationException
 	 * @throws NonUniqueLabelException
 	 * @throws FileNotFoundException
@@ -69,6 +71,11 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 
 	}
 	
+	/**
+	 * Note: current execution time for 3 phenotypes is <1m, need to speed this up
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testSingleProfileQuery() throws Exception {
 		load();
@@ -81,7 +88,7 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn3-it-results-rdms.json");
+		eval.writeJsonTo("target/bn3-it-results-slo.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Smith-Lemli-Opitz Syndrome",
 				16,
@@ -92,7 +99,42 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
 	}
+	
+	/**
+	 * Here we add negative terms to lower the score of SLO,
+	 * bringing GP to the top
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testQueryWithNegation() throws Exception {
+		load();
+		Level level = Level.INFO;
+		LOG.setLevel(level );
+		Logger.getRootLogger().setLevel(level);
+		int numInds = kb.getIndividualIdsInSignature().size();
+		LOG.info("NumInds = "+numInds);
+		assertTrue(numInds > 0);
+		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		ProfileMatcher profileMatcher = createProfileMatcher(kb);
+		LabelMapper labelMapper = kb.getLabelMapper();
+		eval.writeJsonTo("target/bn3-it-results-neg-slo.json");
+		TestQuery tq = eval.constructTestQuery(labelMapper,
+				"Genitopatellar Syndrome",
+				1,
+				"Scrotal hypoplasia",
+				"Renal cyst",
+				"Micrognathia",
+				"not Vomiting", // TODO - check why this does not have desired effect
+				"not Abnormal lung lobation");		
+		LOG.info("TQ="+tq.query);
+		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	@Test
 	public void testQueryMultiple() throws Exception {
 		load();
@@ -107,19 +149,19 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
-					"Microcephalic Osteodysplastic Primordial Dwarfism, Type I",
-					16,
+					"Schwartz-Jampel Syndrome (Orphanet)",
+					3,
 					dq)));		
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
 					"Arthrogryposis, Distal, Type 2a",
-					6,
+					4,
 					dq)));		
 	}
 	
-	// TODO: incorporate disjointness
+	// TODO: incorporate disjointness without introducing inconsistency
 	private void load() throws OWLOntologyCreationException {
 		load("/ontologies/hp.obo",  "/data/Homo_sapiens-data.owl");		
 		//load("/ontologies/hp.obo", "/ontologies/hp-disjoints.owl", "/data/Homo_sapiens-data.owl");		

@@ -37,13 +37,13 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  *
  */
 public abstract class AbstractProfileMatcher implements ProfileMatcher {
-	
+
 	private Logger LOG = Logger.getLogger(AbstractProfileMatcher.class);
 
 	protected BMKnowledgeBase knowledgeBase;
 	private FilterEngine filterEngine;
 
-	
+
 	/**
 	 * @param knowledgeBase
 	 */
@@ -60,14 +60,20 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	public BMKnowledgeBase getKnowledgeBase() {
 		return knowledgeBase;
 	}
-	
 
-	
+
+
 	@Inject
 	private void setKnowledgeBase(BMKnowledgeBase knowledgeBase) {
 		this.knowledgeBase = knowledgeBase;
 	}
 
+	/**
+	 * all positive nodes in query plus their ancestors
+	 * 
+	 * @param q
+	 * @return 
+	 */
 	protected EWAHCompressedBitmap getProfileBM(ProfileQuery q) {
 		return knowledgeBase.getSuperClassesBM(q.getQueryClassIds());
 	}
@@ -121,21 +127,43 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	protected List<String> getFilteredIndividualIds(Filter filter) throws UnknownFilterException {
 		return filterEngine.applyFilter(filter);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher#createProfileQuery(java.lang.String)
 	 */
 	public ProfileQuery createProfileQuery(String individualId) {
+		return createProfileQuery(individualId, null);
+	}
+
+	public ProfileQuery createPositiveProfileQuery(String individualId) {
+		return createProfileQuery(individualId, false);
+	}
+
+	public ProfileQuery createProfileQueryWithNegation(String individualId) {
+		return createProfileQuery(individualId, true);
+	}
+
+	public ProfileQuery createProfileQuery(String individualId, Boolean isUseNegation) {
 		EWAHCompressedBitmap bmi = knowledgeBase.getDirectTypesBM(individualId);
 		EWAHCompressedBitmap nbmi = knowledgeBase.getDirectNegatedTypesBM(individualId);
 		Set<String> qcids = knowledgeBase.getClassIds(bmi);
 		Set<String> nqcids = knowledgeBase.getClassIds(nbmi);
 		ProfileQuery q;
-		if (nqcids.size() == 0) {
-			q = ProfileQueryImpl.create(qcids);
+		if (isUseNegation == null) {
+			if (nqcids.size() == 0) {
+				q = ProfileQueryImpl.create(qcids);
+			}
+			else {
+				q = QueryWithNegationImpl.create(qcids, nqcids);
+			}
 		}
 		else {
-			q = QueryWithNegationImpl.create(qcids, nqcids);
+			if (isUseNegation) {
+				q = QueryWithNegationImpl.create(qcids, nqcids);
+			}
+			else {
+				q = ProfileQueryImpl.create(qcids);				
+			}
 		}
 		return q;
 	}
@@ -144,7 +172,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		ProfileQuery q = createProfileQuery(individualId);
 		return findMatchProfile(q);
 	}
-	
+
 
 	public MatchSet findMatchProfile(ProfileQuery q) throws IncoherentStateException {
 		MatchSet ms = findMatchProfileAll(q);
@@ -154,7 +182,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		}
 		return ms;
 	}
-	
+
 	public MatchSet findMatchProfile(ProfileQuery q, double alpha) throws IncoherentStateException {
 		MatchSet ms = findMatchProfileAll(q);
 
@@ -172,7 +200,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		}		
 		return ms;
 	}
-	
+
 	// additional layer of indirection above Impl, adds standard metadata
 	private MatchSet findMatchProfileAll(ProfileQuery q) throws IncoherentStateException {
 		long t1 = System.currentTimeMillis();

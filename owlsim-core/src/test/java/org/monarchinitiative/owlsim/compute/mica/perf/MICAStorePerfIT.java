@@ -1,10 +1,11 @@
-package org.monarchinitiative.owlsim.compute.mica;
+package org.monarchinitiative.owlsim.compute.mica.perf;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.monarchinitiative.owlsim.compute.mica.MICAStore;
 import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator;
@@ -27,7 +28,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 public class MICAStorePerfIT {
 
 	protected BMKnowledgeBase kb;
-	protected MICAStoreImpl micaStore;
+	protected MICAStore micaStore;
 	private Logger LOG = Logger.getLogger(MICAStorePerfIT.class);
 	protected boolean writeToStdout = false;
 	private List<MICARun> runs;
@@ -51,6 +52,11 @@ public class MICAStorePerfIT {
 		}
 	}
 
+	/**
+	 * Test using random ontology
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testLarge() throws Exception {
 		runs = new ArrayList<MICARun>();
@@ -61,6 +67,16 @@ public class MICAStorePerfIT {
 		w.write(runs);
 	}
 
+	/**
+	 * Create a random ontology
+	 * 
+	 * @param numClasses
+	 * @param avgParents
+	 * @param numIndividuals
+	 * @return
+	 * @throws OWLOntologyCreationException
+	 * @throws NoRootException
+	 */
 	private MICARun create(int numClasses, int avgParents, int numIndividuals) throws OWLOntologyCreationException, NoRootException {
 		System.gc();
 		OWLOntology ontology = 
@@ -70,7 +86,7 @@ public class MICAStorePerfIT {
 		kbsc = new KBStatsCalculator(kb);
 		LOG.info("creating MICAStore");
 		long t1 = System.currentTimeMillis();
-		MICAStoreImpl micaStore = new MICAStoreImpl(kb);
+		MICAStore micaStore = new MICAStoreImpl(kb);
 		long t2 = System.currentTimeMillis();
 		LOG.info("created MICAStore");
 		MICARun r = new MICARun(numClasses, t1,t2);

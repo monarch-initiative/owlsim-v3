@@ -70,6 +70,32 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 	}
 	
 	@Test
+	public void testQueryWithNegation() throws Exception {
+		load();
+		Level level = Level.INFO;
+		LOG.setLevel(level );
+		Logger.getRootLogger().setLevel(level);
+		int numInds = kb.getIndividualIdsInSignature().size();
+		LOG.info("NumInds = "+numInds);
+		assertTrue(numInds > 0);
+		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		ProfileMatcher profileMatcher = createProfileMatcher(kb);
+		LabelMapper labelMapper = kb.getLabelMapper();
+		eval.writeJsonTo("target/bn-it-results-neg-slo.json");
+		TestQuery tq = eval.constructTestQuery(labelMapper,
+				"Genitopatellar Syndrome",
+				3,
+				"Scrotal hypoplasia",
+				"Renal cyst",
+				"Micrognathia",
+				"not Vomiting", 
+				"not Abnormal lung lobation");		
+		LOG.info("TQ="+tq.query);
+		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+
+	}
+
+	@Test
 	public void testSingleProfileQuery() throws Exception {
 		load();
 		Level level = Level.INFO;

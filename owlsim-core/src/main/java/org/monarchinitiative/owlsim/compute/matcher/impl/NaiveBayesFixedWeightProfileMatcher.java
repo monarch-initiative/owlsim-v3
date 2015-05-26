@@ -1,12 +1,15 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
@@ -65,6 +68,24 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 		return "bayes-fixed";
 	}
 
+	private EWAHCompressedBitmap getQueryBlanketBM(ProfileQuery q) {
+		EWAHCompressedBitmap onQueryNodesBM = getProfileBM(q);
+		Set<Integer> nodesWithOnParents = new HashSet<Integer>();
+
+		// there may be more efficient ways of doing this, but this is
+		// called once at the start of the search...
+		for (String cid : knowledgeBase.getClassIdsInSignature()) {
+			int cix = knowledgeBase.getClassIndex(cid);
+			EWAHCompressedBitmap supsBM = knowledgeBase.getDirectSuperClassesBM(cid);
+			int nParents = supsBM.cardinality();
+			if (supsBM.andCardinality(onQueryNodesBM) == nParents) {
+				nodesWithOnParents.add(cix);
+			}
+		}
+
+		return onQueryNodesBM.or(EWAHUtils.converIndexSetToBitmap(nodesWithOnParents));
+	}
+
 	/**
 	 * @param q
 	 * @return match profile containing probabilities of each individual
@@ -76,8 +97,15 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 		//double fpr = getFalsePositiveRate();
 		//double fnr = getFalseNegativeRate();
 		double sumOfProbs = 0.0;
-		int numClasses = knowledgeBase.getClassIdsInSignature().size();
+
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
+		EWAHCompressedBitmap queryBlanketProfileBM = getQueryBlanketBM(q);
+		LOG.info("|OnQueryNodes|="+queryProfileBM.cardinality());
+		LOG.info("|QueryNodesWithOnParents|="+queryBlanketProfileBM.cardinality());
+
+		//int numClassesConsidered = knowledgeBase.getClassIdsInSignature().size();
+		int numClassesConsidered = queryBlanketProfileBM.cardinality();
+
 		EWAHCompressedBitmap negatedQueryProfileBM = null;
 		if (isUseNegation) {
 			LOG.info("Using negation*******");
@@ -95,27 +123,52 @@ public class NaiveBayesFixedWeightProfileMatcher extends AbstractProfileMatcher 
 		int n=0;
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
+			// any node which has an off query parent is discounted
+			targetProfileBM = targetProfileBM.and(queryBlanketProfileBM);
 			LOG.debug("TARGET PROFILE for "+itemId+" "+targetProfileBM);
-			int numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
-			int numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
-			int numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
-			int numNOTInQueryAndNOTInTarget = 
-					numClasses - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
+
+			int numInQueryAndInTarget;
+			int numInQueryAndNOTInTarget;
+			int numNOTInQueryAndInTarget;
+			int numNOTInQueryAndNOTInTarget;
+
+			// the following are only used if negation is used 
 			int numNegatedInQueryAndInTarget = 0;
 			int numInQueryAndNegatedInTarget = 0;
 			int numNegatedInQueryAndNegatedInTarget = 0;
-			if (isUseNegation) {
+			
+			
+			if (!isUseNegation) {
+				// two state model.
+				numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
+				numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
+				numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
+				numNOTInQueryAndNOTInTarget = 
+						numClassesConsidered - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
+			}
+			else {
+				// three state model
+				// TODO: fixme
+
 				// TODO. Investigate efficiency for storing all descendants of
 				// a negated class as a bitmap
 				EWAHCompressedBitmap negatedTargetProfileBM = knowledgeBase.getNegatedTypesBM(itemId);
 				numNegatedInQueryAndInTarget = negatedQueryProfileBM.andCardinality(targetProfileBM);
 				numInQueryAndNegatedInTarget = queryProfileBM.andCardinality(negatedTargetProfileBM);
 				numNegatedInQueryAndNegatedInTarget = negatedQueryProfileBM.andCardinality(negatedTargetProfileBM);
+
 				// TODO - check for inconsistency (Q cannot be positive and negated)
+
+				numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
+				numInQueryAndNOTInTarget = queryProfileBM.andNotCardinality(targetProfileBM);
+				numNOTInQueryAndInTarget = targetProfileBM.andNotCardinality(queryProfileBM);
+				numNOTInQueryAndNOTInTarget = 
+						numClassesConsidered - (numInQueryAndInTarget + numInQueryAndNOTInTarget + numNOTInQueryAndInTarget);
 
 				// if negation mode is on, then we treat NOTInX as being UnknownInX,
 				// thus with 7 mutually exclusive states
 				numNOTInQueryAndInTarget -= numNegatedInQueryAndInTarget;
+				
 				numInQueryAndNOTInTarget -= numInQueryAndNegatedInTarget;
 				numNOTInQueryAndNOTInTarget -= numNegatedInQueryAndNegatedInTarget;
 			}

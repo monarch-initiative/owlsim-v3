@@ -104,9 +104,9 @@ public class AbstractProfileMatcherTest {
 		OWLLoader loader = new OWLLoader();
 		LOG.info("R="+fn);
 		loader.load(getClass().getResource(fn).getFile());
-		for (String datafn : ontfns) {
-			LOG.info("R="+datafn);
-			URL res = getClass().getResource(datafn);
+		for (String ontfn : ontfns) {
+			LOG.info("R="+ontfn);
+			URL res = getClass().getResource(ontfn);
 			LOG.info("RES="+res);
 			loader.loadOntologies(res.getFile());
 		}

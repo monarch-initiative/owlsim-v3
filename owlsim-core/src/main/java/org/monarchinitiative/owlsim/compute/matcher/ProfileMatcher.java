@@ -27,6 +27,15 @@ public interface ProfileMatcher {
 	 * @return profile query corresponding to individual
 	 */
 	public ProfileQuery createProfileQuery(String individualId);
+	
+	/**
+	 * As {@link createProfileQuery}, but ignore all negated statements
+	 * 
+	 * @param individualId
+	 * @param isSuppressNegation
+	 * @return profile query corresponding to individual
+	 */
+	public ProfileQuery createPositiveProfileQuery(String individualId);
 
 	
 	/**
@@ -66,4 +75,7 @@ public interface ProfileMatcher {
 	 * @return ontology interface
 	 */
 	BMKnowledgeBase getKnowledgeBase();
+
+
+
 }
