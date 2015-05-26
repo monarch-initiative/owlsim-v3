@@ -61,7 +61,7 @@ public class BayesianNetworkProfileMatcherTest extends AbstractProfileMatcherTes
 			}
 			if (i.equals("http://x.org/ind-no-brain-phenotype")) {
 				// TODO
-				Assert.assertTrue(isRankedLast("ind-brain", tq.matchSet));
+				Assert.assertTrue(isRankedLast("http://x.org/ind-brain", tq.matchSet));
 				nOk++;
 			}
 

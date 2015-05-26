@@ -25,6 +25,7 @@ import org.monarchinitiative.owlsim.model.kb.KBMetadata;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -100,6 +101,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	//private Set<OWLClass> classesInSignature;
 	private Set<OWLNamedIndividual> individualsInSignature;
 	private Map<String,Map<String,Set<Object>>> propertyValueMapMap;
+	Map<OWLClass,Set<OWLClassExpression>> opposingClassMap = 
+			new HashMap<OWLClass,Set<OWLClassExpression>>();
 
 	private int[] individualCountPerClassArray;
 
@@ -307,7 +310,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			int numAncNodes = owlReasoner.getSuperClasses(c, false).getNodes().size();
 			int freq = owlReasoner.getInstances(c, false).getNodes().size();
 			classNodeToFrequencyMap.put(node, freq);
-			
+
 			// freq depth is inversely correlated informativeness;
 			// frequency is primary measure (high freq = low informativeness);
 			// if frequency is tied, then tie is broken by number of ancestors
@@ -329,7 +332,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			if (owlDataOntology != null)
 				setPropertyValues(owlDataOntology,i);
 		}
-		
+
 		// Order class nodes such that LOW frequencies (HIGH Information Content)
 		// nodes are have LOWER indices
 		// TODO: use depth as a tie breaker
@@ -412,10 +415,21 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			pvm.put(pid, new HashSet<Object>());
 		pvm.get(pid).add(v);
 	}
-
+	
+	private void addOpposingClassPair(OWLClass c, OWLClassExpression dc) {
+		addOpposingClassPairAsym(c,dc);
+		if (!dc.isAnonymous())
+			addOpposingClassPairAsym(dc.asOWLClass(),c);
+	}
+	private void addOpposingClassPairAsym(OWLClass c, OWLClassExpression d) {
+		if (!opposingClassMap.containsKey(c))
+			opposingClassMap.put(c, new HashSet<OWLClassExpression>());
+		opposingClassMap.get(c).add(d);
+	}
 
 	private void storeInferences() {
 
+		
 		// Note: if there are any nodes containing >1 class or individual, then
 		//  the store method is called redundantly. This is unlikely to affect performance,
 		//  and the semantics are unchanged
@@ -441,6 +455,27 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					clsIndex, 
 					subs);
 
+			// Find all disjoint pairs plus opposing pairs
+			for (OWLAnnotationAssertionAxiom aaa : owlOntology.getAnnotationAssertionAxioms(c.getIRI())) {
+				// RO_0002604 is-opposite-of. TODO - use a vocabulary object
+				if (aaa.getProperty().getIRI().toString().equals("http://purl.obolibrary.org/obo/RO_0002604")) {
+					OWLAnnotationValue v = aaa.getValue();
+					if (v instanceof IRI) {
+						IRI dciri = (IRI)v;
+						OWLClass dc = owlOntology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(dciri);
+						addOpposingClassPair(c, dc);
+						
+					}
+				}
+			}	
+
+			for (OWLDisjointClassesAxiom dca : owlOntology.getDisjointClassesAxioms(c)) {
+				for (OWLClassExpression dc : dca.getClassExpressionsMinus(c)) {
+					addOpposingClassPair(c, dc);
+				}
+			}
+
+			
 			// direct individuals are those asserted to be of type c or anything equivalent to c
 			Set<Integer> individualInts = new HashSet<Integer>();
 			for (OWLClass ec : owlReasoner.getEquivalentClasses(c).getEntities()) {
@@ -476,10 +511,19 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 					ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(nc)));
 				}
 			}
-			
-			// Populate negative assertions from DisjointClasses axioms
+
+				// Populate negative assertions from DisjointClasses axioms
 			for (OWLClass c : owlReasoner.getTypes(i, false).getFlattened()) {
 				LOG.debug("TESTING FOR DCs: "+c);
+				if (opposingClassMap.containsKey(c)) {
+					for (OWLClassExpression dc : opposingClassMap.get(c)) {
+						LOG.info(i+" Type: "+c+" DisjointWith: "+dc);
+						ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(dc, false)));					
+						ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+						ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+					}
+				}
+				/*
 				for (OWLDisjointClassesAxiom dca : owlOntology.getDisjointClassesAxioms(c)) {
 					for (OWLClassExpression dc : dca.getClassExpressionsMinus(c)) {
 						LOG.info(i+" Type: "+c+" DisjointWith: "+dc);
@@ -488,7 +532,23 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 						ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
 					}
 				}
+				for (OWLAnnotationAssertionAxiom aaa : owlOntology.getAnnotationAssertionAxioms(c.getIRI())) {
+					// RO_0002604 is-opposite-of. TODO - use a vocabulary object
+					if (aaa.getProperty().getIRI().toString().equals("http://purl.obolibrary.org/obo/RO_0002604")) {
+						OWLAnnotationValue v = aaa.getValue();
+						if (v instanceof IRI) {
+							IRI dciri = (IRI)v;
+							OWLClass dc = owlOntology.getOWLOntologyManager().getOWLDataFactory().getOWLClass(dciri);
+							ncs.addAll(getIntegersForClassSet(owlReasoner.getSubClasses(dc, false)));					
+							ncs.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+							ncsDirect.add(getIndexForClassNode(owlReasoner.getEquivalentClasses(dc)));
+							
+						}
+					}
+				}
+				*/
 			}
+
 			ontoEWAHStore.setNegatedTypes(individualIndex, ncs); // TODO - determine if storing all inferred negated types is too inefficient
 			ontoEWAHStore.setDirectNegatedTypes(individualIndex, ncsDirect);
 		}
