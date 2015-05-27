@@ -45,8 +45,8 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 		LabelMapper labelMapper = kb.getLabelMapper();
 		eval.writeJsonTo("target/phenodigm-results.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
-				"Renal Dysplasia - Megalocystis - Sirenomelia",
-				16,
+				"Androgen Insensitivity, Partial",
+				8,
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia");		

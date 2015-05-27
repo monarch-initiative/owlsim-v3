@@ -163,8 +163,8 @@ public class ThreeStateBayesianNetworkProfileMatcherPerfIT extends AbstractProfi
 	
 	// TODO: incorporate disjointness without introducing inconsistency
 	private void load() throws OWLOntologyCreationException {
-		load("/ontologies/hp.obo",  "/data/Homo_sapiens-data.owl");		
-		//load("/ontologies/hp.obo", "/ontologies/hp-disjoints.owl", "/data/Homo_sapiens-data.owl");		
+		//load("/ontologies/hp.obo",  "/data/Homo_sapiens-data.owl");		
+		load("/ontologies/hp.obo", "/ontologies/hp-opposites.owl", "/data/Homo_sapiens-data.owl");		
 	}
 
 }

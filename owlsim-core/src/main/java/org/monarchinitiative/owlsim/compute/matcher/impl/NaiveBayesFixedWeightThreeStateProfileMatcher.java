@@ -170,13 +170,16 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 		double pvector[] = new double[indIds.size()];
 		String indArr[] = new String[indIds.size()];
 		int n=0;
-		double prFalseNegative = 0.0001;
-		double prFalsePositive = 0.0001;
+		double prFalseNegative = 0.000001;
+		double prFalsePositive = 0.00001; // 
 		double prFalseMiss = 0.01;       // like a weaker false negative
-		double prTrueMiss = 0.15;        // failure to make a call when hidden is false
+		double prTrueMiss = 0.85;        // failure to make a call when hidden is false
 		//double prWeakFalsePositive = prFalsePositive * 100;
-		double prWeakFalsePositive = Math.exp(Math.log(prFalsePositive) /4 );
-		double prWeakTrueMiss = prTrueMiss * 2;  // failure to make a call when hidden is non-obvious false
+		//double prWeakFalsePositive = Math.exp(Math.log(prFalsePositive) /4 );
+		double prWeakFalsePositive = 0.1;
+		
+		//double prWeakTrueMiss = prTrueMiss * 2;  // failure to make a call when hidden is non-obvious false
+		double prWeakTrueMiss = 0.95;
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap nodesHtBM = knowledgeBase.getTypesBM(itemId);
 			//EWAHCompressedBitmap nodesHfBM = knowledgeBase.getNegatedTypesBM(itemId);
@@ -366,7 +369,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 			indArr[n] = itemId;
 			sumOfProbs += p;
 			n++;
-			LOG.debug("p for "+itemId+" = "+p);
+			LOG.info("logp for "+itemId+" = "+logp+"   sumOfLogProbs="+sumOfProbs);
 		}
 		for (n = 0; n<pvector.length; n++) {
 			double p = pvector[n] / sumOfProbs;
