@@ -36,7 +36,8 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 
 	private Logger LOG = Logger.getLogger(ThreeStateBayesianNetworkProfileMatcher.class);
 
-	ThreeStateConditionalProbabilityIndex cpi;
+	private ThreeStateConditionalProbabilityIndex cpi;
+	private Map<BitMapPair,NodeProbabilities[]> targetToQueryCache;
 
 	@Inject
 	private ThreeStateBayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
@@ -47,6 +48,7 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		targetToQueryCache = new HashMap<BitMapPair, NodeProbabilities[]>();
 	}
 
 	/**
@@ -62,7 +64,70 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		return "bayesian-network";
 	}
 
+
+	
+	public class BitMapPair {
+		public final EWAHCompressedBitmap bm1;
+		public final EWAHCompressedBitmap bm2;
+		
+		public BitMapPair(EWAHCompressedBitmap bm1, EWAHCompressedBitmap bm2) {
+			super();
+			this.bm1 = bm1;
+			this.bm2 = bm2;
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((bm1 == null) ? 0 : bm1.hashCode());
+			result = prime * result + ((bm2 == null) ? 0 : bm2.hashCode());
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			BitMapPair other = (BitMapPair) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (bm1 == null) {
+				if (other.bm1 != null)
+					return false;
+			} else if (!bm1.equals(other.bm1))
+				return false;
+			if (bm2 == null) {
+				if (other.bm2 != null)
+					return false;
+			} else if (!bm2.equals(other.bm2))
+				return false;
+			return true;
+		}
+		private ThreeStateBayesianNetworkProfileMatcher getOuterType() {
+			return ThreeStateBayesianNetworkProfileMatcher.this;
+		}
+		
+		
+	}
+	
+	
+	
 	/**
+	 * note that this is exposed primarily for debugging purposes
+	 * 
+	 * @return cache
+	 */
+	public Map<BitMapPair, NodeProbabilities[]> getTargetToQueryCache() {
+		return targetToQueryCache;
+	}
+
+	/**
+	 * Creates a CPT from the knowledgebase. Should be called on initiation.
+	 * 
 	 * @param kb
 	 * @throws IncoherentStateException
 	 */
@@ -147,13 +212,21 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 	public class Calculator {
 		EWAHCompressedBitmap targetProfileBM;
 		EWAHCompressedBitmap negatedTargetProfileBM;
-		NodeProbabilities[] probCache;
+		BitMapPair targetProfilePair;
+		
+		// cache that is local to a particular candidate target
+		//NodeProbabilities[] probCache;
 
 		public Calculator(EWAHCompressedBitmap targetProfileBM, EWAHCompressedBitmap negatedTargetProfileBM) {
 			super();
 			this.targetProfileBM = targetProfileBM;
 			this.negatedTargetProfileBM = negatedTargetProfileBM;
-			probCache = new NodeProbabilities[getKnowledgeBase().getNumClassNodes()];
+			targetProfilePair = new BitMapPair(targetProfileBM, negatedTargetProfileBM);
+			if (!targetToQueryCache.containsKey(targetProfilePair)) {
+				targetToQueryCache.put(targetProfilePair, 
+						new NodeProbabilities[knowledgeBase.getNumClassNodes()]);
+			}
+			//probCache = new NodeProbabilities[getKnowledgeBase().getNumClassNodes()];
 		}
 
 		/**
@@ -221,6 +294,9 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		 * @throws IncoherentStateException 
 		 */
 		private NodeProbabilities calculateProbability(int qcix) throws IncoherentStateException {
+			
+			NodeProbabilities[] probCache = targetToQueryCache.get(targetProfilePair);
+				
 			if (probCache[qcix] != null) {
 				LOG.debug("Using cached for "+qcix);
 				return probCache[qcix];

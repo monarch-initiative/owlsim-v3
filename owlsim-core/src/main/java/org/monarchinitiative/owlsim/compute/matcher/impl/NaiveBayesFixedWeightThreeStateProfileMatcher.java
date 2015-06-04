@@ -179,7 +179,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 		double prWeakFalsePositive = 0.1;
 		
 		//double prWeakTrueMiss = prTrueMiss * 2;  // failure to make a call when hidden is non-obvious false
-		double prWeakTrueMiss = 0.95;
+		double prWeakTrueMiss = 0.85;
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap nodesHtBM = knowledgeBase.getTypesBM(itemId);
 			//EWAHCompressedBitmap nodesHfBM = knowledgeBase.getNegatedTypesBM(itemId);
