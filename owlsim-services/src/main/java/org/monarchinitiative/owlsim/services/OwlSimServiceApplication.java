@@ -81,7 +81,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
 
 		Injector i = Guice.createInjector(
 				new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris()),
-				new MatcherModule());
+				new MatcherMapModule());
 
 		//Add resources
 		Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
