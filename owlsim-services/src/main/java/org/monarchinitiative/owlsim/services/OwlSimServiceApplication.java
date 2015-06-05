@@ -22,6 +22,7 @@ import io.dropwizard.setup.Environment;
 
 import java.util.Set;
 
+import org.monarchinitiative.owlsim.compute.matcher.MatcherMapModule;
 import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
 
