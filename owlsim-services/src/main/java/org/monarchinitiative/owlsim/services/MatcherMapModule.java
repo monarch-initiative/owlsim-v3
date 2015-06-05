@@ -12,7 +12,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 
-public class MatcherModule extends AbstractModule {
+public class MatcherMapModule extends AbstractModule {
 
 	// The package containing ProfileMatcher implementations
 	private static final String matcherPackage = "org.monarchinitiative.owlsim.compute.matcher.impl";

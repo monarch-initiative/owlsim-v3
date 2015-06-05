@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.compute.cpt.impl;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ implements ConditionalProbabilityIndex {
 	private char UNKNOWN = 'u';
 	private char ON = 't';
 	private char OFF = 'f';
-	private char[] STATES = {'f', 'u','t'};
+	private char[] STATES = {OFF, UNKNOWN, ON};
 
 	//Double[][] conditionalProbabilityOnByChildParentState; // Pr(C=on|ParentsStateCombo)
 	//Double[][] conditionalProbabilityOffByChildParentState; // Pr(C=on|ParentsStateCombo)

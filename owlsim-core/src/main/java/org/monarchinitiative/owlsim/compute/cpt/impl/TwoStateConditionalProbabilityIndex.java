@@ -29,8 +29,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 	BMKnowledgeBase kb;
 	private char UNKNOWN = 'u';
 	private char ON = 't';
-	private char[] STATES = {'u','t'};
-	
+	private char[] STATES = { UNKNOWN, ON };
 
 	Double[][] conditionalProbabilityByChildParentState;
 	Map<Integer,Character>[][] parentStateMapByIndex;
