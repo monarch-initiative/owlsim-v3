@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,8 +13,6 @@ import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatch
 import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator.MatcherComparisonResult;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class ProfileMatcherComparisonTest extends AbstractProfileMatcherTest {

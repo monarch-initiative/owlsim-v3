@@ -1,7 +1,6 @@
 package org.monarchinitiative.owlsim.compute.kb.impl;
 
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -9,8 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-
-import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
  * Tests a OWLAPI implementation of a KB

@@ -9,8 +9,6 @@ import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
-import com.googlecode.javaewah.EWAHCompressedBitmap;
-
 /**
  * 
  * Note: currently only used by 3-state implementation

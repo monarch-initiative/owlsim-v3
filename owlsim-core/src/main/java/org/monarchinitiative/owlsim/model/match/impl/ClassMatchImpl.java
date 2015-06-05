@@ -1,7 +1,6 @@
 package org.monarchinitiative.owlsim.model.match.impl;
 
 import org.monarchinitiative.owlsim.model.match.ClassMatch;
-import org.monarchinitiative.owlsim.model.match.Match;
 
 /**
  * 

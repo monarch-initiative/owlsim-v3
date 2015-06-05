@@ -1,17 +1,12 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
-import java.io.FileNotFoundException;
-
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 /**
  * Tests bayesian network matcher, making use of both negative queries and negative

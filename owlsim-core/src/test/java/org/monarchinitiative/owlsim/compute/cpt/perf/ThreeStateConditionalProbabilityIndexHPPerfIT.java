@@ -2,29 +2,16 @@ package org.monarchinitiative.owlsim.compute.cpt.perf;
 
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.cpt.AbstractThreeStateConditionalProbabilityIndexTest;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
-import org.monarchinitiative.owlsim.compute.cpt.impl.NodeProbabilities;
 import org.monarchinitiative.owlsim.compute.cpt.impl.ThreeStateConditionalProbabilityIndex;
-import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
-import org.monarchinitiative.owlsim.compute.mica.AbstractMICAStoreTest;
-import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
-import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator;
 import org.monarchinitiative.owlsim.io.OWLLoader;
-import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-
-import com.google.monitoring.runtime.instrumentation.common.com.google.common.io.Resources;
 
 /**
  * Tests performance of CPT
