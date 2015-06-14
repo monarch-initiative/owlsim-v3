@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
-import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
