@@ -12,7 +12,6 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
-import org.monarchinitiative.owlsim.model.match.QueryWithNegation;
 import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;

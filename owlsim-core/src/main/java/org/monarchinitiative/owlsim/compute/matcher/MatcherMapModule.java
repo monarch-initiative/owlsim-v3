@@ -1,11 +1,9 @@
-package org.monarchinitiative.owlsim.services;
+package org.monarchinitiative.owlsim.compute.matcher;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 
 import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;

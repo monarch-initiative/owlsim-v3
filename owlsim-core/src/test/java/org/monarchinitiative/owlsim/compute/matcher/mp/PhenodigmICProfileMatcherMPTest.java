@@ -1,8 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.mp;
 
-import static org.junit.Assert.*;
-
-import java.io.FileNotFoundException;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -13,8 +11,6 @@ import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatch
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class PhenodigmICProfileMatcherMPTest extends AbstractProfileMatcherTest {

@@ -2,8 +2,6 @@ package org.monarchinitiative.owlsim.compute.matcher.sp;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -13,8 +11,6 @@ import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTw
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatcherTest {

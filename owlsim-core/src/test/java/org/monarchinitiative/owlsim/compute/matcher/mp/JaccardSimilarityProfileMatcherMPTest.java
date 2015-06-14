@@ -1,13 +1,8 @@
 package org.monarchinitiative.owlsim.compute.matcher.mp;
 
-import java.io.FileNotFoundException;
-
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 public class JaccardSimilarityProfileMatcherMPTest extends AbstractProfileMatcherMPTest {
 

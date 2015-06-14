@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.compute.matcher.mp;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
 
@@ -11,8 +10,6 @@ import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;

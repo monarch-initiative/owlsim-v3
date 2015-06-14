@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +8,9 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
-import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.cpt.impl.NodeProbabilities;
 import org.monarchinitiative.owlsim.compute.cpt.impl.ThreeStateConditionalProbabilityIndex;
-import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
