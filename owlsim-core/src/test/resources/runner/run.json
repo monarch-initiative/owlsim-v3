@@ -1,0 +1,29 @@
+{
+    "description" : "test",
+    "tool" : "foo",
+    "ontologyInputs" : ["src/test/resources/simple-pheno-with-negation.owl"],
+    "pairwiseJobs" : [
+        {
+        "queryIndividual" : "http://x.org/ind-small-heart-small-brain",
+        "targetIndividual" : "http://x.org/ind-big-heart-big-brain"
+        }
+    ],
+    "searchJobs" : [
+        {
+        "queryIndividual" : "http://x.org/ind-small-heart-small-brain"
+        }
+    ],
+    "searchJobs_FOO" : [
+        {
+        "queryClassIds" : [
+        	"http://x.org/bone-morphology",
+        	"http://x.org/hypoplastic-heart"
+         ],
+         "negatedQueryClassIds" : [
+        	"http://x.org/inc-bone-length",
+        	"http://x.org/neuro-phenotype"
+         ]
+        }
+    ]
+    
+}

@@ -21,6 +21,10 @@ public class IdFilter implements Filter {
 		ids.addAll(ids);
 	}
 	
+	public static Filter create(String id) {
+		return new IdFilter(id);
+	}
+	
 	public Set<String> getIds() {
 		return this.ids;
 	}
