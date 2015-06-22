@@ -28,16 +28,19 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * 
  * <h4>Mapping to Bitmap positions</h4>
  * Bitmap vectors are used for fast set-wise operations.
+ * <br/>
  * 
- * Each class or individual is identified by a String identifier, but behind the scenes,
+ * Each class or individual is identified by a String identifier (e.g a CURIE), but behind the scenes,
  * this is mapped to an integer denoting a position in the bitmap. A set of classes or
- * a set of individuals can then be represented by a bitmap.
+ * a set of individuals can then be represented by a {@link EWAHCompressedBitmap}.
+ * <br/>
  * 
  * Note that classes and individuals are mutually exclusive, so the ID to Index mapping
- * is dependent on the datatype
+ * is dependent on the datatype.
+ * <br/>
  * 
  * <b>Guarantee:</b>Note that the index assigned to a class node is ordered according to
- * informativeness. if Ix(C1) < Ix(C2), then Informativeness(C1) =< Informativeness(C2).
+ * informativeness. if <code>Ix(C1) < Ix(C2)</code>, then <code>Informativeness(C1) =< Informativeness(C2)</code>.
  * Here Informativeness is the IC (with ties broken according to number of ancestors,
  * with more ancestors being more informative).
  * This means that an iterator starts with the classes

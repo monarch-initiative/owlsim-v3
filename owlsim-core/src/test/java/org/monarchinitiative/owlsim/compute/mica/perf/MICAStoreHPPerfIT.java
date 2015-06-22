@@ -55,7 +55,7 @@ public class MICAStoreHPPerfIT extends AbstractMICAStoreTest {
 		LOG.info("Cache traversal time: "+dt); // Expect <1s, e.g. 15ms for 100m lookups
 		Assert.assertTrue("found MICA", isFoundMICA);
 		Assert.assertTrue("Cache traversal should be faster than population", dt < timeToIndex);
-
+		Assert.assertTrue("Must be fast", timeToIndex < 50000);
 	}
 
 

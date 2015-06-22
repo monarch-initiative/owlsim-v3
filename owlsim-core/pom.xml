@@ -14,6 +14,53 @@
 		<jena.version>2.11.2</jena.version>
 	</properties>
 
+        <build>
+          <plugins>
+            <!-- Build a bin/owlsim.jar file with all dependencies -->
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-assembly-plugin</artifactId>
+              <configuration>
+                <finalName>owlsim</finalName>
+                <appendAssemblyId>false</appendAssemblyId>
+                <attach>false</attach>
+                <outputDirectory>${project.parent.basedir}/bin</outputDirectory>
+                <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+                <archive>
+                  <manifest>
+                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                    <mainClass>org.monarchinitiative.owlsim.compute.runner.RunEngine</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>make-assembly</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>single</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-failsafe-plugin</artifactId>
+              <version>2.18.1</version>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>integration-test</goal>
+                    <goal>verify</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.jena</groupId>

@@ -17,8 +17,10 @@ import org.apache.log4j.Logger;
  * This requires memory on the order of |C|^2
  * 
  * It would be possible to create a separate implementation that uses (|C|^2)/2, as
- * the grid is symmetric. This is left as a future extension for now. For now we treat
- * double the memory for what may be negligible increase in speed.
+ * the grid is symmetric. This is left as a future extension for now. For now we incur
+ * the memory cost, the speed gain from this may be negligible.
+ * 
+ * TODO: implement saving/restoring from file
  * 
  * @author cjm
  *
