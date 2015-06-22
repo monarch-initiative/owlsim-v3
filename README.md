@@ -2,6 +2,9 @@
 
 Ontology Based Profile Matching
 
+[![Build Status](https://travis-ci.org/cmungall/owlsim-v3.svg)](https://travis-ci.org/cmungall/owlsim-v3)
+[![Coverage Status](https://coveralls.io/repos/cmungall/owlsim-v3/badge.svg)](https://coveralls.io/r/cmungall/owlsim-v3)
+
 This will eventually replace sim2 currently distributed as part of owltools
 
 ## Documentation
