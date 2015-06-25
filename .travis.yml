@@ -8,7 +8,7 @@ branches:
   - master
 
 before_install:
-  - cd owlsim-core; make
+  - cd owlsim-core; make; ulimit -u 514029
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
