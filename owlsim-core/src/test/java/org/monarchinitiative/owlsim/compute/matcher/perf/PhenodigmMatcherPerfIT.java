@@ -1,10 +1,9 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
@@ -50,9 +49,6 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia");		
-		Level level = Level.DEBUG;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 
@@ -83,9 +79,6 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				d,
 				1,
 				d);		
-		Level level = Level.DEBUG;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 

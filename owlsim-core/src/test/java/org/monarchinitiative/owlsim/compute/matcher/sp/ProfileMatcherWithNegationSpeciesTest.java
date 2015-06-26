@@ -2,7 +2,6 @@ package org.monarchinitiative.owlsim.compute.matcher.sp;
 
 import static org.junit.Assert.assertTrue;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
@@ -41,9 +40,6 @@ public class ProfileMatcherWithNegationSpeciesTest extends AbstractProfileMatche
 				//"not cetacean",
 				//"not carnivore",
 				"not zebrafish");
-		Level level = Level.DEBUG;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		

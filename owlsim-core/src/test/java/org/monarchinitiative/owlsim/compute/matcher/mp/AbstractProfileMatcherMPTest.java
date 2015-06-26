@@ -48,7 +48,7 @@ public abstract class AbstractProfileMatcherMPTest {
 	protected BMKnowledgeBase ontology;
 	protected ProfileMatcher profileMatcher;
 	private Logger LOG = Logger.getLogger(AbstractProfileMatcherMPTest.class);
-	protected boolean writeToStdout = true;
+	protected boolean writeToStdout = false;
 	
 	protected enum DISEASE {
 		sg,

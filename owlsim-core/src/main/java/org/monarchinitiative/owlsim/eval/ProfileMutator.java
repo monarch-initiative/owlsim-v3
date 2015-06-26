@@ -19,7 +19,7 @@ import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 public class ProfileMutator {
 	
 	private Logger LOG = Logger.getLogger(ProfileMutator.class);
-	private boolean writeToStdout = true;
+	private boolean writeToStdout = false;
 	private JSONWriter jsonWriter;
 	
 	public void writeJsonTo(String fileName) throws FileNotFoundException {

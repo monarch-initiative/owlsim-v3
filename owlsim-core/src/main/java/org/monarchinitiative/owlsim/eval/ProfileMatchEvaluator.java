@@ -34,7 +34,7 @@ import java.util.Set;
 public class ProfileMatchEvaluator {
 
 	private Logger LOG = Logger.getLogger(ProfileMatchEvaluator.class);
-	private boolean writeToStdout = true;
+	private boolean writeToStdout = false;
 	private JSONWriter jsonWriter;
 
 	public void writeJsonTo(String fileName) throws FileNotFoundException {
