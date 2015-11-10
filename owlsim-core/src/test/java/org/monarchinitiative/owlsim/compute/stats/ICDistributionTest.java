@@ -92,7 +92,7 @@ public class ICDistributionTest {
 			ICDistribution randomReferenceDistro = new ICDistribution(icc.getICStatsForIndividual(randomibit), 0.001);		
 			double pvalue = randomReferenceDistro.kolmogorovSmirnovTest(randomReferenceDistro);
 			LOG.info("|C|="+numClasses+". I1 v I1 (K-S), p="+pvalue); //should be 1.0
-			Assert.assertTrue(indiv+" pvalue=1", (pvalue>cutoff));
+			Assert.assertTrue(indiv+" pvalue="+pvalue+" pvalue > cutoff", (pvalue>cutoff));
 		}
 	}	
 	
