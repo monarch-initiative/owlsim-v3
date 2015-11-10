@@ -33,7 +33,7 @@ public class ProfileMatcherSpeciesTest {
 
 	protected BMKnowledgeBase kb;
 	private Logger LOG = Logger.getLogger(ProfileMatcherSpeciesTest.class);
-	protected boolean writeToStdout = true;
+	protected boolean writeToStdout = false;
 	List<TestQuery> testQueries = new ArrayList<TestQuery>();
 	
 

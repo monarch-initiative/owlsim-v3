@@ -32,7 +32,7 @@ public class MultiMatcherSpeciesTest {
 
 	protected BMKnowledgeBase kb;
 	private Logger LOG = Logger.getLogger(MultiMatcherSpeciesTest.class);
-	protected boolean writeToStdout = true;
+	protected boolean writeToStdout = false;
 	List<TestQuery> testQueries = new ArrayList<TestQuery>();
 	
 	private class TestQuery {

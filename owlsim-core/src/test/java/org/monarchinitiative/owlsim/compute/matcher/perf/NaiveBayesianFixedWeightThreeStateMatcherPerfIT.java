@@ -1,10 +1,9 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
@@ -49,9 +48,6 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 	@Test
 	public void testQueryWithSelf() throws Exception {
 		load();
-		Level level = Level.INFO;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
 		assertTrue(numInds > 0);
@@ -79,9 +75,6 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 	@Test
 	public void testSingleProfileQuery() throws Exception {
 		load();
-		Level level = Level.INFO;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
 		assertTrue(numInds > 0);
@@ -109,9 +102,6 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 	@Test
 	public void testQueryWithNegation() throws Exception {
 		load();
-		Level level = Level.INFO;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
 		assertTrue(numInds > 0);
@@ -138,9 +128,6 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 	@Test
 	public void testQueryMultiple() throws Exception {
 		load();
-		Level level = Level.INFO;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
 		eval.writeJsonTo("target/bn3-it-results-multi.json");

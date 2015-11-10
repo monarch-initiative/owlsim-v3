@@ -36,7 +36,7 @@ public class AbstractProfileMatcherTest {
 
 	protected BMKnowledgeBase kb;
 	private Logger LOG = Logger.getLogger(AbstractProfileMatcherTest.class);
-	protected boolean writeToStdout = true;
+	protected boolean writeToStdout = false;
 	protected ProfileMatchEvaluator eval = new ProfileMatchEvaluator();
 
 

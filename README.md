@@ -2,6 +2,9 @@
 
 Ontology Based Profile Matching
 
+[![Build Status](https://travis-ci.org/monarch-initiative/owlsim-v3.svg?branch=master)](https://travis-ci.org/monarch-initiative/owlsim-v3)
+[![Coverage Status](https://coveralls.io/repos/monarch-initiative/owlsim-v3/badge.svg?branch=master&service=github)](https://coveralls.io/github/monarch-initiative/owlsim-v3?branch=master)
+
 This will eventually replace sim2 currently distributed as part of owltools
 
 ## Documentation

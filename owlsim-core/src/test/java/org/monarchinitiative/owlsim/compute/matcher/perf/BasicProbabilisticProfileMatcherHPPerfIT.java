@@ -1,10 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import static org.junit.Assert.assertTrue;
-
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
@@ -35,9 +31,6 @@ public class BasicProbabilisticProfileMatcherHPPerfIT extends AbstractProfileMat
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia");
-		Level level = Level.INFO;
-		LOG.setLevel(level );
-		Logger.getRootLogger().setLevel(level);
 		//assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
 		
 	}

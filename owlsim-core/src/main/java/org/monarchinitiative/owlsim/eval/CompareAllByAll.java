@@ -19,7 +19,7 @@ import org.monarchinitiative.owlsim.model.match.MatchSet;
 public class CompareAllByAll {
 	
 	private Logger LOG = Logger.getLogger(CompareAllByAll.class);
-	private boolean writeToStdout = true;
+	private boolean writeToStdout = false;
 	ProfileMatcher profileMatcher;
 	
 	
