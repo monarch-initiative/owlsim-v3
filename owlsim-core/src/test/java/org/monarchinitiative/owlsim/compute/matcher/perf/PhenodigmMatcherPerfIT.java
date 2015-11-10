@@ -34,6 +34,11 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 		return PhenodigmICProfileMatcher.create(kb);
 	}
 
+	/**
+	 * Duration ~ 0.1s
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testPhenodigmSingleProfileQuery() throws Exception {
 		load();
@@ -50,16 +55,19 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia");		
-		Level level = Level.DEBUG;
+		Level level = Level.INFO;
 		LOG.setLevel(level );
 		Logger.getRootLogger().setLevel(level);
 		LOG.info("TQ="+tq.query);
 		assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+		LOG.info("DONE!");
 
 	}
 
 	/**
 	 * Tests that self is the top hit for Schwartz-Jampel Syndrome
+	 * 
+	 * Duration <1s
 	 * 
 	 * @throws OWLOntologyCreationException
 	 * @throws NonUniqueLabelException
@@ -91,6 +99,11 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 
 	}
 
+	/**
+	 * Duration <.3s
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testPhenodigmQueryMultiple() throws Exception {
 		load();
@@ -103,14 +116,14 @@ public class PhenodigmMatcherPerfIT extends AbstractProfileMatcherTest {
 					kb,
 					labelMapper,
 					"Microcephalic Osteodysplastic Primordial Dwarfism, Type I",
-					3,
+					10,
 					dq)));		
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(
 					kb,
 					labelMapper,
 					"Multicentric Osteolysis, Nodulosis, And Arthropathy",
-					6,
+					10,
 					dq)));		
 	}
 	private void load() throws OWLOntologyCreationException {

@@ -11,7 +11,7 @@ import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 
 /**
- * Compare all by all
+ * Utility object for doing all-by-all comparisons.
  * 
  * @author cjm
  *
@@ -29,6 +29,15 @@ public class CompareAllByAll {
 		this.profileMatcher = profileMatcher;
 	}
 
+	/**
+	 * Perform all-by-all comparison of all individuals.
+	 * 
+	 * The result is a 2D array indexed by the index-value of each individual
+	 * 
+	 * @return
+	 * @throws UnknownFilterException
+	 * @throws IncoherentStateException
+	 */
 	public int[][] compareAllByAll() throws UnknownFilterException, IncoherentStateException {
 		BMKnowledgeBase kb = profileMatcher.getKnowledgeBase();
 		Set<String> indIds = kb.getIndividualIdsInSignature();

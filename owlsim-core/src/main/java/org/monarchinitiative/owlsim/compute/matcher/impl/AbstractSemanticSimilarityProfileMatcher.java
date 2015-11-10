@@ -8,7 +8,7 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
  *  common methods and variables for all ProfileMatcher that
- *  implement semantic similarity techniques  
+ *  implement semantic similarity techniques, i.e. those involving a MRCA  
  * 
  * @author cjm
  *

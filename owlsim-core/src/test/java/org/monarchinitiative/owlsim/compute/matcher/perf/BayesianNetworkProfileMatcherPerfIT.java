@@ -39,6 +39,8 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 	/**
 	 * Tests that self is the top hit for Schwartz-Jampel Syndrome
 	 * 
+	 * Duration: ~14s
+	 * 
 	 * @throws OWLOntologyCreationException
 	 * @throws NonUniqueLabelException
 	 * @throws FileNotFoundException
@@ -69,6 +71,11 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 
 	}
 	
+	/**
+	 * Duration: ~8s
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testQueryWithNegation() throws Exception {
 		load();
@@ -95,6 +102,11 @@ public class BayesianNetworkProfileMatcherPerfIT extends AbstractProfileMatcherT
 
 	}
 
+	/**
+	 * Duration: ~6s
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testSingleProfileQuery() throws Exception {
 		load();

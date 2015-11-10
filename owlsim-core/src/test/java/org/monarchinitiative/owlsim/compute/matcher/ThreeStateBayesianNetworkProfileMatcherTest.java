@@ -14,7 +14,10 @@ import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
  * Tests 3-state bayesian network matcher, making use of both negative queries and negative
- * associations
+ * associations.
+ * 
+ * Without negation, a class big-femur may partially match small-femur at the level of 'femur'.
+ * With negation, these are disjoint and one should penalize the other 
  * 
  * @author cjm
  *
@@ -55,6 +58,10 @@ public class ThreeStateBayesianNetworkProfileMatcherTest extends AbstractProfile
 				Assert.assertTrue(isRankedLast("http://x.org/ind-big-heart-small-brain", tq.matchSet));
 				nOk++;
 			}
+			if (i.equals("http://x.org/ind-big-femur")) {
+				Assert.assertTrue(isRankedLast("http://x.org/ind-small-femur", tq.matchSet));
+				nOk++;
+			}
 			if (i.equals("http://x.org/ind-unstated-phenotype")) {
 				//Assert.assertTrue(isRankedLast("http://x.org/ind-no-phenotype", tq.matchSet));
 				nOk++;
@@ -69,7 +76,7 @@ public class ThreeStateBayesianNetworkProfileMatcherTest extends AbstractProfile
 			}
 			
 		}
-		Assert.assertEquals(5, nOk);
+		Assert.assertEquals(6, nOk);
 	}
 	
 

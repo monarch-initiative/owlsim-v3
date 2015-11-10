@@ -9,7 +9,6 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
  * where C is a child class, P1..Pn are parent classes, and S1..Sn are
  * the states of P1..Pn
  * 
- * Currently only states are {1,0} TODO check
  * 
  * The interface is relatively low-level for speed. Entries are accessed using
  * the integer index of the child class C (clsIndex). For the parents' states, a second index is

@@ -21,7 +21,7 @@ import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
- * Calculate of observing query given target as evidence.
+ * Calculate probability of observing query (e.g. patient profile) given target as evidence.
  * 
  * Note this first implementation does not use NOTs; it uses a {@link TwoStateConditionalProbabilityIndex}.
  * The two states are ON (true/observed) and OFF (unknown/not observed)
@@ -180,6 +180,8 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		}
 
 		/**
+		 * Top-level call
+		 * 
 		 * Calculate the probability of all queryClasses being on,
 		 * given the nodes in the target profile are not
 		 * 
@@ -229,6 +231,15 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 			return calculateProbability(qcix);
 		}
 
+		/**
+		 * Calculate the probability that a node qc is ON.
+		 * 
+		 *  - If this is specified in the query, then a set value is returned (1-FP);
+		 *  - If not specified, equal to sum of probabilities of all states of parents
+		 * 
+		 * @param qcix
+		 * @return
+		 */
 		private double calculateProbability(int qcix) {
 			if (probCache[qcix] != null) {
 				LOG.debug("Using cached for "+qcix);

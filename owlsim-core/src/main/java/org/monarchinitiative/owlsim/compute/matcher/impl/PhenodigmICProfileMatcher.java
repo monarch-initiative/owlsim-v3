@@ -83,7 +83,7 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 		// end of optimal target score calculation
 		// ---
 		
-		// obtain target set
+		// obtain target set and iterate through each one
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
@@ -93,14 +93,13 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 			
 			EWAHCompressedBitmap targetProfileDirectBM = knowledgeBase.getDirectTypesBM(itemId);
 			int tsize = targetProfileDirectBM.cardinality();
-			//LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 			
 			// note: this is an experimental implementation that
 			// does not make use of a MICA cache; it may be replaced by
 			// a version that uses a cache later.
 			double score = 0;
 
-			// find best match for every q in query profile
+			// find best match for every class j in query profile
 			for (int j = 0; j<qsize; j++) {
 				EWAHCompressedBitmap queryBM = queryProfileBMArr[j];
 				// find best match for Qj; we can optimize here;
