@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
