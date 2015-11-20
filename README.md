@@ -32,7 +32,8 @@ produces a standalone Dropwizard jar:
 
 which runs with:
 
-    java -jar owlsim-services/target/owlsim-services.3.0-SNAPSHOT.jar server configuration.yaml
+    cd owlsim-services
+    java -jar target/owlsim-services-3.0-SNAPSHOT.jar server src/test/resources/test-configuration.yaml
 
 where configuration.yaml describes the desired ontologies:
 

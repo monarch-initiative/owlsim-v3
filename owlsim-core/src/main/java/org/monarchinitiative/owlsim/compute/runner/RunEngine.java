@@ -2,11 +2,13 @@ package org.monarchinitiative.owlsim.compute.runner;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.io.OWLLoader;
@@ -16,6 +18,8 @@ import org.monarchinitiative.owlsim.kb.filter.IdFilter;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
+import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
+import org.monarchinitiative.owlsim.model.match.impl.QueryWithNegationImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.google.gson.Gson;
@@ -29,13 +33,17 @@ import com.google.gson.GsonBuilder;
  */
 public class RunEngine {
 	
-	//private Logger LOG = Logger.getLogger(RunEngine.class);
+	private Logger LOG = Logger.getLogger(RunEngine.class);
 
 	RunConfiguration runConfiguration;
-	MatcherModule mm = new MatcherModule();
 	ProfileMatcher profileMatcher;
 	BMKnowledgeBase kb;
 
+	Class[] matcherClasses = {
+			PhenodigmICProfileMatcher.class,
+			BayesianNetworkProfileMatcher.class
+	};
+	
 	/**
 	 * @param runConfiguration
 	 */
@@ -43,6 +51,20 @@ public class RunEngine {
 		super();
 		this.runConfiguration = runConfiguration;
 	}
+	
+	
+
+	public RunConfiguration getRunConfiguration() {
+		return runConfiguration;
+	}
+
+
+
+	public void setRunConfiguration(RunConfiguration runConfiguration) {
+		this.runConfiguration = runConfiguration;
+	}
+
+
 
 	protected BMKnowledgeBase createKnowledgeBase(List<String> fns) throws OWLOntologyCreationException {
 		OWLLoader loader = null;
@@ -58,34 +80,76 @@ public class RunEngine {
 		return loader.createKnowledgeBaseInterface();
 	}
 
+	public ProfileQuery createProfileQuery(Job job) {
+		ProfileQuery q = null;
+		if (job.getQueryIndividual() != null) {
+			q = profileMatcher.createProfileQuery(job.getQueryIndividual());
+		}
+		if (job.getQueryClassIds() != null) {
+			if (job.getNegatedQueryClassIds() != null) {
+				q = QueryWithNegationImpl.create(job.getQueryClassIds(), 
+						job.getNegatedQueryClassIds());
+			}
+			else {
+				q = ProfileQueryImpl.create(job.getQueryClassIds());
+			}
+		}
+
+		return q;
+	}
+	
 	public void execute() throws IOException, InstantiationException, IllegalAccessException, OWLOntologyCreationException, UnknownFilterException, IncoherentStateException {
 		kb = createKnowledgeBase(runConfiguration.getOntologyInputs());
 		profileMatcher = createProfileMatcher();
 		for (PairwiseJob job : runConfiguration.getPairwiseJobs()) {
-			ProfileQuery q = profileMatcher.createProfileQuery(job.getQueryIndividual());
+			job.setId();
+			ProfileQuery q = createProfileQuery(job);
 			Filter filter = IdFilter.create(job.getTargetIndividual());
 			q.setFilter(filter);
 			//job.getTargetIndividual();
 			MatchSet mp = profileMatcher.findMatchProfile(q);
 			job.setMatchSet(mp);
 			//LOG.info(mp);
-			
+
 		}
 		for (SearchJob job : runConfiguration.getSearchJobs()) {
-			// TODO: classes
-			ProfileQuery q = profileMatcher.createProfileQuery(job.getQueryIndividual());
+			job.setId();
+			ProfileQuery q = createProfileQuery(job);
 			//job.getTargetIndividual();
 			MatchSet mp = profileMatcher.findMatchProfile(q);
 			job.setMatchSet(mp);
 			//LOG.info(mp);
-			
+
 		}
 		return;
 	}
 
+
 	public ProfileMatcher createProfileMatcher() throws IOException, InstantiationException, IllegalAccessException {
-		//mm.getMatchers();
-		return PhenodigmICProfileMatcher.create(kb);
+		String requestedMatcher = runConfiguration.getTool();
+		ProfileMatcher matcher = null;
+		if (requestedMatcher == null) {
+			requestedMatcher = "phenodigm";
+		}
+
+		for (int i=0; i<matcherClasses.length; i++) {
+			Class c = matcherClasses[i];
+			System.out.println(c);
+			String sn = ((ProfileMatcher) c.newInstance()).getShortName();
+
+			if (sn.equals(requestedMatcher)) {
+				Class[] args = {BMKnowledgeBase.class};
+				try {
+					Constructor constr = 
+							c.getDeclaredConstructor(args);
+						matcher = (ProfileMatcher) constr.newInstance(kb);
+				}
+				catch (Exception e) {
+					System.err.println(e.getStackTrace());
+				}
+			}
+		}
+		return matcher;		
 	}
 	
 	public void toJsonFile(String fn) throws FileNotFoundException {

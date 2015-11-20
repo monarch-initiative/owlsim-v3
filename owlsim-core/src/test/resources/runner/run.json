@@ -11,9 +11,7 @@
     "searchJobs" : [
         {
         "queryIndividual" : "http://x.org/ind-small-heart-small-brain"
-        }
-    ],
-    "searchJobs_FOO" : [
+        },
         {
         "queryClassIds" : [
         	"http://x.org/bone-morphology",

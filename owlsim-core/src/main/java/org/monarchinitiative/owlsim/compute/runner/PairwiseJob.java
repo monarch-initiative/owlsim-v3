@@ -1,13 +1,16 @@
 package org.monarchinitiative.owlsim.compute.runner;
 
+import java.util.Set;
+
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 
 public class PairwiseJob extends Job {
 	
 	public String queryIndividual;
 	public String targetIndividual;
+	public Set<String> queryClassIds;
+	public Set<String> negatedQueryClassIds;
 	public MatchSet matchSet;
-	
 	
 	
 	public String getQueryIndividual() {
@@ -32,6 +35,27 @@ public class PairwiseJob extends Job {
 		this.targetIndividual = targetIndividual;
 	}
 
+	public Set<String> getQueryClassIds() {
+		return queryClassIds;
+	}
+
+
+
+	public void setQueryClassIds(Set<String> queryClassIds) {
+		this.queryClassIds = queryClassIds;
+	}
+
+
+
+	public Set<String> getNegatedQueryClassIds() {
+		return negatedQueryClassIds;
+	}
+
+
+
+	public void setNegatedQueryClassIds(Set<String> negatedQueryClassIds) {
+		this.negatedQueryClassIds = negatedQueryClassIds;
+	}
 
 
 	public MatchSet getMatchSet() {

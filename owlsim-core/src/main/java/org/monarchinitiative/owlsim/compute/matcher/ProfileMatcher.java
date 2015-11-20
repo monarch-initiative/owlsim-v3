@@ -27,16 +27,17 @@ public interface ProfileMatcher {
 	 * @return profile query corresponding to individual
 	 */
 	public ProfileQuery createProfileQuery(String individualId);
-	
+
+
 	/**
 	 * As {@link createProfileQuery}, but ignore all negated statements
 	 * 
 	 * @param individualId
-	 * @param isSuppressNegation
 	 * @return profile query corresponding to individual
 	 */
 	public ProfileQuery createPositiveProfileQuery(String individualId);
 
+	
 	
 	/**
 	 * Use q to scan all individuals in the kb that match the filter,

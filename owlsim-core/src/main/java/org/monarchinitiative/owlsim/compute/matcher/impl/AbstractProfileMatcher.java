@@ -147,6 +147,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	}
 
 	public ProfileQuery createProfileQuery(String individualId, Boolean isUseNegation) {
+		Preconditions.checkNotNull(individualId);
 		EWAHCompressedBitmap bmi = knowledgeBase.getDirectTypesBM(individualId);
 		EWAHCompressedBitmap nbmi = knowledgeBase.getDirectNegatedTypesBM(individualId);
 		Set<String> qcids = knowledgeBase.getClassIds(bmi);
