@@ -1,4 +1,5 @@
 language: java
+sudo: false
 jdk:
   - oraclejdk7
 
@@ -7,7 +8,7 @@ branches:
   - master
 
 before_install:
-  - cd owlsim-core; make; ulimit -u 514029
+  - cd owlsim-core; make
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
