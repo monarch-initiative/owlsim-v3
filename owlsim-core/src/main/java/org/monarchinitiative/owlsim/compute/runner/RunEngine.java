@@ -3,7 +3,9 @@ package org.monarchinitiative.owlsim.compute.runner;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
@@ -32,7 +34,7 @@ import com.google.gson.GsonBuilder;
  *
  */
 public class RunEngine {
-	
+
 	private Logger LOG = Logger.getLogger(RunEngine.class);
 
 	RunConfiguration runConfiguration;
@@ -43,7 +45,7 @@ public class RunEngine {
 			PhenodigmICProfileMatcher.class,
 			BayesianNetworkProfileMatcher.class
 	};
-	
+
 	/**
 	 * @param runConfiguration
 	 */
@@ -51,8 +53,8 @@ public class RunEngine {
 		super();
 		this.runConfiguration = runConfiguration;
 	}
-	
-	
+
+
 
 	public RunConfiguration getRunConfiguration() {
 		return runConfiguration;
@@ -97,7 +99,7 @@ public class RunEngine {
 
 		return q;
 	}
-	
+
 	public void execute() throws IOException, InstantiationException, IllegalAccessException, OWLOntologyCreationException, UnknownFilterException, IncoherentStateException {
 		kb = createKnowledgeBase(runConfiguration.getOntologyInputs());
 		profileMatcher = createProfileMatcher();
@@ -124,6 +126,29 @@ public class RunEngine {
 		return;
 	}
 
+	/**
+	 * @return map between names of profile matcher (e.g. phenodigm) and an implementing class
+	 */
+	public Map<String,ProfileMatcher> getProfileMatcherMap() {
+		Map<String,ProfileMatcher> pmm = new HashMap<>();
+		for (int i=0; i<matcherClasses.length; i++) {
+			Class c = matcherClasses[i];
+			System.out.println(c);
+			Class[] args = {BMKnowledgeBase.class};
+			try {
+				Constructor constr = 
+						c.getDeclaredConstructor(args);
+				ProfileMatcher matcher = (ProfileMatcher) constr.newInstance(kb);
+				System.out.println(matcher.getShortName() +"==>"+ matcher);
+				pmm.put(matcher.getShortName(), matcher);
+			}
+			catch (Exception e) {
+				System.err.println(e.getStackTrace());
+			}
+
+		}
+		return pmm;
+	}
 
 	public ProfileMatcher createProfileMatcher() throws IOException, InstantiationException, IllegalAccessException {
 		String requestedMatcher = runConfiguration.getTool();
@@ -131,40 +156,26 @@ public class RunEngine {
 		if (requestedMatcher == null) {
 			requestedMatcher = "phenodigm";
 		}
-
-		for (int i=0; i<matcherClasses.length; i++) {
-			Class c = matcherClasses[i];
-			System.out.println(c);
-			String sn = ((ProfileMatcher) c.newInstance()).getShortName();
-
-			if (sn.equals(requestedMatcher)) {
-				Class[] args = {BMKnowledgeBase.class};
-				try {
-					Constructor constr = 
-							c.getDeclaredConstructor(args);
-						matcher = (ProfileMatcher) constr.newInstance(kb);
-				}
-				catch (Exception e) {
-					System.err.println(e.getStackTrace());
-				}
-			}
+		Map<String, ProfileMatcher> pmm = getProfileMatcherMap();
+		if (!pmm.containsKey(requestedMatcher)) {
+			System.err.println("NO SUCH MATCHER:"+requestedMatcher);
 		}
-		return matcher;		
+		return pmm.get(requestedMatcher);
 	}
-	
+
 	public void toJsonFile(String fn) throws FileNotFoundException {
 		JSONWriter jsonWriter = new JSONWriter(fn);
 		jsonWriter.write(runConfiguration);
 	}
 
-	
+
 	public String toJsonString() {
-		
+
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		return gson.toJson(runConfiguration);		
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * Usage:

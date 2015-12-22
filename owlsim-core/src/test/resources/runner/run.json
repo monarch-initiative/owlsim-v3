@@ -1,6 +1,6 @@
 {
     "description" : "test",
-    "tool" : "foo",
+    "tool" : "phenodigm",
     "ontologyInputs" : ["src/test/resources/simple-pheno-with-negation.owl"],
     "pairwiseJobs" : [
         {
