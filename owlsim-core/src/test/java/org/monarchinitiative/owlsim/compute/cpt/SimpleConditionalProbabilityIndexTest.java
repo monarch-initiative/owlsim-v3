@@ -25,10 +25,10 @@ public class SimpleConditionalProbabilityIndexTest extends AbstractTwoStateCondi
 
 		String[] expectedMatches = {
 
-				"Pr(http://x.org/a |  http://x.org/b = u ;  ) = 0.33",
-				"Pr(http://x.org/a |  http://x.org/b = t ;  ) = 0.50",
-				"Pr(http://x.org/b |  http://x.org/c = u ;  ) = 0.67",
-				"Pr(http://x.org/b |  http://x.org/c = t ;  ) = 0.67"
+				"Pr(http://x.org/a |  http://x.org/b = u ) = 0.33",
+				"Pr(http://x.org/a |  http://x.org/b = t ) = 0.50",
+				"Pr(http://x.org/b |  http://x.org/c = u ) = 0.67",
+				"Pr(http://x.org/b |  http://x.org/c = t ) = 0.67"
 
 		};
 		examineCPT(expectedMatches, 4);
