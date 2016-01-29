@@ -1,7 +1,13 @@
 package org.monarchinitiative.owlsim.compute.cpt;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -75,14 +81,18 @@ public class AbstractTwoStateConditionalProbabilityIndexTest  {
 		//LOG.info("stateIx="+i);
 		Map<Integer, Character> psm = cpi.getParentsToStateMapping(clsIndex, i);
 		//LOG.info("PSM="+psm);
-		StringBuilder sb = new StringBuilder();
+		List<String> priorProbStrs = new ArrayList<String>();
 		for (int pix : psm.keySet()) {
 			String pid = kb.getClassId(pix);
-			sb.append(pid+" = "+psm.get(pix)+" ; ");
+			priorProbStrs.add(pid+" = "+psm.get(pix));
+			//sb.append(pid+" = "+psm.get(pix)+" ; ");
 		}
+		Collections.sort(priorProbStrs);
+		
+		String ppStr = priorProbStrs.stream().collect(Collectors.joining(", "));
 		Double cp = cpi.getConditionalProbabilityChildIsOn(clsIndex, i);
 		long cpp = Math.round(cp * 100);
-		String rpt = "Pr(" + ci + " |  "+sb.toString()+" ) = 0."+cpp;
+		String rpt = "Pr(" + ci + " |  "+ppStr+" ) = 0."+cpp;
 		LOG.info(rpt);
 
 

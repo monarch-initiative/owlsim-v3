@@ -2,7 +2,7 @@ package org.monarchinitiative.owlsim.compute.matcher;
 
 
 /**
- * A profile matcher whose profile can be extended incrememntally
+ * A profile matcher whose profile can be extended incrementally
  * 
  * @author cjm
  *

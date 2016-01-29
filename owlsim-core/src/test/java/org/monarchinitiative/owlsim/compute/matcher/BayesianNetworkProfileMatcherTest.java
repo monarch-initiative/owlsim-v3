@@ -26,7 +26,7 @@ public class BayesianNetworkProfileMatcherTest extends AbstractProfileMatcherTes
 	@Test
 	public void testBasic() throws Exception {
 		loadSimplePhenoWithNegation();
-		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
+		LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 
 		int nOk = 0;

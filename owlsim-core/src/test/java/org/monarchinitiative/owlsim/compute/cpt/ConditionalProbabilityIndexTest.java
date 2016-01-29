@@ -21,12 +21,18 @@ public class ConditionalProbabilityIndexTest extends AbstractTwoStateConditional
 	public void cptTest() throws OWLOntologyCreationException, NoRootException, URISyntaxException, NonUniqueLabelException, IncoherentStateException {
 		load("SimpleDAG.owl");
 		
+		String leafId = kb.getClassId(kb.getClassIndex("http://x.org/leaf"));
+		String x1Id = kb.getClassId(kb.getClassIndex("http://x.org/x1"));
+		String x2Id = kb.getClassId(kb.getClassIndex("http://x.org/x2"));
+	
 		String[] expectedMatches = {
-				"Pr(http://x.org/leaf |  http://x.org/x2 = u ; http://x.org/ex1 = u ;  ) = 0.20",
-				"Pr(http://x.org/leaf |  http://x.org/x2 = t ; http://x.org/ex1 = u ;  ) = 0.33",
-				"Pr(http://x.org/leaf |  http://x.org/x2 = u ; http://x.org/ex1 = t ;  ) = 0.33",
-				"Pr(http://x.org/leaf |  http://x.org/x2 = t ; http://x.org/ex1 = t ;  ) = 0.50"
+				"Pr("+leafId+" |  "+x1Id+" = u, "+x2Id+" = u ) = 0.20",
+				"Pr("+leafId+" |  "+x1Id+" = t, "+x2Id+" = u ) = 0.33",
+				"Pr("+leafId+" |  "+x1Id+" = u, "+x2Id+" = t ) = 0.33",
+				"Pr("+leafId+" |  "+x1Id+" = t, "+x2Id+" = t ) = 0.50"
 		};
+
+
 		examineCPT(expectedMatches, 4);
 	}
 
