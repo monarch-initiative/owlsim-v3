@@ -96,6 +96,21 @@ public class EWAHKnowledgeBaseStore {
 		}
 		return bm;
 	}
+	
+	/**
+	 * @param clsIndices
+	 * @return union of all subClasses (direct and indirect) of any input class
+	 */
+	public EWAHCompressedBitmap getSubClasses(Set<Integer> clsIndices) {
+		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+		for (int i : clsIndices) {
+			//TODO: determine why this does not work - may be faster?
+			//bm.orToContainer(getSuperClasses(i), bm);
+			bm = bm.or(getSubClasses(i));
+		}
+		return bm;
+	}
+
 
 	/**
 	 * @param clsIndex

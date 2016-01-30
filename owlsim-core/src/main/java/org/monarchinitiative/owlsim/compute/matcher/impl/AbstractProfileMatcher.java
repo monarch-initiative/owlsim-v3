@@ -67,6 +67,9 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 	private void setKnowledgeBase(BMKnowledgeBase knowledgeBase) {
 		this.knowledgeBase = knowledgeBase;
 	}
+	
+	public void precompute() {
+	}
 
 	/**
 	 * all positive nodes in query plus their ancestors

@@ -21,6 +21,15 @@ public interface ProfileMatcher {
 	String getShortName();
 	
 	/**
+	 * Some matchers require a costly precomputation step. Subsequent calls should
+	 * have no effect.
+	 * 
+	 * To ensure that all precomputations are performed ahead of time, call
+	 * this after initialization of the matcher object
+	 */
+	public void precompute();
+	
+	/**
 	 * Translate the phenotype profile of an individual to a ProfileQuery object
 	 * 
 	 * @param individualId

@@ -34,19 +34,12 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 
 	private Logger LOG = Logger.getLogger(ThreeStateBayesianNetworkProfileMatcher.class);
 
-	private ThreeStateConditionalProbabilityIndex cpi;
+	private ThreeStateConditionalProbabilityIndex cpi = null;
 	private Map<BitMapPair,NodeProbabilities[]> targetToQueryCache;
 
 	@Inject
 	private ThreeStateBayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
-		try {
-			calculateConditionalProbabilities(kb);
-		} catch (IncoherentStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		targetToQueryCache = new HashMap<BitMapPair, NodeProbabilities[]>();
 	}
 
 	/**
@@ -62,7 +55,17 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 		return "bayesian-network";
 	}
 
-
+	public void precompute() {
+		if (cpi != null)
+			return;
+		try {
+			calculateConditionalProbabilities(knowledgeBase);
+		} catch (IncoherentStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		targetToQueryCache = new HashMap<BitMapPair, NodeProbabilities[]>();
+	}
 	
 	public class BitMapPair {
 		public final EWAHCompressedBitmap bm1;
@@ -140,7 +143,8 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 	 * @throws IncoherentStateException 
 	 */
 	public MatchSet findMatchProfileImpl(ProfileQuery q) throws IncoherentStateException {
-
+		precompute();
+		
 		boolean isUseNegation = q instanceof QueryWithNegation;
 		if (!isUseNegation) {
 			LOG.error("Consider using TwoState BN, this will be inefficient");

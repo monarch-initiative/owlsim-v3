@@ -59,17 +59,11 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 
 	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcher.class);
 
-	ConditionalProbabilityIndex cpi;
+	ConditionalProbabilityIndex cpi = null;
 
 	@Inject
 	private BayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
-		try {
-			calculateConditionalProbabilities(kb);
-		} catch (IncoherentStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -83,6 +77,17 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 	@Override
 	public String getShortName() {
 		return "bayesian-network";
+	}
+	
+	public void precompute() {
+		if (cpi != null)
+			return;
+		try {
+			calculateConditionalProbabilities(knowledgeBase);
+		} catch (IncoherentStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -100,6 +105,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 	 */
 	public MatchSet findMatchProfileImpl(ProfileQuery q) {
 
+		precompute();
 		boolean isUseNegation = q instanceof QueryWithNegation;
 
 		//double fpr = getFalsePositiveRate();

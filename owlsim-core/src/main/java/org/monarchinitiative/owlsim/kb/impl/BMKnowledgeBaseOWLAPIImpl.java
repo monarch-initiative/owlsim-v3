@@ -809,6 +809,20 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getSubClasses(int classIndex) {
 		return ontoEWAHStore.getSubClasses(classIndex);
 	}
+	
+	/**
+	 * @param clsIds
+	 * @return union of all subClasses (direct and indirect) of any input class
+	 */
+	public EWAHCompressedBitmap getSubClassesBM(Set<String> clsIds) {
+		Set<Integer> classIndices = new HashSet<Integer>();
+		for (String id : clsIds) {
+			classIndices.add(getClassIndex(id));
+		}
+		return ontoEWAHStore.getSubClasses(classIndices);
+	}
+	
+
 
 	/**
 	 * @param clsIds
