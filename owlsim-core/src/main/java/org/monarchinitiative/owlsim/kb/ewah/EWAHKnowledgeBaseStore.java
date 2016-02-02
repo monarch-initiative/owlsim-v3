@@ -85,6 +85,20 @@ public class EWAHKnowledgeBaseStore {
 	
 	/**
 	 * @param clsIndices
+	 * @return union of all direct superClasses of all input classes
+	 */
+	public EWAHCompressedBitmap getDirectSuperClasses(Set<Integer> clsIndices) {
+		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+		for (int i : clsIndices) {
+			//TODO: determine why this does not work - may be faster?
+			//bm.orToContainer(getSuperClasses(i), bm);
+			bm = bm.or(getDirectSuperClasses(i));
+		}
+		return bm;
+	}
+	
+	/**
+	 * @param clsIndices
 	 * @return union of all superClasses (direct and indirect) of any input class
 	 */
 	public EWAHCompressedBitmap getSuperClasses(Set<Integer> clsIndices) {
@@ -97,6 +111,14 @@ public class EWAHKnowledgeBaseStore {
 		return bm;
 	}
 	
+	/**
+	 * @param clsIndex
+	 * @return all direct subClasses of query class as Bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSubClasses(int clsIndex) {
+		return storedDirectSubClasses[clsIndex];
+	}
+
 	/**
 	 * @param clsIndices
 	 * @return union of all subClasses (direct and indirect) of any input class
@@ -111,6 +133,19 @@ public class EWAHKnowledgeBaseStore {
 		return bm;
 	}
 
+	/**
+	 * @param clsIndices
+	 * @return union of all direct subClasses of all input classes
+	 */
+	public EWAHCompressedBitmap getDirectSubClasses(Set<Integer> clsIndices) {
+		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+		for (int i : clsIndices) {
+			//TODO: determine why this does not work - may be faster?
+			//bm.orToContainer(getSuperClasses(i), bm);
+			bm = bm.or(getDirectSubClasses(i));
+		}
+		return bm;
+	}
 
 	/**
 	 * @param clsIndex

@@ -30,7 +30,7 @@ public class ICDistributionTest {
 	private static double cutoff = 0.95;
 	OWLOntology ontology;
 
-	@Test
+	//@Test
 	public void testSelfComparisonTTest() throws Exception {
 		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
@@ -52,7 +52,7 @@ public class ICDistributionTest {
 		}
 	}	
 	
-	@Test
+	//@Test
 	public void testSelfComparisonOneWayAnova() throws Exception {
 		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
@@ -74,7 +74,7 @@ public class ICDistributionTest {
 		}
 	}	
 	
-	@Test
+	//@Test
 	public void testSelfComparisonKS() throws Exception {
 		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
@@ -96,7 +96,7 @@ public class ICDistributionTest {
 		}
 	}	
 	
-	@Test
+	//@Test
 	public void testRandomComparisonProbabilities() throws Exception {
 		Random r = new Random(1);
 		create(2000, 2, 4000, 10);
@@ -138,7 +138,7 @@ public class ICDistributionTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testSelfBySubsetComparisonTTest() throws Exception {
 		Random r = new Random(1);
 		Random r2 = new Random(1);

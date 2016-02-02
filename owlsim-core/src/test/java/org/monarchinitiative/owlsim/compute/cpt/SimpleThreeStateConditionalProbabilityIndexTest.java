@@ -54,8 +54,8 @@ public class SimpleThreeStateConditionalProbabilityIndexTest extends AbstractThr
 		String[] expectedMatches = new String[] {
 				"Pr(http://x.org/b =ON |  http://x.org/c = f ;  ) = 0 %",
 				"Pr(http://x.org/b =OFF |  http://x.org/c = f ;  ) = 100 %",
-				"Pr(http://x.org/b =ON |  http://x.org/c = u ;  ) = 70 %",
-				"Pr(http://x.org/b =OFF |  http://x.org/c = u ;  ) = 20 %",
+				"Pr(http://x.org/b =ON |  http://x.org/c = u ;  ) = 58 %",
+				"Pr(http://x.org/b =OFF |  http://x.org/c = u ;  ) = 17 %",
 				"Pr(http://x.org/b =ON |  http://x.org/c = t ;  ) = 70 %",
 				"Pr(http://x.org/b =OFF |  http://x.org/c = t ;  ) = 10 %"
 		};

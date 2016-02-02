@@ -126,16 +126,35 @@ public interface BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String classId);
 	
 	/**
+	 * @param classIds
+	 * @return union of all direct superclasses as a bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSuperClassesBM(Set<String> classIds);
+
+	/**
 	 * @param classIndex
-	 * @return subclasses (direct and direct and equivalent)
+	 * @return subclasses (direct and indirect and equivalent)
 	 */
 	public EWAHCompressedBitmap getSubClasses(int classIndex);
+	
+	/**
+	 * @param classId
+	 * @return direct subclasses of classId as bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSubClassesBM(String classId);
+
 
 	/**
 	 * @param classIds
-	 * @return union of all superclasses as a bitmap
+	 * @return union of all superclasses (direct and indirect and equivalent) as a bitmap
 	 */
 	public EWAHCompressedBitmap getSubClassesBM(Set<String> classIds);
+
+	/**
+	 * @param classIds
+	 * @return union of all direct subclasses as a bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSubClassesBM(Set<String> classIds);
 
 
 	/**

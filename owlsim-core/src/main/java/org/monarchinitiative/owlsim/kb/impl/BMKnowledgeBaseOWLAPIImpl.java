@@ -656,6 +656,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	@Override
 	public EWAHCompressedBitmap getIndividualsBM(int classIndex) {
+		if (classIndex == getRootIndex()) {
+			EWAHCompressedBitmap indsBM = new EWAHCompressedBitmap();
+			indsBM.setSizeInBits(getIndividualIdsInSignature().size(), true);
+			return indsBM;
+		}
 		EWAHCompressedBitmap subsBM = getSubClasses(classIndex);
 		EWAHCompressedBitmap indsBM = null;
 		// Note this implementation iterates through all subclasses
@@ -809,7 +814,10 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getSubClasses(int classIndex) {
 		return ontoEWAHStore.getSubClasses(classIndex);
 	}
-	
+	public EWAHCompressedBitmap getDirectSubClassesBM(String cid) {
+		return ontoEWAHStore.getDirectSubClasses(getClassIndex(cid));
+	}
+
 	/**
 	 * @param clsIds
 	 * @return union of all subClasses (direct and indirect) of any input class
@@ -822,6 +830,17 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		return ontoEWAHStore.getSubClasses(classIndices);
 	}
 	
+	/**
+	 * @param clsIds
+	 * @return union of all direct subClasses of all input classes
+	 */
+	public EWAHCompressedBitmap getDirectSubClassesBM(Set<String> clsIds) {
+		Set<Integer> classIndices = new HashSet<Integer>();
+		for (String id : clsIds) {
+			classIndices.add(getClassIndex(id));
+		}
+		return ontoEWAHStore.getDirectSubClasses(classIndices);
+	}
 
 
 	/**
@@ -834,6 +853,18 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			classIndices.add(getClassIndex(id));
 		}
 		return ontoEWAHStore.getSuperClasses(classIndices);
+	}
+	
+	/**
+	 * @param clsIds
+	 * @return union of all direct superClasses of all input classes
+	 */
+	public EWAHCompressedBitmap getDirectSuperClassesBM(Set<String> clsIds) {
+		Set<Integer> classIndices = new HashSet<Integer>();
+		for (String id : clsIds) {
+			classIndices.add(getClassIndex(id));
+		}
+		return ontoEWAHStore.getDirectSuperClasses(classIndices);
 	}
 
 	/**
@@ -877,6 +908,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getTypesBM(String id) {
 		Preconditions.checkNotNull(id);
 		return ontoEWAHStore.getTypes(getIndividualIndex(id));
+	}
+
+	/**
+	 * @param individualIndex
+	 * @return bitmap representation of all (direct and indirect) instantiated classes
+	 */
+	public EWAHCompressedBitmap getTypesBM(int individualIndex) {
+		return ontoEWAHStore.getTypes(individualIndex);
 	}
 
 	/**
