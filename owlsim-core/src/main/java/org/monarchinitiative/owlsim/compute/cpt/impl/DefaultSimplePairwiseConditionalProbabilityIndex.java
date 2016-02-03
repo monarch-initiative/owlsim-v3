@@ -85,6 +85,12 @@ public class DefaultSimplePairwiseConditionalProbabilityIndex implements SimpleP
 			int priorIndex) {
 		return  ((double)cpIndex[clsIndex][priorIndex]) / SCALE_FACTOR;
 	}
+	/**
+	 * @return the cpIndex
+	 */
+	public short[][] getCpIndex() {
+		return cpIndex;
+	}
 
 
 

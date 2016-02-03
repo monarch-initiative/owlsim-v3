@@ -17,16 +17,13 @@ import com.google.gson.GsonBuilder;
  * @author cjm
  *
  */
-public class JSONWriter {
+public class JSONWriter extends AbstractWriter {
 	
-	private PrintStream stream;
-
 	/**
 	 * @param stream
 	 */
 	public JSONWriter(PrintStream stream) {
-		super();
-		this.stream = stream;
+		super(stream);
 	}
 
 	/**
@@ -34,14 +31,9 @@ public class JSONWriter {
 	 * @throws FileNotFoundException
 	 */
 	public JSONWriter(String file) throws FileNotFoundException {
-		super();
-		setStream(file);
+		super(file);
 	}
 	
-	private void setStream(String file) throws FileNotFoundException {
-		FileOutputStream fos = new FileOutputStream(file);
-		stream = new PrintStream(new BufferedOutputStream(fos));
-	}
 	
 	/**
 	 * Writes a Gson-ready object

@@ -33,5 +33,4 @@ public interface SimplePairwiseConditionalProbabilityIndex {
 	 */
 	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException;
 
-	
 }

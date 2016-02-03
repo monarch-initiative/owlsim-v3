@@ -613,6 +613,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return integer representation of class
 	 */
 	protected int getIndex(OWLClass c) {
+		Preconditions.checkNotNull(c);
 		return getIndexForClassNode(classToNodeMap.get(c));
 	}
 
@@ -728,6 +729,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return integer representation of class node
 	 */
 	protected int getIndexForClassNode(Node<OWLClass> n) {
+		Preconditions.checkNotNull(n);
 		if (!classNodeToIntegerMap.containsKey(n))
 			LOG.error("No such node: "+n);
 		return classNodeToIntegerMap.get(n);
