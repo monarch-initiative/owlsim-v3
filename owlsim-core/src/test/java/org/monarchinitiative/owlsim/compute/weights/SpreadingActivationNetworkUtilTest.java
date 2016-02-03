@@ -31,17 +31,17 @@ public class SpreadingActivationNetworkUtilTest {
 		kb = loader.createKnowledgeBaseInterface();
 	}
 	
-	//@Test
+	@Test
 	public void test() throws OWLOntologyCreationException, URISyntaxException, NoRootException {
 		load("SimpleDAG.owl");
 		Set<String> qids = new HashSet<String>();
 		Set<String> nqids = new HashSet<String>();
-		qids.add("ex1");
-		nqids.add("ex2");
+		qids.add("http://x.org/ex1");
+		nqids.add("http://x.org/ex2");
 		QueryWithNegation q = 
 			QueryWithNegationImpl.create(qids, nqids);
 		SpreadingActivationNetworkUtil san = new SpreadingActivationNetworkUtil(kb);
-		san.propagateQuery(q);
+		san.propagateQuery(q); // TODO - test values returned
 	}
 
 }

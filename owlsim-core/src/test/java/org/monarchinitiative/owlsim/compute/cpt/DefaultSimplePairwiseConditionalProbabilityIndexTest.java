@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.compute.cpt;
 
+import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.monarchinitiative.owlsim.compute.cpt.impl.DefaultSimplePairwiseCondit
 import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.io.OWLLoader;
+import org.monarchinitiative.owlsim.io.WeightedSimpleGraphWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.semanticweb.owlapi.model.IRI;
@@ -22,9 +24,9 @@ import com.google.monitoring.runtime.instrumentation.common.com.google.common.io
  * @author cjm
  *
  */
-public class DefaultSImpleConditionalProbabilityIndexTest  {
+public class DefaultSimplePairwiseConditionalProbabilityIndexTest  {
 
-	private Logger LOG = Logger.getLogger(DefaultSImpleConditionalProbabilityIndexTest.class);
+	private Logger LOG = Logger.getLogger(DefaultSimplePairwiseConditionalProbabilityIndexTest.class);
 
 	protected BMKnowledgeBase kb;
 	protected SimplePairwiseConditionalProbabilityIndex cpi;
@@ -53,13 +55,16 @@ public class DefaultSImpleConditionalProbabilityIndexTest  {
 	}
 
 	@Test
-	public void cptTest() throws OWLOntologyCreationException, NoRootException, URISyntaxException, NonUniqueLabelException, IncoherentStateException {
+	public void cptTest() throws OWLOntologyCreationException, NoRootException, URISyntaxException, NonUniqueLabelException, IncoherentStateException, FileNotFoundException {
 		load("SimpleDAG.owl");
 		
 		String leafId = kb.getClassId(kb.getClassIndex("http://x.org/leaf"));
 		String x1Id = kb.getClassId(kb.getClassIndex("http://x.org/x1"));
 		String x2Id = kb.getClassId(kb.getClassIndex("http://x.org/x2"));
 		int[] na = kb.getIndividualCountPerClassArray();
+		
+		WeightedSimpleGraphWriter w = new WeightedSimpleGraphWriter(kb, "target/foo.graph");
+		w.write(cpi);
 
 		for (String cid : kb.getClassIdsInSignature()) {
 			int cix = kb.getClassIndex(cid);
