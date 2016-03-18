@@ -343,4 +343,64 @@ public class ProfileMatchEvaluator {
 		return results;
 
 	}
+
+	public void runNoiseSimulation(BMKnowledgeBase kb, Set<ProfileMatcher> pms, String dir) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
+		int N = kb.getIndividualIdsInSignature().size();
+		EWAHCompressedBitmap tbm = null;
+		String tgtId = null;
+		while (tgtId == null) {
+			int i = (int) (Math.random() * N);
+			tgtId = kb.getIndividualId(i);
+			tbm = kb.getDirectTypesBM(tgtId);
+			if (tbm.cardinality() < 5) {
+				tgtId = null; // select again
+			}
+		}
+		ProfileMutator mutator = new ProfileMutator();
+
+		Set<String> tcids = kb.getClassIds(tbm);
+		//EWAHCompressedBitmap qbm = tbm.or(tbm); // clone
+		ProfileQuery q = ProfileQueryImpl.create(tcids);
+		for (int iteration = 0; iteration<10; iteration++) {
+			//qbm = addNoise(qbm);
+			//q = mutator.addMember(q);
+			q = mutator.addBranch(kb, q, 0.1);
+			q = mutator.removeBranch(kb, q, 0.3);
+			q.setLimit(400);
+			for (ProfileMatcher profileMatcher : pms) {
+				///ProfileQuery q = createProfileQuery(qbm);
+				MatchSet mp = profileMatcher.findMatchProfile(q);
+				Match match = mp.getMatchesWithId(tgtId);
+				Integer rank;
+				Integer erank;
+				if (match != null) {
+					rank = match.getRank();
+					erank = mp.getMatchesWithOrBelowRank(rank).size();
+				}
+				else {
+					rank = null;
+					erank = null;
+				}
+				System.out.println(" "+iteration +
+						"\t"+profileMatcher.getShortName()+"\t" + erank+ "\t" + rank+
+						"\t"+q.getQueryClassIds().size()+"\t"+tgtId+
+						"\t"+rank+"\t"+mp.getExecutionMetadata().getDuration());
+				if (dir != null) {
+					writeJsonTo(dir+"/"+profileMatcher.getShortName()+"-"+iteration+".json");
+					writeJson(mp);
+				}
+			}
+		}
+
+	}
+
+	private EWAHCompressedBitmap addNoise(EWAHCompressedBitmap qbm) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ProfileQuery createProfileQuery(EWAHCompressedBitmap qbm) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

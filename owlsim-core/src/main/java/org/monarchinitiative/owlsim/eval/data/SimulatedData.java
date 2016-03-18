@@ -33,7 +33,7 @@ public interface SimulatedData {
 	 * attribute, where the chosen attribute is replaced.</p>
 	 * <p>The Annotations are not loaded into the graph.</p>
 	 * <p>Care should be taken when calling this method, as it will return the
-	 * full set of annotations based on all individuals in the grap; this could
+	 * full set of annotations based on all individuals in the graph; this could
 	 * be very large and produce JavaHeapSpace errors if performed recursively.  
 	 * Far less memory is used
 	 * by iterating over a set of attributes in the calling function, 

@@ -1,12 +1,6 @@
 package org.monarchinitiative.owlsim.compute.cpt.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
-import org.junit.Assert;
-import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.cpt.SimplePairwiseConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -57,11 +51,12 @@ public class DefaultSimplePairwiseConditionalProbabilityIndex implements SimpleP
 
 	public void calculateConditionalProbabilities(BMKnowledgeBase kb) throws IncoherentStateException {
 		int[] na = kb.getIndividualCountPerClassArray();
-		Assert.assertTrue(kb.getIndividualIdsInSignature().size() == 6);
+		LOG.info("SIZE="+size);
 		for (int i=0; i<size; i++) {
 			int numC = na[i];
+			LOG.info(i+" numC="+numC);
 			if (numC == 0) {
-				for (int j=0; i<size; i++) {
+				for (int j=0; j<size; j++) {
 					cpIndex[i][j] = 0;
 				}
 			}

@@ -15,14 +15,15 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * An implementation of {@link ConditionalProbabilityIndex} in which only two states are
  * possible:
  * 
- *  0 = u (unknown/false/off)
- *  1 = t (true/on)
+ *  0 = u (unknown/unobserved/off)
+ *  1 = t (true/observed/on)
  *  
- * TODO: Use Abstract parent class
+ * 
  * 
  * @author cjm
  *
  */
+//TODO: Use Abstract parent class
 public class TwoStateConditionalProbabilityIndex implements ConditionalProbabilityIndex {
 
 	private Logger LOG = Logger.getLogger(TwoStateConditionalProbabilityIndex.class);
@@ -99,7 +100,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 		//int[] icpca = kb.getIndividualCountPerClassArray();
 		int totalInds = kb.getIndividualsBM(kb.getRootIndex()).cardinality();
 
-		LOG.info("Calculating all CPTs...");
+		LOG.info("Calculating entire CPT...");
 		for (String cid : kb.getClassIdsInSignature()) {
 			LOG.debug("   Calculating CPT for "+cid);
 			int cix = kb.getClassIndex(cid);
@@ -121,7 +122,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 
 			for (int parentState=0; parentState<numStates; parentState++) {
 				
-				// Pr(C=on | P1=S1, ..., Pn=Sn) = |C| / |{ p in P & P=on } |
+				// Pr(C=on | P1=P1_s, ..., Pn=Pn_s) = |C| / |{ p : p in P & p=on } |
 				
 				Map<Integer, Character> parentStateMap = calculateParentStateMapForIndex(parentState, pixs);
 
@@ -141,8 +142,10 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 				int numIndividualsForOnParents = 
 						allIndsForOnParentsBM == null ? 
 								totalInds : allIndsForOnParentsBM.cardinality();
+				// in any given corpus, there may be unseen classes, which can lead to 0/0=Nan
+				// we therefore boost the population by making 9 additional 'clones' of any 
 				double conditionalProbability = 
-						numIndividualsForChild / (double) numIndividualsForOnParents;
+						(10*numIndividualsForChild+1) / (double) (10*numIndividualsForOnParents+1);
 				LOG.debug("  CP for "+parentStateMap+" = "+numIndividualsForChild+"/"+numIndividualsForOnParents+" = "+conditionalProbability);
 				setConditionalProbabilityChildIsOn(cix, parentState, 
 						numStates, conditionalProbability);
@@ -150,7 +153,7 @@ public class TwoStateConditionalProbabilityIndex implements ConditionalProbabili
 			}
 			
 		}
-		LOG.info("DONE Calculating all CPTs");
+		LOG.info("DONE Calculating CPT");
 
 	}
 	

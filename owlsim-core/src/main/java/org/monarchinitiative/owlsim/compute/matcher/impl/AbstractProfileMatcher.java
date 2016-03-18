@@ -130,6 +130,11 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
 		return MatchImpl.create(matchId, matchLabel, s);
 	}
 
+	/**
+	 * @param filter
+	 * @return list of individuals that satisfy filter
+	 * @throws UnknownFilterException
+	 */
 	protected List<String> getFilteredIndividualIds(Filter filter) throws UnknownFilterException {
 		return filterEngine.applyFilter(filter);
 	}

@@ -28,6 +28,12 @@ public interface MatchSet {
 	public List<Match> getMatchesWithRank(int rank);
 	
 	/**
+	 * @param rank
+	 * @return all matches <= rank
+	 */
+	public List<Match> getMatchesWithOrBelowRank(int rank);
+	
+	/**
 	 * @param matchId
 	 * @return Match with identical matchId
 	 */

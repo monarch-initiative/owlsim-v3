@@ -23,23 +23,38 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
 /**
  * Calculate probability of observing query (e.g. patient profile) given target as evidence.
  * 
- * Note this first implementation does not use NOTs; it uses a {@link TwoStateConditionalProbabilityIndex}.
+ * This implementation does not explicitly model NOTs, it
+ * uses a {@link TwoStateConditionalProbabilityIndex}.
  * The two states are ON (true/observed) and OFF (unknown/not observed)
  * - note the open world assumptions: that the off state means there is no
- * information about the truth of the node, it does not mean the node is false.
+ * information about the truth of the node, <i>it does not mean the node is false</i>.
  * 
- * Probabilities propagate TO a child FROM its parents. 
+ * Although we do not model negation as a 3rd state, we still compute on negation, post-hoc, see below.
+ * 
+ * <h2>Calculating probabilities</h2>
+ * <h3>Calculating probabilities for a single query node</h3>
+ * 
+ * Using a {@link TwoStateConditionalProbabilityIndex},
+ * probabilities propagate TO a child FROM its parents.
+ * 
+ * If the query node is ON, and the node is ON in the target, then Pr = 1-fnr;
+ * otherwise the probability is calculated based on the probability of the parents.
+ * 
  * 
  * The probability of a child node being on C=on is dependent on the state of its
- * parents:
+ * parents; we sum over 2<sup>N</sup> states
  * 
  * 
- * Pr( C=on | P1=S1, ..., Pn=Sn) =
+ * <code>
+ * <pre>
+ * Pr( C=on | P1=P1_s, ..., Pn=P2_s) =
  * Pr( C=on | S1, ..., Sn) =             <-- syntactic sugar
- *   Pr( C=on | on,on,...,on ) * P(on,on,...,on) +
- *   Pr( C=on | off,on,...,on ) * P(off,on,...,on) +
+ *   Pr( C=on | on,on,...,on ) * Pr(on,on,...,on) +
+ *   Pr( C=on | off,on,...,on ) * Pr(off,on,...,on) +
  *   ...
- *   Pr( C=on | off,off,...,off ) * P(off,off,...,off) 
+ *   Pr( C=on | off,off,...,off ) * Pr(off,off,...,off) 
+ *   </pre>
+ * </code>
  * 
  * For any given query Q=Q1,...Qm, we assume independent probabilities
  * and calculate Pr(Q) = Pq(Q1=on,...,Qm=on)
@@ -50,7 +65,20 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * as being the 'unknown' state. We assume an open world assumption. The absence of
  * a node in the query should be thought of as 'not observed' rather than 'not'.
  * 
- * TODO: document negation strategy
+ * We still include negation in the calculation; for any negated query node i, we
+ * calculate Pr(i) = ON, and assign a final probability of 1-fnr (this is the only circumstance
+ * a fnr can have an effect, since we have the open world model).
+ * 
+ * Similarly, for any negated target node j, the Pr of any query under this will be 1-fpr
+ * 
+ * <h2>TODOs</h2>
+ * 
+ * Currently this method is too slow to be used for dynamic queries, taking 1-5s per query.
+ * Some efficiency could be gained by calculating with log-probs.
+ * 
+ * If we cache probabilities per-node for every target, we would gain a lot of speed,
+ * space = NumClasses x NumTargets
+ * 
  * 
  * @author cjm
  *
@@ -59,11 +87,24 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 
 	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcher.class);
 
-	ConditionalProbabilityIndex cpi = null;
+	double falseNegativeRate = 0.01; // TODO - do not harcode
+	double falsePositiveRate = 0.01; // TODO - do not harcode
+
+	ConditionalProbabilityIndex cpi = null; // index of Pr(Node={on,off}|ParentsState)
+
+	@Deprecated
+	private Calculator[] calculatorCache;
+	private Double[][] targetClassProbabilityCache;
 
 	@Inject
 	private BayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
+		int N = kb.getIndividualIdsInSignature().size();
+		calculatorCache = new Calculator[N];
+		for (int i=0; i<N; i++) {
+			calculatorCache[i] = null;
+		}
+		targetClassProbabilityCache = new Double[N][];
 	}
 
 	/**
@@ -78,7 +119,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 	public String getShortName() {
 		return "bayesian-network";
 	}
-	
+
 	public void precompute() {
 		if (cpi != null)
 			return;
@@ -108,11 +149,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		precompute();
 		boolean isUseNegation = q instanceof QueryWithNegation;
 
-		//double fpr = getFalsePositiveRate();
-		//double fnr = getFalseNegativeRate();
 		double sumOfProbs = 0.0;
-		//int numClasses = knowledgeBase.getClassIdsInSignature().size();
-		//EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
 		EWAHCompressedBitmap negatedQueryProfileBM = null;
 		Set<String> negatedQueryClassIds = null;
 		if (isUseNegation) {
@@ -134,33 +171,84 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		double pvector[] = new double[indIds.size()];
 		String indArr[] = new String[indIds.size()];
 		int n=0;
+
+		// TODO - FOR DEBUGGING ONLY
+		//		int nc=0;
+		//		for (String itemId : indIds) {
+		//			int indIx = knowledgeBase.getIndividualIndex(itemId);
+		//			if (targetClassProbabilityCache[indIx] != null) {
+		//				Double[] a = targetClassProbabilityCache[indIx];
+		//				for (int i=0; i<a.length; i++) {
+		//					if (a[i] != null) {
+		//						nc++;
+		//					}
+		//				}
+		//			}
+		//		}
+		//		System.out.println("NUM_CACHED:"+nc);
+
+		double debugMaxP = 0.0;
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
 			EWAHCompressedBitmap negatedTargetProfileBM = knowledgeBase.getNegatedTypesBM(itemId);
-			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
-			LOG.info("NEGATIVE TARGET PROFILE for "+itemId+" "+negatedTargetProfileBM);
 
+			int indIx = knowledgeBase.getIndividualIndex(itemId);
+			// we create a new calculator for every target;
+			// TODO: investigate speedup from cacheing this <-- doing this now
 			Calculator calc = new Calculator(targetProfileBM, negatedTargetProfileBM);
-			//double p = calculateProbability(queryClassIds, targetProfileBM);
-			double p = calc.calculateProbability(queryClassIds);
 
-			if (negatedQueryProfileBM != null) {
-				double np = 1 - calc.calculateProbability(negatedQueryClassIds);
-				LOG.info("Combined Probability = (POS) "+p+" * (NEG) "+np);
-				p = p*np;
+			if (false) {
+				if (targetClassProbabilityCache[indIx] == null) {
+					LOG.info("Assigning cached probs for "+itemId);
+					targetClassProbabilityCache[indIx] = calc.probCache;
+				}
+				else {
+					calc.probCache = targetClassProbabilityCache[indIx];
+				}
+			}
+			double p = calc.calculateProbability(queryClassIds);
+			if (p > debugMaxP) {
+				debugMaxP = p;
 			}
 			
+			if (Double.isNaN(p)) {
+				LOG.error("NaN for tgt "+itemId);
+			}
+
+			// NEGATION
+			if (negatedQueryProfileBM != null) {
+				double np = 1 - calc.calculateProbability(negatedQueryClassIds);
+				//LOG.info("Combined Probability = (POS) "+p+" * (NEG) "+np);
+				p = p*np;
+			}
+
 			pvector[n] = p;
 			indArr[n] = itemId;
 			sumOfProbs += p;
 			n++;
 			//LOG.info("p for "+itemId+" = "+p);
 		}
+		if (sumOfProbs == 0.0) {
+			LOG.error("sumOfProds=0.0");
+		}
+		if (Double.isNaN(sumOfProbs)) {
+			LOG.error("NaN for sumOfProds");
+		}
+
+		int tempNumNans = 0;
 		for (n = 0; n<pvector.length; n++) {
 			double p = pvector[n] / sumOfProbs;
+			if (Double.isNaN(p)) {
+				tempNumNans++;
+			}
+
 			String id = indArr[n];
 			String label = knowledgeBase.getLabelMapper().getArbitraryLabel(id);
 			mp.add(createMatch(id, label, p));
+		}
+		if (tempNumNans > 0) {
+			LOG.error("#NaNs "+tempNumNans+" / "+pvector.length);
+			LOG.error("maxPr = "+debugMaxP);
 		}
 		mp.sortMatches();
 		return mp;
@@ -195,11 +283,14 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		 * the probability of the target given the query nodes are on;
 		 * this has the effect of penalizing large queries; for a fixed
 		 * query this is not an issue. However, it also does *not* penalize
-		 * broad-spectrum targets
+		 * broad-spectrum targets.
+		 * 
+		 * This also means the FNR is meaningless,
+		 * unless negation is explicitly used
 		 * 
 		 * @param queryClassIds
 		 * @param targetProfileBM
-		 * @return probability
+		 * @return probability of all queryClasses being on
 		 */
 		public double calculateProbability(Set<String> queryClassIds) {
 			double cump = 1.0;
@@ -211,13 +302,21 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 			//  Pr=0.0 otherwise
 			for (String queryClassId : queryClassIds) {
 				double p = calculateProbability(queryClassId);
+
+				if (Double.isNaN(p)) {
+					LOG.error("NaN for qc="+queryClassId);
+				}
+
+				// NEGATION
+				// the FNR only comes into play if negation is explicitly specified.
+				// If the query is on but a superclass in the target has been negated,
+				// we assume the query is a false positive
 				if (negatedTargetProfileBM != null) {
 					if (knowledgeBase.getSuperClassesBM(queryClassId).andCardinality(negatedTargetProfileBM) > 0) {
 						LOG.info("NEGATIVE EVIDENCE for "+queryClassId);
-						p *= 0.01;  // TODO - do not hardcode false negative
+						p *= falsePositiveRate; 
 					}
 				}
-
 				cump *= p;
 			}
 			return cump;
@@ -242,9 +341,11 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 		 * 
 		 *  - If this is specified in the query, then a set value is returned (1-FP);
 		 *  - If not specified, equal to sum of probabilities of all states of parents
+		 *  
+		 *  Side effects: caches probability
 		 * 
 		 * @param qcix
-		 * @return
+		 * @return Pr(Qi=on|T)
 		 */
 		private double calculateProbability(int qcix) {
 			if (probCache[qcix] != null) {
@@ -255,20 +356,21 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 			BMKnowledgeBase kb = getKnowledgeBase();
 			LOG.debug("Calculating probability for "+qcix+" ie "+kb.getClassId(qcix));
 
-			double returnProb;
-
+			double probQiGivenT;
 
 			// TODO - optimization: determine efficiency of using get(ix) vs other methods
 			if (targetProfileBM.get(qcix)) {
-				LOG.debug("Q is in target profile");
-				returnProb = 0.95; // TODO - do not hardcode
+				LOG.debug("Qi is in target profile");
+				probQiGivenT = 1-falsePositiveRate;
 			}
 			else {
+				// Qi is NOT in target profile;
+				// Pr(Qi=on | T) = Pr(QiP1=on, QiP2=on, ..|T)Pr(on on...) + Pr(QiP1=off, ...)
 				List<Integer> pixs = kb.getDirectSuperClassesBM(qcix).getPositions();
 				double[] parentProbs = new double[pixs.size()];
 				LOG.debug("calculating probabilities for parents");
 				for (int i=0; i<pixs.size(); i++) {
-					// recursive call
+					// recursive call; cache prevents repeated calculations
 					parentProbs[i] = 
 							calculateProbability(pixs.get(i));
 				}
@@ -302,10 +404,10 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 				}
 				LOG.debug("Calculated probability for "+qcix+" ie "+kb.getClassId(qcix)+" = "+sump);
 
-				returnProb = sump;
+				probQiGivenT = sump;
 			}
-			probCache[qcix] = returnProb;
-			return returnProb;
+			probCache[qcix] = probQiGivenT;
+			return probQiGivenT;
 		}
 
 

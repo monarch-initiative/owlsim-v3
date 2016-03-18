@@ -144,6 +144,7 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 						tbm);
 		if (mica == null) {
 			LOG.error("No MICA between "+qbm+" -vs- "+tbm);
+			return 0;
 		}
 		return  mica.ic;
 	}

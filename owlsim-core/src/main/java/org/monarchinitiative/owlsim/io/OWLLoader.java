@@ -1,13 +1,19 @@
 package org.monarchinitiative.owlsim.io;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -125,6 +131,31 @@ public class OWLLoader {
 			mergeData( loadOWL(path) );
 		Preconditions.checkNotNull(owlDataOntology);	    
 	}
+	
+	public void loadDataFromTsv(String path) throws OWLOntologyCreationException, IOException {
+		File f = new File(path);
+		List<String> lines = FileUtils.readLines(f);
+		for (String line : lines) {
+			String[] vals = line.split("\t", 2);
+			String[] terms = vals[1].split(";");
+			for (String t : terms) {
+				addInstanceOf(vals[0], t);
+			}
+		}
+		Preconditions.checkNotNull(owlDataOntology);	    
+	}
+
+
+	
+	private IRI getIRI(String id) {
+		// TODO - use json-ld
+		if (id.contains(":")) {
+			return IRI.create("http://purl.obolibrary.org/obo/"+id.replace(":", "_"));
+		}
+		else {
+			return IRI.create(id);
+		}
+	}
 
 	private void mergeOntology(OWLOntology o) {
 		if (owlOntology == null) {
@@ -136,6 +167,16 @@ public class OWLLoader {
 			owlOntology.getOWLOntologyManager().addAxioms(owlOntology, o.getAxioms());
 		}
 	}
+	
+	private void addInstanceOf(String i, String c) {
+		if (owlDataOntology == null) {
+			owlDataOntology = owlOntology;
+		}
+		OWLDataFactory f = manager.getOWLDataFactory();
+		OWLClassAssertionAxiom ax = f.getOWLClassAssertionAxiom(f.getOWLClass(getIRI(c)), f.getOWLNamedIndividual(getIRI(i)));
+		manager.addAxiom(owlOntology, ax);
+	}
+
 
 	private void mergeData(OWLOntology o) {
 		if (owlDataOntology == null) {

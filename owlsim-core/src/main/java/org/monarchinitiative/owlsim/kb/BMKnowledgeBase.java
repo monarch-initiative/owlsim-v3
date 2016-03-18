@@ -156,6 +156,11 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getDirectSubClassesBM(Set<String> classIds);
 
+	/**
+	 * @param classIndex
+	 * @return direct subclasses as a bitmap
+	 */
+	public EWAHCompressedBitmap getDirectSubClassesBM(int classIndex);
 
 	/**
 	 * @param classIndex

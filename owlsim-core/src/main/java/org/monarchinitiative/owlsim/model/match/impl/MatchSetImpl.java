@@ -88,6 +88,20 @@ public class MatchSetImpl implements MatchSet {
 		return ms;
 	}
 	
+	/**
+	 * assumes already sorted or ranked
+	 * @return matches
+	 */
+	public List<Match> getMatchesWithOrBelowRank(int rank) {
+		List<Match> ms = new ArrayList<Match>();
+		for (Match m : matches) {
+			if (m.getRank() <= rank)
+				ms.add(m);
+		}
+		return ms;
+	}
+
+	
 	public Match getMatchesWithId(String id) {
 		for (Match m : matches) {
 			if (m.getMatchId().equals(id)) {

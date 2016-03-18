@@ -64,7 +64,7 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
 			
-			LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
+			//LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 			int numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
 			int numInQueryOrInTarget = queryProfileBM.orCardinality(targetProfileBM);
 			double j = numInQueryAndInTarget / (double) numInQueryOrInTarget;

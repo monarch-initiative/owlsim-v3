@@ -2,17 +2,24 @@ package org.monarchinitiative.owlsim.compute.cpt;
 
 import java.util.Map;
 
+import org.monarchinitiative.owlsim.compute.cpt.impl.TwoStateConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
- * Index for storing the value of Pr(C | P1=S1, P2=S2, ..., Pn=Sn),
- * where C is a child class, P1..Pn are parent classes, and S1..Sn are
- * the states of P1..Pn
+ * Index for storing the value of Pr(C=on | P1=P1s, P2=P2s, ..., Pn=Pns),
+ * where C is a child class, P1..Pn are parent classes, and P1_s...P_ns are
+ * the <i>states</i> of P1..Pn, where Pi_s &in; S.
  * 
+ * There are two implementations:
+ * 
+ * <ul>
+ *  <li>{@link TwoStateConditionalProbabilityIndex} S={on,unknown}
+ *  <li>{@link ThreeStateConditionalProbabilityIndex} S={on,unknown,off}
+ * </ul>
  * 
  * The interface is relatively low-level for speed. Entries are accessed using
  * the integer index of the child class C (clsIndex). For the parents' states, a second index is
- * created, psi, an integer 0<=i<|S|^n, representing each possible state of each parent.
+ * created, psi, an integer 0<=i<|S|^n, where representing each possible state of each parent.
  * i.e. psi = 0 means P1=0,Pn=0,...,Pn=0.
  * 
  * 
@@ -30,15 +37,6 @@ public interface ConditionalProbabilityIndex {
 	 */
 	public Double getConditionalProbabilityChildIsOn(int clsIndex, int parentsStatesIndex);
 	
-	/**
-	 * @param childClassIndex
-	 * @param parentsStatesIndex
-	 * @param numStates
-	 * @param cp
-	 * @throws IncoherentStateException
-	 */
-	//public void setConditionalProbabilityChildIsOn(int childClassIndex, int parentsStatesIndex, int numStates, 
-	//		double cp) throws IncoherentStateException;
 	
 	/**
 	 * Called to set all CPs
@@ -51,18 +49,18 @@ public interface ConditionalProbabilityIndex {
 	/**
 	 * Returns the number of possible different state combinations for the parents of C
 	 * 
-	 * @param childClassIndex
-	 * @return |S|^n
+	 * @param <code>ci</code>childClassIndex
+	 * @return |S|<sup>|pa(ci)|</sup>
 	 */
 	public int getNumberOfParentStates(int childClassIndex);
 	
 	
 	/**
-	 * Each possible combination of P1=S1,...,Pn=Sn is encoded as an integer;
+	 * Each possible combination of P1=P1_s,...,Pn=Pn_s is encoded as an integer;
 	 * this method maps from the integer back to a map of parents to states
 	 * 
 	 * @param clsIndex
-	 * @param parentsState number between 0 and |S|^n
+	 * @param parentsState is a number between 0 and |S|^n
 	 * @return map between class indices and states
 	 */
 	public Map<Integer, Character> getParentsToStateMapping(int clsIndex, int parentsState);
