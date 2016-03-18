@@ -1,6 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 
@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightThreeStateProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -26,12 +26,12 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * @author cjm
  *
  */
-public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractProfileMatcherTest {
+public class NaiveBayesianFixedWeightTwoStateMatcherPerfIT extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(NaiveBayesianFixedWeightThreeStateMatcherPerfIT.class);
+	private Logger LOG = Logger.getLogger(NaiveBayesianFixedWeightTwoStateMatcherPerfIT.class);
 
 	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return NaiveBayesFixedWeightThreeStateProfileMatcher.create(kb);
+		return NaiveBayesFixedWeightTwoStateProfileMatcher.create(kb);
 	}
 
 
@@ -82,7 +82,7 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn3-it-results-slo.json");
+		eval.writeJsonTo("target/nbn2-it-results-slo.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Smith-Lemli-Opitz Syndrome",
 				16,
@@ -109,14 +109,14 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn3-it-results-neg-slo.json");
+		eval.writeJsonTo("target/nbn2-it-results-neg-slo.json");
 		TestQuery tq = eval.constructTestQuery(labelMapper,
 				"Genitopatellar Syndrome",
 				1,
 				"Scrotal hypoplasia",
 				"Renal cyst",
 				"Micrognathia",
-				"not Vomiting", // TODO - check why this does not have desired effect
+				"not Vomiting", // these have no effect on the two state model
 				"not Abnormal lung lobation");		
 		LOG.info("TQ="+tq.query);
 		LOG.getRootLogger().setLevel(Level.WARN);
@@ -132,7 +132,7 @@ public class NaiveBayesianFixedWeightThreeStateMatcherPerfIT extends AbstractPro
 		load();
 		ProfileMatcher profileMatcher = createProfileMatcher(kb);
 		LabelMapper labelMapper = kb.getLabelMapper();
-		eval.writeJsonTo("target/bn3-it-results-multi.json");
+		eval.writeJsonTo("target/nbn2-it-results-multi.json");
 		String dq = "Schwartz-Jampel Syndrome, Type 1";
 		assertTrue(eval.evaluateTestQuery(profileMatcher,
 			     eval.constructTestQueryAgainstIndividual(

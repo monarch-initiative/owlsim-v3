@@ -55,6 +55,13 @@ public class DefaultSimplePairwiseConditionalProbabilityIndexTest  {
 	}
 
 	@Test
+	public void writerTest() throws OWLOntologyCreationException, NoRootException, URISyntaxException, NonUniqueLabelException, IncoherentStateException, FileNotFoundException {
+		load("go-pheno-test.owl");
+		WeightedSimpleGraphWriter w = new WeightedSimpleGraphWriter(kb, "target/go-pheno.cpt");
+		w.write(cpi);
+	}
+	
+	@Test
 	public void cptTest() throws OWLOntologyCreationException, NoRootException, URISyntaxException, NonUniqueLabelException, IncoherentStateException, FileNotFoundException {
 		load("SimpleDAG.owl");
 		
@@ -63,7 +70,7 @@ public class DefaultSimplePairwiseConditionalProbabilityIndexTest  {
 		String x2Id = kb.getClassId(kb.getClassIndex("http://x.org/x2"));
 		int[] na = kb.getIndividualCountPerClassArray();
 		
-		WeightedSimpleGraphWriter w = new WeightedSimpleGraphWriter(kb, "target/foo.graph");
+		WeightedSimpleGraphWriter w = new WeightedSimpleGraphWriter(kb, "target/dag.cpt");
 		w.write(cpi);
 
 		for (String cid : kb.getClassIdsInSignature()) {
