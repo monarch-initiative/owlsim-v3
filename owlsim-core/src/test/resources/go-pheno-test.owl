@@ -1,0 +1,68 @@
+Prefix: : <http://x.org/>
+
+Ontology: <http://x.org>
+
+Class: phenotype
+Class: ns-phenotype
+  SubClassOf: phenotype
+Class: skin-phenotype
+  SubClassOf: phenotype
+Class: bone-phenotype
+  SubClassOf: phenotype
+Class: musculature-phenotype
+  SubClassOf: phenotype
+Class: cancer
+  SubClassOf: phenotype
+Class: brain-cancer
+  SubClassOf: cancer, brain-phenotype
+Class: skin-cancer
+  SubClassOf: cancer, skin-phenotype
+Class: bone-cancer
+  SubClassOf: cancer, bone-phenotype
+
+Class: brain-phenotype SubClassOf: ns-phenotype
+Class: cerebellum-phenotype SubClassOf: brain-phenotype
+Class: neuron-phenotype SubClassOf: ns-phenotype
+Class: upper-motor-neuron-dysfunction SubClassOf: neuron-phenotype
+
+Class: abn-muscle-tone SubClassOf: musculature-phenotype
+Class: spasticity SubClassOf: abn-muscle-tone SubClassOf: upper-motor-neuron-dysfunction
+Class: reduced-myelin SubClassOf: neuron-phenotype
+Class: abnormal-myelination SubClassOf: neuron-phenotype
+
+Class: function
+
+Class: process
+Class: physiology SubClassOf: process
+Class: neuron-physiology SubClassOf: physiology
+Class: muscle-physiology SubClassOf: physiology
+Class: myelination SubClassOf: neuron-physiology
+Class: signaling SubClassOf: process
+Class: ras-signaling SubClassOf: signaling
+Class: cell-proliferation SubClassOf: process
+
+Individual: d1
+ Types: spasticity
+
+Individual: g1
+ Types: spasticity, muscle-physiology, neuron-physiology
+
+Individual: g2
+ Types: cerebellum-phenotype
+
+Individual: g3
+ Types: abnormal-myelination, myelination
+
+Individual: g4
+ Types: reduced-myelin, myelination
+
+Individual: g5
+ Types: ras-signaling, brain-cancer, bone-cancer
+
+Individual: g6
+ Types: ras-signaling, brain-cancer, skin-cancer
+
+Individual: g7
+ Types: cell-proliferation, cancer
+
+
