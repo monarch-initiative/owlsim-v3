@@ -5,10 +5,15 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.phenopackets.api.PhenoPacket;
+import org.phenopackets.api.io.JsonReader;
+import org.phenopackets.api.io.YamlReader;
+import org.phenopackets.api.model.association.PhenotypeAssociation;
+import org.phenopackets.api.model.ontology.OntologyClass;
+import org.phenopackets.api.util.ContextUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -20,6 +25,8 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import com.github.jsonldjava.core.Context;
+import com.github.jsonldjava.core.JsonLdError;
 import com.google.common.base.Preconditions;
 
 /**
@@ -145,7 +152,24 @@ public class OWLLoader {
 		Preconditions.checkNotNull(owlDataOntology);	    
 	}
 
-
+	public void loadDataFromPhenoPacket(String path) throws IOException, JsonLdError {
+		File f = new File(path);
+		PhenoPacket packet;
+		try {
+			packet = JsonReader.readFile(f);
+		} catch (IOException e) {
+			packet = YamlReader.readFile(f);
+		}
+		Context context = ContextUtil.getJSONLDContext(packet);
+		for (PhenotypeAssociation association : packet.getPhenotypeAssociations()) {
+			String instance = ContextUtil.expandIdentifierAsValue(association.getEntityId(), context);
+			for (OntologyClass type : association.getPhenotype().getTypes()) {
+				// PhenoPacket types are not expanded as JSON-LD @type fields
+				String term = ContextUtil.expandIdentifierAsValue(type.getId(), context);
+				addInstanceOf(instance, term);
+			}
+		}
+	}
 	
 	private IRI getIRI(String id) {
 		// TODO - use json-ld

@@ -186,6 +186,11 @@
 		  <artifactId>commons-validator</artifactId>
 		  <version>1.4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.phenopackets</groupId>
+			<artifactId>phenopackets-api</artifactId>
+			<version>0.0.4-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 
