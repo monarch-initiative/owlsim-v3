@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.eval;
 
+import static org.junit.Assert.*;
+
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 import org.apache.log4j.Logger;
@@ -392,6 +394,48 @@ public class ProfileMatchEvaluator {
 			}
 		}
 
+	}
+	
+	public void recapitulateHomologies(BMKnowledgeBase kb, Set<ProfileMatcher> pms, Map<String, String> mappings, String dir) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
+		int numInds = kb.getIndividualIdsInSignature().size();
+		LOG.info("NumInds = "+numInds);
+		assertTrue(numInds > 0);
+		
+		//LOG.getRootLogger().setLevel(Level.WARN);
+
+		for (String g1 : mappings.keySet()) {
+			if (!kb.getIndividualIdsInSignature().contains(g1)) {
+				System.err.println("SKIPPING: "+g1);
+				continue;
+			}
+			String g2 = mappings.get(g1);
+			if (!kb.getIndividualIdsInSignature().contains(g2)) {
+				System.err.println("SKIPPING: "+g2);
+				continue;
+			}
+			for (ProfileMatcher pm : pms) {
+				//System.out.println("Q:"+g1);
+				//System.out.println(pm);
+				
+				ProfileQuery q = pm.createProfileQuery(g1);
+				q.setLimit(1000);
+				MatchSet mp = pm.findMatchProfile(q);
+				Match m = mp.getMatchesWithId(g2);
+				Integer rank = null;
+				Integer erank = null;
+				if (m != null) {
+					rank = m.getRank();
+					erank = mp.getMatchesWithOrBelowRank(rank).size();
+				}
+				System.out.println(" "+g1+"\t"+g2+"\t"+pm.getShortName()+"\t"+erank+"\t"+rank+"\t"+mp.getExecutionMetadata().getDuration());
+				if (dir != null) {
+					writeJsonTo(dir+"/htest-"+pm.getShortName()+"-"+g1+".json");
+					writeJson(mp);
+				}
+			}
+
+		}
+		
 	}
 
 	private EWAHCompressedBitmap addNoise(EWAHCompressedBitmap qbm) {
