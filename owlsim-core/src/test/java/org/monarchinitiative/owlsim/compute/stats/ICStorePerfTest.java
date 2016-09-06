@@ -65,7 +65,7 @@ public class ICStorePerfTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testAccess() throws Exception {
 		runs = new ArrayList<ICRun>();
 		create(2000, 2, 4000, (int)Math.round(Math.random()*10));

@@ -2,6 +2,13 @@ Prefix: : <http://x.org/>
 
 Ontology: <http://x.org>
 
+## Diamond
+##       --- x1 --
+##      /          \
+##  root            >---- leaf
+##      \          /
+##       --- x2 --
+
 Class: root
 Class: x1
   SubClassOf: root
@@ -10,6 +17,7 @@ Class: x2
  Class: leaf
   SubClassOf: x1, x2 
 
+## eX shadows X
 
 Class: ex1
  EquivalentTo: x1
@@ -20,6 +28,7 @@ Class: eleaf
 Class: eroot
  EquivalentTo: root
 
+## 6 individuals; one for every X, also a super-root individual and one instantiating x1 and x2
 Individual: ithing
 Individual: iroot
  Types: root

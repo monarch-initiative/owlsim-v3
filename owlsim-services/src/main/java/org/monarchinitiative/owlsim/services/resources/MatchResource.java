@@ -18,6 +18,7 @@ package org.monarchinitiative.owlsim.services.resources;
 import io.dropwizard.jersey.caching.CacheControl;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,8 @@ import javax.ws.rs.core.MediaType;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
@@ -50,8 +53,9 @@ import com.wordnik.swagger.annotations.ApiParam;
 @Produces({ MediaType.APPLICATION_JSON })
 public class MatchResource {
 
+    // TODO: this needs to be updated for Dropwizard 1.0, use HK2
 	@Inject
-	Map<String, ProfileMatcher> matchers;
+	Map<String, ProfileMatcher> matchers = new HashMap<>();
 
 	@GET
 	@Path("/matchers")
@@ -70,10 +74,15 @@ public class MatchResource {
 	public MatchSet getMatches(
 			@ApiParam( value = "The name of the matcher to use", required = true)
 			@PathParam("matcher") String matcherName,
-			@ApiParam( value = "IDs that should match", required = false)
+			@ApiParam( value = "Class IDs to be matched", required = false)
 			@QueryParam("id") Set<String> ids,
-			@ApiParam( value = "IDs that should not match", required = false)
-			@QueryParam("negatedId") Set<String> negatedIds) throws UnknownFilterException, IncoherentStateException {
+            @ApiParam( value = "Negated Class IDs", required = false)
+            @QueryParam("negatedId") Set<String> negatedIds,
+            @ApiParam( value = "Filter individuals by type", required = false)
+            @QueryParam("filterClassId") String filterId,
+			@ApiParam( value = "cutoff limit", required = false)
+			@QueryParam("limit") Integer limit
+	        ) throws UnknownFilterException, IncoherentStateException {
 		if (!matchers.containsKey(matcherName)) {
 			throw new UnknownMatcherException(matcherName);
 		}
@@ -83,6 +92,13 @@ public class MatchResource {
 			throw new NonNegatedMatcherException(matcherName);
 		}
 		ProfileQuery query = ProfileQueryFactory.createQueryWithNegation(ids, negatedIds);
+		
+		if (limit != null)
+		    query.setLimit(limit);
+		if (filterId != null) {
+		    TypeFilter filter = new TypeFilter(filterId, false, false);
+		    query.setFilter(filter);
+		}
 		return matcher.findMatchProfile(query);
 	}
 

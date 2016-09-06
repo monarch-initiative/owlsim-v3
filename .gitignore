@@ -7,3 +7,4 @@ target/
 *iml
 .idea
 /bin/
+**/semantic.cache

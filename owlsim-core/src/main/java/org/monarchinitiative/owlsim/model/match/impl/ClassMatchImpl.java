@@ -3,6 +3,7 @@ package org.monarchinitiative.owlsim.model.match.impl;
 import org.monarchinitiative.owlsim.model.match.ClassMatch;
 
 /**
+ * A match between two classes
  * 
  * @author cjm
  *
@@ -13,6 +14,7 @@ public class ClassMatchImpl implements ClassMatch {
 	private String matchClassId;
 	private String MICAClassId;
 	private double MICAInformationContent;
+	
 	public String getQueryClassId() {
 		return queryClassId;
 	}

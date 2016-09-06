@@ -23,18 +23,25 @@ import javax.validation.constraints.NotNull;
 
 public class ApplicationConfiguration extends Configuration {
 
-	@NotNull
-	private Set<String> ontologyUris;
+    @NotNull
+    private Set<String> ontologyUris;
 
-	@NotNull
-	private Set<String> ontologyDataUris;
+    @NotNull
+    private Set<String> ontologyDataUris;
 
-	public Set<String> getOntologyUris() {
-		return ontologyUris;
-	}
+    @NotNull
+    private Set<String> ontologyDataTsvs;
 
-	public Set<String> getOntologyDataUris() {
-		return ontologyDataUris;
-	}
+    public Set<String> getOntologyUris() {
+        return ontologyUris;
+    }
+
+    public Set<String> getOntologyDataUris() {
+        return ontologyDataUris;
+    }
+
+    public Set<String> getDataTsvs() {
+        return ontologyDataTsvs;
+    }
 
 }

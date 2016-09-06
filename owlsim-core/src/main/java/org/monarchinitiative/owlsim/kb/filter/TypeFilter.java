@@ -17,11 +17,13 @@ public class TypeFilter implements Filter  {
 	private boolean isNegated;
 	
 	public TypeFilter(String typeId) {
+        this.typeId = typeId;
 		this.isExact = false;
 		this.isNegated = false;
 	}
 
 	public TypeFilter(String typeId, boolean isExact, boolean isNegated) {
+        this.typeId = typeId;
 		this.isExact = isExact;
 		this.isNegated = isNegated;
 	}

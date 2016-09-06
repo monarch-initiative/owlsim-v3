@@ -1,8 +1,14 @@
 package org.monarchinitiative.owlsim.io;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -21,6 +27,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
 import com.google.common.base.Preconditions;
+import com.google.common.io.Files;
 
 /**
  * Object for loading OWL ontologies into a {@link BMKnowledgeBase}
@@ -58,6 +65,8 @@ public class OWLLoader {
 		IRI iri = IRI.create(file);
 		return getOWLOntologyManager().loadOntologyFromOntologyDocument(iri);	    
 	}
+	
+
 
 	/**
 	 * Loads an OWL ontology from a URI or file
@@ -94,7 +103,12 @@ public class OWLLoader {
 		Preconditions.checkNotNull(owlOntology);	    
 	}
 
-
+    public void loadGzippdOntology(String path) throws FileNotFoundException, IOException, OWLOntologyCreationException {
+        GZIPInputStream gis = new GZIPInputStream(new FileInputStream(path));
+        BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+        owlOntology = getOWLOntologyManager().loadOntologyFromOntologyDocument(gis);
+        Preconditions.checkNotNull(owlOntology);      
+    }
 
 	/**
 	 * Loads an OWL ontology from a URI or file
@@ -134,6 +148,7 @@ public class OWLLoader {
 	
 	public void loadDataFromTsv(String path) throws OWLOntologyCreationException, IOException {
 		File f = new File(path);
+		//Files.readLines(f, Charset.defaultCharset());
 		List<String> lines = FileUtils.readLines(f);
 		for (String line : lines) {
 			String[] vals = line.split("\t", 2);
@@ -145,6 +160,21 @@ public class OWLLoader {
 		Preconditions.checkNotNull(owlDataOntology);	    
 	}
 
+    public void loadDataFromTsvGzip(String path) throws OWLOntologyCreationException, IOException {
+        GZIPInputStream gis = new GZIPInputStream(new FileInputStream(path));
+        BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+        String line;
+        while ((line=bf.readLine())!=null) {
+            String[] vals = line.split("\t", 2);
+            String[] terms = vals[1].split(";");
+            for (String t : terms) {
+                addInstanceOf(vals[0], t);
+            }
+        }
+        Preconditions.checkNotNull(owlDataOntology);        
+    }
+    
+ 
 
 	
 	private IRI getIRI(String id) {
@@ -203,4 +233,6 @@ public class OWLLoader {
 
 		return BMKnowledgeBaseOWLAPIImpl.create(owlOntology, owlDataOntology, owlReasonerFactory);
 	}
+
+ 
 }

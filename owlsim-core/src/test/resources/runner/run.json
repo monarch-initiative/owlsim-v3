@@ -10,7 +10,8 @@
     ],
     "searchJobs" : [
         {
-        "queryIndividual" : "http://x.org/ind-small-heart-small-brain"
+            "queryIndividual" : "http://x.org/ind-small-heart-small-brain",
+            "referenceIndividualIds" : ["http://x.org/ind-big-heart-big-brain"]
         },
         {
         "queryClassIds" : [

@@ -47,3 +47,17 @@ and then browse the [REST documentation](http://localhost:8080/api/docs/).
 If you prefer to run the REST services from your IDE launch:
 `org.monarchinitiative.owlsim.services.OwlSimServiceApplication` as a main
 class with `server` and an appropriate YAML configuration as arguments.
+
+Paths:
+
+ * http://localhost:8080/api-docs/
+ * http://localhost:8080/match/matchers -- lists matchers
+
+or for some versions of dropwizard:
+
+ * http://localhost:8080/api/docs/
+ * http://localhost:8080/api/match/matchers 
+
+Example query using default config (TODO: map URIs to CURIEs)
+
+http://localhost:8080/api/match/jaccard?id=http%3A%2F%2Fx.org%2Fheart-morphology&http%3A%2F%2Fx.org%2Fbrain-morphology

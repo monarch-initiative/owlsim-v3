@@ -22,9 +22,15 @@ import io.dropwizard.setup.Environment;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.MatcherMapModule;
 import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
+import org.semanticweb.owlapi.OWLAPIParsersModule;
+import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
+import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
@@ -42,55 +48,67 @@ import com.wordnik.swagger.reader.ClassReaders;
 
 public class OwlSimServiceApplication extends Application<ApplicationConfiguration> {
 
-	public static void main(String[] args) throws Exception {
-		new OwlSimServiceApplication().run(args);
-	}
+    private Logger LOG = Logger.getLogger(OwlSimServiceApplication.class);
 
-	@Override
-	public String getName() {
-		return "owlsim Web Services";
-	}
+    public static void main(String[] args) throws Exception {
+        new OwlSimServiceApplication().run(args);
+    }
 
-	@Override
-	public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
-		initializeSwaggger(bootstrap);
-	}
+    @Override
+    public String getName() {
+        return "owlsim Web Services";
+    }
 
-	void initializeSwaggger(Bootstrap<ApplicationConfiguration> bootstrap) {
-		bootstrap.addBundle(new AssetsBundle("/swagger/", "/docs", "index.html"));
-	}
+    @Override
+    public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
+        initializeSwaggger(bootstrap);
+    }
 
-	/***
-	 * The context path must be set before configuring swagger
-	 * @param environment
-	 */
-	void configureSwagger(Environment environment) {
-		environment.jersey().register(new ApiListingResourceJSON());
-		environment.jersey().register(new ApiDeclarationProvider());
-		environment.jersey().register(new ResourceListingProvider());
-		ScannerFactory.setScanner(new DefaultJaxrsScanner());
-		ClassReaders.setReader(new DefaultJaxrsApiReader());
-		SwaggerConfig config = ConfigFactory.config();
-		config.setApiVersion("1.0.1");
-		config.setBasePath(".." + environment.getApplicationContext().getContextPath());
-	}
+    void initializeSwaggger(Bootstrap<ApplicationConfiguration> bootstrap) {
+        bootstrap.addBundle(new AssetsBundle("/swagger/", "/docs", "index.html"));
+    }
 
-	@Override
-	public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-		environment.getApplicationContext().setContextPath("/api");
-		configureSwagger(environment);
+    /***
+     * The context path must be set before configuring swagger
+     * @param environment
+     */
+    void configureSwagger(Environment environment) {
+        environment.jersey().register(new ApiListingResourceJSON());
+        environment.jersey().register(new ApiDeclarationProvider());
+        environment.jersey().register(new ResourceListingProvider());
+        ScannerFactory.setScanner(new DefaultJaxrsScanner());
+        ClassReaders.setReader(new DefaultJaxrsApiReader());
+        SwaggerConfig config = ConfigFactory.config();
+        config.setApiVersion("1.0.1");
+        config.setBasePath(".." + environment.getApplicationContext().getContextPath());
+    }
 
-		Injector i = Guice.createInjector(
-				new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris()),
-				new MatcherMapModule());
+    @Override
+    public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
+        environment.getApplicationContext().setContextPath("/api");
+        configureSwagger(environment);
 
-		//Add resources
-		Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
-				.getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");
-		for (ClassInfo resourceClass: resourceClasses) {
-			environment.jersey().register(i.getInstance(resourceClass.load()));
-		}
+        Concurrency concurrency = Concurrency.CONCURRENT;
+        LOG.info("Creating injector...");
+        Injector i = Guice.createInjector(
+                new OWLAPIImplModule(concurrency),
+                new OWLAPIParsersModule(),
+                new OWLAPIServiceLoaderModule(),
+                new KnowledgeBaseModule(
+                        configuration.getOntologyUris(),
+                        configuration.getOntologyDataUris(),
+                        configuration.getDataTsvs()
+                        ),
+                        new MatcherMapModule());
+        LOG.info("BINDINGS ="+i.getAllBindings());
+        //Add resources
+        Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
+                .getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");
+        for (ClassInfo resourceClass: resourceClasses) {
+            Class<?> c = resourceClass.load();
+            environment.jersey().register(i.getInstance(c));
+        }
 
-	}
+    }
 
 }

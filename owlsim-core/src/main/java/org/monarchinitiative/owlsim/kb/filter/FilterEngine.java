@@ -7,6 +7,8 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
+import com.googlecode.javaewah.EWAHCompressedBitmap;
+
 /**
  * Applies a {@link Filter} on a set of individuals.
  * 
@@ -76,13 +78,20 @@ public class FilterEngine {
 			else
 				return contains;
 		}
-/*		else if (filter instanceof TypeFilter) {
-			//TODO
-			//int tix = knowledgeBase.get ((TypeFilter)filter).getTypeId();
-			//EWAHCompressedBitmap typeBM = knowledgeBase.getTypesBM(id);
-			//if (typeBM.getPositions().contains(filter))
-			return false;
-		}*/
+		else if (filter instanceof TypeFilter) {
+		    // TODO : provide a convenience method in kb
+		    TypeFilter tf = (TypeFilter)filter;
+		    EWAHCompressedBitmap typesBM;
+            if (tf.isExact()) {
+                typesBM = knowledgeBase.getDirectTypesBM(id);
+            }
+            else {
+                typesBM = knowledgeBase.getTypesBM(id);
+            }
+            LOG.info("typeId = " + tf.getTypeId());
+            int ix = knowledgeBase.getClassIndex(tf.getTypeId());
+            return typesBM.getPositions().contains(ix) ^ tf.isNegated();
+		}
 		else if (filter instanceof IdFilter) {
 			IdFilter idf = (IdFilter)filter;
 			if (idf.getIds().contains(id)) {

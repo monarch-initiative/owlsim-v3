@@ -17,44 +17,49 @@ import org.monarchinitiative.owlsim.model.match.ProfileQuery;
  */
 public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
 
-	private Logger LOG = Logger.getLogger(PhenodigmICProfileMatcherTest.class);
+    private Logger LOG = Logger.getLogger(PhenodigmICProfileMatcherTest.class);
 
-	protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
-		return PhenodigmICProfileMatcher.create(kb);
-	}
+    protected ProfileMatcher createProfileMatcher(BMKnowledgeBase kb) {
+        return PhenodigmICProfileMatcher.create(kb);
+    }
 
-	@Test
-	public void testBasic() throws Exception {
-		loadSimplePhenoWithNegation();
-		//LOG.info("INDS="+kb.getIndividualIdsInSignature());
-		ProfileMatcher profileMatcher = createProfileMatcher(kb);
-		
-		int nOk = 0;
-		for (String i : kb.getIndividualIdsInSignature()) {
-			if (i.equals("http://x.org/ind-no-brain-phenotype")) {
-				continue;
-			}
-			if (i.equals("http://x.org/ind-unstated-phenotype")) {
-				continue;
-			}
-			ProfileQuery pq = profileMatcher.createProfileQuery(i);
-			TestQuery tq =  new TestQuery(pq, i, 1); // self should always be ranked first
-			String fn = i.replaceAll(".*/", "");
-			eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
-			Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
-			
-			if (i.equals("http://x.org/ind-dec-all")) {
-				Assert.assertTrue(isRankedLast("http://x.org/ind-unstated-phenotype", tq.matchSet));
-				nOk++;
-			}
-			if (i.equals("http://x.org/ind-small-heart-big-brain")) {
-				Assert.assertTrue(isRankedLast("http://x.org/ind-bone", tq.matchSet));
-				nOk++;
-			}
-			
-		}
-		Assert.assertEquals(2, nOk);
-	}
-	
+    @Test
+    public void testBasic() throws Exception {
+        loadSimplePhenoWithNegation();
+        //LOG.info("INDS="+kb.getIndividualIdsInSignature());
+        ProfileMatcher profileMatcher = createProfileMatcher(kb);
+
+        int nOk = 0;
+        for (String i : kb.getIndividualIdsInSignature()) {
+            if (i.equals("http://x.org/ind-no-brain-phenotype")) {
+                continue;
+            }
+            if (i.equals("http://x.org/ind-unstated-phenotype")) {
+                continue;
+            }
+            ProfileQuery pq = profileMatcher.createProfileQuery(i);
+            TestQuery tq =  new TestQuery(pq, i, 1); // self should always be ranked first
+            String fn = i.replaceAll(".*/", "");
+            eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
+            Assert.assertTrue(eval.evaluateTestQuery(profileMatcher, tq));
+
+            if (i.equals("http://x.org/ind-dec-all")) {
+                Assert.assertTrue(isRankedLast("http://x.org/ind-unstated-phenotype", tq.matchSet));
+                nOk++;
+            }
+            if (i.equals("http://x.org/ind-small-heart-big-brain")) {
+                Assert.assertTrue(isRankedLast("http://x.org/ind-bone", tq.matchSet));
+                nOk++;
+            }
+
+        }
+        Assert.assertEquals(2, nOk);
+    }
+
+    public void testBasicWithFilter() throws Exception {
+        loadSimplePhenoWithNegation();
+       // ProfileQuery pq = profileMatcher.createProfileQuery("http://x.org/ind-dec-all");
+
+    }
 
 }

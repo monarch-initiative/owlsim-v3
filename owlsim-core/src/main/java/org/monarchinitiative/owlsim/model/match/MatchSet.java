@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.model.match;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
@@ -68,6 +69,15 @@ public interface MatchSet {
 	 * @param limit
 	 */
 	public void truncate(int limit);
+	
+	/**
+	 * Matches for all reference individuals
+	 * 
+	 * This is preserved even after truncation
+	 * 
+	 * @return map between match id and match
+	 */
+	public Map<String, Match> getReferenceMatches();
 		
 	public DescriptiveStatistics getScores();
 

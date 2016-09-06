@@ -31,17 +31,17 @@ public class MatchResourceTest {
 
 	@Test(expected=UnknownMatcherException.class)
 	public void testUnkownMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("unknown", Collections.<String>emptySet(), Collections.<String>emptySet());
+		match.getMatches("unknown", Collections.<String>emptySet(), Collections.<String>emptySet(), null, null);
 	}
 	
 	@Test(expected=NonNegatedMatcherException.class)
 	public void testNegatedIdsWithNonNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("foo", Collections.<String>emptySet(), newHashSet("not me"));
+		match.getMatches("foo", Collections.<String>emptySet(), newHashSet("not me"), null, null);
 	}
 	
 	@Test
 	public void testNegatedIdsWithNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("notfoo", Collections.<String>emptySet(), newHashSet("not me"));
+		match.getMatches("notfoo", Collections.<String>emptySet(), newHashSet("not me"), null, null);
 	}
 
 }

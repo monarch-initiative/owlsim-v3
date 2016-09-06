@@ -28,10 +28,6 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  * @author cjm
  *
  */
-/**
- * @author cjm
- *
- */
 public class AbstractProfileMatcherTest {
 
 	protected BMKnowledgeBase kb;

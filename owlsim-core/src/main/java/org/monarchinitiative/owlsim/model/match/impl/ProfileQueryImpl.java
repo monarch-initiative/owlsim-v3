@@ -16,8 +16,8 @@ public class ProfileQueryImpl implements ProfileQuery {
 	private Set<String> queryClassIds;
 	private Filter filter;
 	private Integer limit;
+	private Set<String> referenceIndividualIds;
 	
-	// TODO: inject this?
 	public ProfileQueryImpl(Set<String> queryClassIds) {
 		super();
 		this.queryClassIds = queryClassIds;
@@ -61,8 +61,24 @@ public class ProfileQueryImpl implements ProfileQuery {
 	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
+	
+	
 
-	@Override
+	/**
+     * @return the referenceIndividualIds
+     */
+    public Set<String> getReferenceIndividualIds() {
+        return referenceIndividualIds;
+    }
+
+    /**
+     * @param referenceIndividualIds the referenceIndividualIds to set
+     */
+    public void setReferenceIndividualIds(Set<String> referenceIndividualIds) {
+        this.referenceIndividualIds = referenceIndividualIds;
+    }
+
+    @Override
 	public String toString() {
 		return queryClassIds.toString();
 	}

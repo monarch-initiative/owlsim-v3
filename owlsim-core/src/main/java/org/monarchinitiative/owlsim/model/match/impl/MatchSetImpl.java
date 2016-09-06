@@ -3,7 +3,9 @@ package org.monarchinitiative.owlsim.model.match.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.inference.TestUtils;
@@ -26,6 +28,7 @@ public class MatchSetImpl implements MatchSet {
 	ExecutionMetadata executionMetadata;
 	MethodMetadata methodMetadata;
 	private boolean isSorted;
+	private Map<String, Match> referenceMatches;
 	
 	/**
 	 * constructor
@@ -35,6 +38,7 @@ public class MatchSetImpl implements MatchSet {
 		isSorted = false;
 		this.query = query;
 		matches = new ArrayList<Match>();
+		referenceMatches = new HashMap<>();
 	}
 	
 	public static MatchSet create(ProfileQuery query) {
@@ -149,6 +153,10 @@ public class MatchSetImpl implements MatchSet {
 		int rank = 0;
 		Double lastScore = null;
 		for (Match m : matches) {
+		    if (query.getReferenceIndividualIds() != null &&
+		            query.getReferenceIndividualIds().contains(m.getMatchId())) {
+		        referenceMatches.put(m.getMatchId(), m);
+		    }
 			double s = m.getScore();
 			// TODO - avoid double equality test
 			if (lastScore == null ||
@@ -167,7 +175,16 @@ public class MatchSetImpl implements MatchSet {
 			matches = matches.subList(0, limit);
 	}
 	
-	public DescriptiveStatistics getScores() {
+	
+	
+	/**
+     * @return the referenceMatches
+     */
+    public Map<String, Match> getReferenceMatches() {
+        return referenceMatches;
+    }
+
+    public DescriptiveStatistics getScores() {
 		DescriptiveStatistics ds = new DescriptiveStatistics();
 		for (Match m : this.matches) {
 			ds.addValue(m.getScore());

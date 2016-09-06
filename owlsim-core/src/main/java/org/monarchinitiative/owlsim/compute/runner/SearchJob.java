@@ -8,7 +8,8 @@ public class SearchJob extends Job {
 	
 	public String queryIndividual;
 	public Set<String> queryClassIds;
-	public Set<String> negatedQueryClassIds;
+    public Set<String> negatedQueryClassIds;
+    public Set<String> referenceIndividualIds;
 	public MatchSet matchSet;
 	
 	
@@ -60,7 +61,25 @@ public class SearchJob extends Job {
 
 
 
-	@Override
+	/**
+     * @return the expectedIndividuals
+     */
+    public Set<String> getReferenceIndividualIds() {
+        return referenceIndividualIds;
+    }
+
+
+
+    /**
+     * @param expectedIndividuals the expectedIndividuals to set
+     */
+    public void setReferenceIndividualIds(Set<String> expectedIndividuals) {
+        this.referenceIndividualIds = expectedIndividuals;
+    }
+
+
+
+    @Override
 	public String toString() {
 		return "SearchJob [queryIndividual=" + queryIndividual
 				+ ", queryClassIds=" + queryClassIds

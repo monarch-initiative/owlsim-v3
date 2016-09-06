@@ -36,4 +36,17 @@ public interface ProfileQuery {
 	 * @param limit
 	 */
 	public void setLimit(Integer limit);
+	
+	/**
+	 * an optional set of individuals for which we wish to test ranking.
+	 * 
+	 * This is for use when we with to limit the number of individuals returned,
+	 * but we want to know the ranking and scores of particular individuals outside
+	 * the top N
+	 * 
+	 * @return individual ids
+	 */
+    public Set<String> getReferenceIndividualIds();
+    public void setReferenceIndividualIds(Set<String> indIds);
+
 }

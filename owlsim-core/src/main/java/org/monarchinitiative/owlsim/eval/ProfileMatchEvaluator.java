@@ -1,6 +1,5 @@
 package org.monarchinitiative.owlsim.eval;
 
-import static org.junit.Assert.*;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
@@ -11,6 +10,7 @@ import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
+import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.*;
 import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
@@ -346,6 +346,19 @@ public class ProfileMatchEvaluator {
 
 	}
 
+	/**
+	 * Takes a random individual, fetches its profile Q
+	 * 
+	 * over 10 iterations, query KB for Q, returning rank of original individual;
+	 * each iteration, permute Q
+	 * 
+	 * @param kb
+	 * @param pms
+	 * @param dir - directory for json results
+	 * @throws UnknownFilterException
+	 * @throws IncoherentStateException
+	 * @throws FileNotFoundException
+	 */
 	public void runNoiseSimulation(BMKnowledgeBase kb, Set<ProfileMatcher> pms, String dir) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
 		int N = kb.getIndividualIdsInSignature().size();
 		EWAHCompressedBitmap tbm = null;
@@ -395,11 +408,19 @@ public class ProfileMatchEvaluator {
 		}
 
 	}
-	
-	public void recapitulateHomologies(BMKnowledgeBase kb, Set<ProfileMatcher> pms, Map<String, String> mappings, String dir) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
+
+	public void recapitulateHomologies(BMKnowledgeBase kb, Set<ProfileMatcher> pms, 
+	        Map<String, String> mappings, 
+	        String dir) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
+	    recapitulateHomologies(kb, pms, mappings, dir, null);
+	}
+	public void recapitulateHomologies(BMKnowledgeBase kb, Set<ProfileMatcher> pms, 
+	        Map<String, String> mappings, 
+	        String dir,
+	        Filter filter) throws UnknownFilterException, IncoherentStateException, FileNotFoundException {
 		int numInds = kb.getIndividualIdsInSignature().size();
 		LOG.info("NumInds = "+numInds);
-		assertTrue(numInds > 0);
+		//assertTrue(numInds > 0);
 		
 		//LOG.getRootLogger().setLevel(Level.WARN);
 
@@ -418,6 +439,8 @@ public class ProfileMatchEvaluator {
 				//System.out.println(pm);
 				
 				ProfileQuery q = pm.createProfileQuery(g1);
+				if (filter != null)
+				    q.setFilter(filter);
 				q.setLimit(1000);
 				MatchSet mp = pm.findMatchProfile(q);
 				Match m = mp.getMatchesWithId(g2);
@@ -429,7 +452,8 @@ public class ProfileMatchEvaluator {
 				}
 				System.out.println(" "+g1+"\t"+g2+"\t"+pm.getShortName()+"\t"+erank+"\t"+rank+"\t"+mp.getExecutionMetadata().getDuration());
 				if (dir != null) {
-					writeJsonTo(dir+"/htest-"+pm.getShortName()+"-"+g1+".json");
+				    String g1n = g1.replace("/", "-");
+					writeJsonTo(dir+"/htest-"+pm.getShortName()+"-"+g1n+".json");
 					writeJson(mp);
 				}
 			}
