@@ -78,16 +78,16 @@ public class DefaultSimplePairwiseConditionalProbabilityIndexTest  {
 			for (String did : kb.getClassIdsInSignature()) {
 				int dix = kb.getClassIndex(did);
 				Double p = cpi.getConditionalProbabilityChildIsOn(cix, dix);
-				System.out.println(cid + " | "+ did +" == "+p);
+				//System.out.println(cid + " | "+ did +" == "+p);
 				int numCandP = kb.getIndividualsBM(cix).andCardinality(kb.getIndividualsBM(dix));
-				System.out.println(kb.getIndividualsBM(cix).cardinality());
-				System.out.println(kb.getIndividualsBM(cix).cardinality());
-				System.out.println(na[cix]);
-				System.out.println(na[dix]);
-				System.out.println("   AND == "+numCandP);
-				for (int x : kb.getIndividualsBM(cix).getPositions()) {
-					System.out.println(" XX:" + kb.getIndividualId(x));
-				}
+//				System.out.println(kb.getIndividualsBM(cix).cardinality());
+//				System.out.println(kb.getIndividualsBM(cix).cardinality());
+//				System.out.println(na[cix]);
+//				System.out.println(na[dix]);
+//				System.out.println("   AND == "+numCandP);
+//				for (int x : kb.getIndividualsBM(cix).getPositions()) {
+//					System.out.println(" XX:" + kb.getIndividualId(x));
+//				}
 				Assert.assertTrue(p >= 0.0);
 				Assert.assertTrue(p <= 1.0);
 				if (cid.equals(did)) {

@@ -7,6 +7,8 @@ branches:
   only:
   - master
 
+script: mvn test -Dlog4j.configuration=file:`pwd`/owlsim-core/src/test/resources/log4j-travis.properties
+  
 #before_install:
 #  - cd owlsim-core; make
 
