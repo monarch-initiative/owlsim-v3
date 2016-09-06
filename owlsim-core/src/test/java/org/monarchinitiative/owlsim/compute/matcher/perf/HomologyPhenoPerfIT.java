@@ -1,10 +1,6 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import static org.junit.Assert.*;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,30 +9,18 @@ import java.util.Set;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.BayesTransitionTwoStateProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightThreeStateProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator;
-import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.io.ReadMappingsUtil;
-import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
-import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
-import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
-import org.monarchinitiative.owlsim.model.match.Match;
-import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 /**
