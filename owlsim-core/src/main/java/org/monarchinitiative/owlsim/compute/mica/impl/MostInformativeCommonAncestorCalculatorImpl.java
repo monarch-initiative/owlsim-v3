@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.compute.mica.impl;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator;
@@ -84,5 +86,14 @@ public class MostInformativeCommonAncestorCalculatorImpl implements MostInformat
 			return null;
 		}
 	}
+
+    @Override
+    public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(
+            Set<String> queryClassIds, Set<String> targetClassIds) {
+        return getMostInformativeCommonAncestorWithIC(knowledgeBase.getSuperClassesBM(queryClassIds),
+                knowledgeBase.getSuperClassesBM(targetClassIds));
+    }
+	
+	
 	
 }

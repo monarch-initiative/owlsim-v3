@@ -1,3 +1,4 @@
 ontologyUris:
   - ../owlsim-core/src/test/resources/simple-pheno-with-negation.owl
 ontologyDataUris: []
+dataTsvs: []

@@ -8,3 +8,5 @@ target/
 .idea
 /bin/
 **/semantic.cache
+owlsim-services/js
+owlsim-services/python

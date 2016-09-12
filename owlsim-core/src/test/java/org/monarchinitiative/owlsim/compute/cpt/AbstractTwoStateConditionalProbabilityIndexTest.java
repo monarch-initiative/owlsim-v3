@@ -86,7 +86,7 @@ public class AbstractTwoStateConditionalProbabilityIndexTest  {
 			//sb.append(pid+" = "+psm.get(pix)+" ; ");
 		}
 		Collections.sort(priorProbStrs);
-		
+
 		String ppStr = priorProbStrs.stream().collect(Collectors.joining(", "));
 		Double cp = cpi.getConditionalProbabilityChildIsOn(clsIndex, i);
 		long cpp = Math.round(cp * 100);

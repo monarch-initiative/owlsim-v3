@@ -30,7 +30,7 @@ public class ApplicationConfiguration extends Configuration {
     private Set<String> ontologyDataUris;
 
     @NotNull
-    private Set<String> ontologyDataTsvs;
+    private Set<String> dataTsvs;
 
     public Set<String> getOntologyUris() {
         return ontologyUris;
@@ -41,7 +41,7 @@ public class ApplicationConfiguration extends Configuration {
     }
 
     public Set<String> getDataTsvs() {
-        return ontologyDataTsvs;
+        return dataTsvs;
     }
 
 }

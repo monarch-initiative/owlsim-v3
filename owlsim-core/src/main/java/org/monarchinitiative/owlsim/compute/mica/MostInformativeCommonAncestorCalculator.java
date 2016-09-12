@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.compute.mica;
 
+import java.util.Set;
+
 import org.monarchinitiative.owlsim.compute.mica.impl.MostInformativeCommonAncestorCalculatorImpl;
 
 import com.google.inject.ImplementedBy;
@@ -98,6 +100,8 @@ public interface MostInformativeCommonAncestorCalculator {
 	public int getFrequencyOfMostInformativeCommonAncestor(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
 
 	/**
+     * Note closure assumed for BM
+     * 
 	 * @param queryProfileBM
 	 * @param targetProfileBM
 	 * @return frequency of MICA plus MICA
@@ -105,9 +109,20 @@ public interface MostInformativeCommonAncestorCalculator {
 	public ClassFrequencyPair getMostInformativeCommonAncestorWithFrequency(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
 	
 	/**
+	 * Note closure assumed for BM
+	 * 
 	 * @param queryProfileBM
 	 * @param targetProfileBM
 	 * @return frequency of MICA plus IC
 	 */
-	public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
+    public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
+
+    /**
+     * @param queryClassIds
+     * @param targetClassIds
+     * @return frequency of MICA plus IC
+     */
+    public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(
+            Set<String> queryClassIds,
+            Set<String> targetClassIds) ;
 }

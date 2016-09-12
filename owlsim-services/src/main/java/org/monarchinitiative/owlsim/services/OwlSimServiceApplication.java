@@ -23,6 +23,7 @@ import io.dropwizard.setup.Environment;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.monarchinitiative.owlsim.compute.enrich.EnrichmentMapModule;
 import org.monarchinitiative.owlsim.compute.matcher.MatcherMapModule;
 import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
@@ -99,6 +100,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
                         configuration.getOntologyDataUris(),
                         configuration.getDataTsvs()
                         ),
+                        new EnrichmentMapModule(),
                         new MatcherMapModule());
         LOG.info("BINDINGS ="+i.getAllBindings());
         //Add resources

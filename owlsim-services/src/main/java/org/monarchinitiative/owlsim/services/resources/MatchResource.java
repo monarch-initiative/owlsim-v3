@@ -101,5 +101,7 @@ public class MatchResource {
 		}
 		return matcher.findMatchProfile(query);
 	}
+	
+	// TODO - API for comparing two entities
 
 }
