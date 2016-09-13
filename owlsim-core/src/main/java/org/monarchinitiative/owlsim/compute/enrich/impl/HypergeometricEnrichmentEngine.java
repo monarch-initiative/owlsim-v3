@@ -150,7 +150,7 @@ public class HypergeometricEnrichmentEngine implements EnrichmentEngine {
         double p = hg.upperCumulativeProbability(numShared);
 
         //if (p == 0.0) {
-        LOG.error(numShared + " "+ enrichedCardinality +" "+sampleCardinality+" POP:"+popSize+" p="+p);
+        //LOG.error(numShared + " "+ enrichedCardinality +" "+sampleCardinality+" POP:"+popSize+" p="+p);
         //}
 
         long t2 = System.currentTimeMillis();

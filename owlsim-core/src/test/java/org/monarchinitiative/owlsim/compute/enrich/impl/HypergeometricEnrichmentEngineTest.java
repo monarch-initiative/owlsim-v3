@@ -32,8 +32,8 @@ public class HypergeometricEnrichmentEngineTest {
             EnrichmentResult tr = rs.getResults().get(0);
             //LOG.info(tr + " SCORE: "+tr.getScore());
             for (EnrichmentResult r : rs.getResults()) {
-                //LOG.info(r + " SCORE: "+r.getScore());
-                System.out.println(r + " SCORE: "+r.getScore());
+                LOG.info(r + " SCORE: "+r.getScore());
+                //System.out.println(r + " SCORE: "+r.getScore());
             }
         }
     }
