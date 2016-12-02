@@ -39,7 +39,7 @@ which runs with:
 where configuration.yaml describes the desired ontologies:
 
     ontologyUris:
-      - owlsim-core/src/test/resources/species.owl
+      - owlsim-core/src/test/resources/simple-pheno-with-negation.owl
     ontologyDataUris: []
 
 and then browse the [REST documentation](http://localhost:8080/api/docs/).

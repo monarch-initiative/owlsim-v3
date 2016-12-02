@@ -35,6 +35,7 @@ import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.kb.filter.AnonIndividualFilter;
 import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -78,6 +79,8 @@ public class MatchResource {
 			@QueryParam("id") Set<String> ids,
             @ApiParam( value = "Negated Class IDs", required = false)
             @QueryParam("negatedId") Set<String> negatedIds,
+            @ApiParam( value = "Target Class IDs", required = false)
+            @QueryParam("targetClassId") Set<String> targetClassIds,
             @ApiParam( value = "Filter individuals by type", required = false)
             @QueryParam("filterClassId") String filterId,
 			@ApiParam( value = "cutoff limit", required = false)
@@ -88,16 +91,23 @@ public class MatchResource {
 		}
 		ProfileMatcher matcher = matchers.get(matcherName);
 		// Verify that matcher is negation aware if negated IDs are used
-		if (!negatedIds.isEmpty() && !NegationAwareProfileMatcher.class.isAssignableFrom(matcher.getClass())) {
-			throw new NonNegatedMatcherException(matcherName);
-		}
-		ProfileQuery query = ProfileQueryFactory.createQueryWithNegation(ids, negatedIds);
+        if (!negatedIds.isEmpty() && !NegationAwareProfileMatcher.class.isAssignableFrom(matcher.getClass())) {
+            throw new NonNegatedMatcherException(matcherName);
+        }
+ 		ProfileQuery query = ProfileQueryFactory.createQueryWithNegation(ids, negatedIds);
 		
 		if (limit != null)
 		    query.setLimit(limit);
 		if (filterId != null) {
 		    TypeFilter filter = new TypeFilter(filterId, false, false);
 		    query.setFilter(filter);
+		}
+		if (!targetClassIds.isEmpty()) {
+	        ProfileQuery targetPQ = 
+	                ProfileQueryFactory.createQuery(targetClassIds);
+	        AnonIndividualFilter filter = new AnonIndividualFilter(targetPQ);
+	        query.setFilter(filter);
+
 		}
 		return matcher.findMatchProfile(query);
 	}
