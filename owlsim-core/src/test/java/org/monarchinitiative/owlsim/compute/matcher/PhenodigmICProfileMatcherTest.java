@@ -1,11 +1,15 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
 import org.monarchinitiative.owlsim.eval.TestQuery;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.model.match.Match;
+import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
 /**
@@ -56,9 +60,40 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
         Assert.assertEquals(2, nOk);
     }
 
+    @Test
+    public void testCompareProfileFile() throws Exception {
+        loadSimplePhenoWithNegation();
+        //LOG.info("INDS="+kb.getIndividualIdsInSignature());
+        ProfileMatcher profileMatcher = createProfileMatcher(kb);
+
+        for (String i : kb.getIndividualIdsInSignature()) {
+            Set<String> qcids = kb.getClassIds(kb.getDirectTypesBM(i));
+            ProfileQuery qp = profileMatcher.createProfileQueryFromClasses(qcids, null);
+            MatchSet matches = profileMatcher.findMatchProfile(qp);
+            for (Match match : matches.getMatches()) {
+                String j = match.getMatchId();
+                Set<String> tcids = kb.getClassIds(kb.getDirectTypesBM(j));
+                ProfileQuery tp = profileMatcher.createProfileQueryFromClasses(tcids, null);
+
+                                String fn = i.replaceAll(".*/", "");
+                //eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
+                Match pairMatch = profileMatcher.compareProfilePair(qp, tp);
+                
+                // note: scores may deiverge slightly; this is because
+                // disjointness axioms are used for to populate negative class
+                // assertions for individuals at KB creation time 
+                System.out.println("COMPARING: "+i+" -vs- "+j);
+                System.out.println(pairMatch);
+                System.out.println(match);
+                System.out.println("---");
+            }
+
+        }
+    }
+
     public void testBasicWithFilter() throws Exception {
         loadSimplePhenoWithNegation();
-       // ProfileQuery pq = profileMatcher.createProfileQuery("http://x.org/ind-dec-all");
+        // ProfileQuery pq = profileMatcher.createProfileQuery("http://x.org/ind-dec-all");
 
     }
 

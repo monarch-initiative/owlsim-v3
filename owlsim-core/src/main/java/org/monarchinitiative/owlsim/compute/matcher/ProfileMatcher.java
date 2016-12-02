@@ -1,8 +1,11 @@
 package org.monarchinitiative.owlsim.compute.matcher;
 
+import java.util.Set;
+
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
+import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 
@@ -45,6 +48,17 @@ public interface ProfileMatcher {
 	 * @return profile query corresponding to individual
 	 */
 	public ProfileQuery createPositiveProfileQuery(String individualId);
+	
+	/**
+	 * Create a query from a set of positive and negative class Ids
+	 * 
+	 * @param classIds
+	 * @param negatedClassIds
+	 * @return profile query
+	 */
+	public ProfileQuery createProfileQueryFromClasses(Set<String> classIds, 
+	        Set<String> negatedClassIds);
+	
 
 	
 	
@@ -69,6 +83,17 @@ public interface ProfileMatcher {
 	 * @throws IncoherentStateException 
 	 */
 	MatchSet findMatchProfile(ProfileQuery q, double alpha) throws UnknownFilterException, IncoherentStateException;
+
+	/**
+     * Finds matches for a given individual already known to the kb
+     * 
+     * @param q
+     * @param t
+     * @return scored matche
+     * @throws UnknownFilterException 
+     * @throws IncoherentStateException 
+     */
+    public Match compareProfilePair(ProfileQuery q, ProfileQuery t) throws UnknownFilterException, IncoherentStateException;
 
 	/**
 	 * 

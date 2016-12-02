@@ -52,6 +52,10 @@ public class FilterEngine {
 				ids.add(id);
 			}
 		}
+		if (filter instanceof AnonIndividualFilter) {
+		    // always include anon individuals
+		    ids.add(((AnonIndividualFilter)filter).toString());
+		}
 		return ids;	
 	}
 
@@ -100,6 +104,9 @@ public class FilterEngine {
 				return false;
 			}
 		}
+        else if (filter instanceof AnonIndividualFilter) {
+            return false;
+        }
 		else {
 			throw new UnknownFilterException(filter.toString());
 		}

@@ -62,7 +62,15 @@ public class EWAHKnowledgeBaseStore {
 	public EWAHCompressedBitmap getSuperClasses(int clsIndex) {
 		return storedSuperClasses[clsIndex];
 	}
-	
+
+    public EWAHCompressedBitmap getClasses(Set<Integer> clsIndices) {
+        EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+        for (int i : clsIndices) {
+                bm.set(i);
+        }
+        return bm;
+    }
+
 	/**
 	 * @param clsIndex
 	 * @param isDirect 

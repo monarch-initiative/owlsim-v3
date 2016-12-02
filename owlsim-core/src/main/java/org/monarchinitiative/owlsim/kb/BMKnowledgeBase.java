@@ -186,6 +186,12 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex);
 
+	/**
+     * @param classIds
+     * @return direct translation of a classId list to a bitmap
+     */
+    public EWAHCompressedBitmap getClassesBM(Set<String> classIds);
+
 		
 	/**
 	 * @param id - an individual

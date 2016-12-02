@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
+import org.monarchinitiative.owlsim.kb.filter.AnonIndividualFilter;
 import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -86,12 +87,12 @@ public class PhenodigmICProfileMatcher extends AbstractSemanticSimilarityProfile
 		// obtain target set and iterate through each one
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
-			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
+			EWAHCompressedBitmap targetProfileBM = getTypesBM(itemId);
 			
 			// calculate maximum IC
 			double maxScore = getScore(queryProfileBM, targetProfileBM);
 			
-			EWAHCompressedBitmap targetProfileDirectBM = knowledgeBase.getDirectTypesBM(itemId);
+			EWAHCompressedBitmap targetProfileDirectBM = getDirectTypesBM(itemId);
 			int tsize = targetProfileDirectBM.cardinality();
 			
 			// note: this is an experimental implementation that

@@ -808,6 +808,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex) {
 		return ontoEWAHStore.getSuperClasses(classIndex);
 	}
+	
+	public EWAHCompressedBitmap getClassesBM(Set<String> classIds) {
+	    EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
+	    for (String id : classIds) {
+	        bm.set(getClassIndex(id));
+	    }
+	    return bm;
+	}
+
 
 	public EWAHCompressedBitmap getDirectSuperClassesBM(int classIndex) {
 		return ontoEWAHStore.getDirectSuperClasses(classIndex);
