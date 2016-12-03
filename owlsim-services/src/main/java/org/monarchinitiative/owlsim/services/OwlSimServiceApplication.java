@@ -33,6 +33,7 @@ import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
 import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
 import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.inject.Guice;
@@ -83,12 +84,23 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
         config.setApiVersion("1.0.1");
         config.setBasePath(".." + environment.getApplicationContext().getContextPath());
     }
+    
+    /***
+     * Configure Jackson parameters
+     * @param environment
+     */
+    void configureJackson(Environment environment) {
+      // Some classes from commons-math do not have members to serialized. Ignore those or Jackson
+      // will throw an exception.
+      environment.getObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+    }
 
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
         environment.getApplicationContext().setContextPath("/api");
         configureSwagger(environment);
-
+        configureJackson(environment);
+        
         Concurrency concurrency = Concurrency.CONCURRENT;
         LOG.info("Creating injector...");
         Injector i = Guice.createInjector(
