@@ -17,31 +17,36 @@ import org.monarchinitiative.owlsim.services.exceptions.UnknownMatcherException;
 
 public class MatchResourceTest {
 
-	MatchResource match;
+  MatchResource match;
 
-	@Before
-	public void setup() {
-		match = new MatchResource();
-		ProfileMatcher matcher = mock(ProfileMatcher.class);
-		NegationAwareProfileMatcher negatedMatcher = mock(NegationAwareProfileMatcher.class);
-		match.matchers = new HashMap<>();
-		match.matchers.put("foo", matcher);
-		match.matchers.put("notfoo", negatedMatcher);
-	}
+  @Before
+  public void setup() {
+    match = new MatchResource();
+    ProfileMatcher matcher = mock(ProfileMatcher.class);
+    NegationAwareProfileMatcher negatedMatcher = mock(NegationAwareProfileMatcher.class);
+    match.matchers = new HashMap<>();
+    match.matchers.put("foo", matcher);
+    match.matchers.put("notfoo", negatedMatcher);
+  }
 
-	@Test(expected=UnknownMatcherException.class)
-	public void testUnkownMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("unknown", Collections.<String>emptySet(), Collections.<String>emptySet(), null, null);
-	}
-	
-	@Test(expected=NonNegatedMatcherException.class)
-	public void testNegatedIdsWithNonNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("foo", Collections.<String>emptySet(), newHashSet("not me"), null, null);
-	}
-	
-	@Test
-	public void testNegatedIdsWithNegatedMatcher() throws UnknownFilterException, IncoherentStateException {
-		match.getMatches("notfoo", Collections.<String>emptySet(), newHashSet("not me"), null, null);
-	}
+  @Test(expected = UnknownMatcherException.class)
+  public void testUnkownMatcher() throws UnknownFilterException, IncoherentStateException {
+    match.getMatches("unknown", Collections.<String>emptySet(), Collections.<String>emptySet(),
+        Collections.<String>emptySet(), null, null);
+  }
+
+  @Test(expected = NonNegatedMatcherException.class)
+  public void testNegatedIdsWithNonNegatedMatcher()
+      throws UnknownFilterException, IncoherentStateException {
+    match.getMatches("foo", Collections.<String>emptySet(),
+        newHashSet("not me"), Collections.<String>emptySet(), null, null);
+  }
+
+  @Test
+  public void testNegatedIdsWithNegatedMatcher()
+      throws UnknownFilterException, IncoherentStateException {
+    match.getMatches("notfoo", Collections.<String>emptySet(), Collections.<String>emptySet(),
+        newHashSet("not me"), null, null);
+  }
 
 }
