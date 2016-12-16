@@ -15,10 +15,9 @@
  */
 package org.monarchinitiative.owlsim.services.resources;
 
-import io.dropwizard.jersey.caching.CacheControl;
-
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -29,12 +28,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
-import org.monarchinitiative.owlsim.compute.mica.MICAStore;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
+import org.prefixcommons.CurieUtil;
 
 import com.codahale.metrics.annotation.Timed;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -42,54 +41,66 @@ import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 
+import io.dropwizard.jersey.caching.CacheControl;
+
 @Path("/ancestor")
 @Api(value = "/match", description = "match services")
-@Produces({ MediaType.APPLICATION_JSON })
+@Produces({MediaType.APPLICATION_JSON})
 public class AncestorResource {
-   
-    @Inject
-    MostInformativeCommonAncestorCalculator micaCalculator;
-    
-    @Inject
-    BMKnowledgeBase knowledgeBase;
 
-    @GET
-    @Path("/ancestors")
-    @Timed
-    @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
-    @ApiOperation(value = "Match", response = MatchSet.class, 
-    notes= "Additional notes on the match resource.")
-    public Set<String> getAncestors(
-            @ApiParam( value = "The name of the matcher to use", required = true)
-            @PathParam("matcher") String matcherName,
-            @ApiParam( value = "Class IDs to be matched", required = false)
-            @QueryParam("classIds") Set<String> classIds,
-            @ApiParam( value = "cutoff limit", required = false)
-            @QueryParam("limit") Integer limit
-            ) throws UnknownFilterException, IncoherentStateException {
-        
-        EWAHCompressedBitmap superBM = knowledgeBase.getSuperClassesBM(classIds);
-        return knowledgeBase.getClassIds(superBM);
-    }
+  @Inject
+  MostInformativeCommonAncestorCalculator micaCalculator;
 
-	@GET
-	@Path("/mica")
-	@Timed
-	@CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
-	@ApiOperation(value = "ICPair", response = ClassInformationContentPair.class, 
-	notes= "Additional notes on the match resource.")
-	public ClassInformationContentPair getMatches(
-            @ApiParam( value = "Class IDs to be matched", required = false)
-            @QueryParam("classIds1") Set<String> classIds1,
-            @ApiParam( value = "Class IDs to be matched", required = false)
-            @QueryParam("classIds2") Set<String> classIds2,
-			@ApiParam( value = "cutoff limit", required = false)
-			@QueryParam("limit") Integer limit
-	        ) throws UnknownFilterException, IncoherentStateException {
-		
-	    
-	    ClassInformationContentPair mica = micaCalculator.getMostInformativeCommonAncestorWithIC(classIds1, classIds2);
-		return mica;
-	}
+  @Inject
+  BMKnowledgeBase knowledgeBase;
+
+  @Inject
+  CurieUtil curieUtil;
+
+  @GET
+  @Path("/ancestors")
+  @Timed
+  @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
+  @ApiOperation(value = "Match", response = MatchSet.class,
+      notes = "Additional notes on the match resource.")
+  public Set<String> getAncestors(
+      @ApiParam(value = "The name of the matcher to use",
+          required = true) @PathParam("matcher") String matcherName,
+      @ApiParam(value = "Class IDs to be matched",
+          required = false) @QueryParam("classIds") Set<String> classIds,
+      @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
+      throws UnknownFilterException, IncoherentStateException {
+
+
+    Set<String> resolvedClassIds =
+        classIds.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
+    EWAHCompressedBitmap superBM = knowledgeBase.getSuperClassesBM(resolvedClassIds);
+    return knowledgeBase.getClassIds(superBM);
+  }
+
+  @GET
+  @Path("/mica")
+  @Timed
+  @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
+  @ApiOperation(value = "ICPair", response = ClassInformationContentPair.class,
+      notes = "Additional notes on the match resource.")
+  public ClassInformationContentPair getMatches(
+      @ApiParam(value = "Class IDs to be matched",
+          required = false) @QueryParam("classIds1") Set<String> classIds1,
+      @ApiParam(value = "Class IDs to be matched",
+          required = false) @QueryParam("classIds2") Set<String> classIds2,
+      @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
+      throws UnknownFilterException, IncoherentStateException {
+
+
+    Set<String> resolvedClassIds1 =
+        classIds1.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
+    Set<String> resolvedClassIds2 =
+        classIds2.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
+
+    ClassInformationContentPair mica =
+        micaCalculator.getMostInformativeCommonAncestorWithIC(resolvedClassIds1, resolvedClassIds2);
+    return mica;
+  }
 
 }

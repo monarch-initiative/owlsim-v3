@@ -19,6 +19,11 @@ public interface Match {
 	 * @return id of the matched individual
 	 */
 	public String getMatchId();
+	
+	/**
+     * @param matchId The matchId to set
+     */
+    public void setMatchId(String matchId);
 
 	/**
 	 * @return label of the matched individual

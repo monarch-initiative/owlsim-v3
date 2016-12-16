@@ -6,7 +6,7 @@ target/
 ./src/test/resources/catalog-v001.xml
 *iml
 .idea
-/bin/
+**/bin/
 **/semantic.cache
 owlsim-services/js
 owlsim-services/python

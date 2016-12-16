@@ -87,8 +87,8 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 
 	private Logger LOG = Logger.getLogger(BayesianNetworkProfileMatcher.class);
 
-	double falseNegativeRate = 0.01; // TODO - do not harcode
-	double falsePositiveRate = 0.01; // TODO - do not harcode
+	double falseNegativeRate = 0.01; // TODO - do not hardcode
+	double falsePositiveRate = 0.01; // TODO - do not hardcode
 
 	ConditionalProbabilityIndex cpi = null; // index of Pr(Node={on,off}|ParentsState)
 
