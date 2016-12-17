@@ -1,11 +1,14 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
+import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -50,7 +53,7 @@ public class CoAnnotationStatsTest {
 				.addRandomIndividuals(numIndividuals, avgClassesPerIndividual)
 				.getOntology();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
-		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf, new CurieUtil(new HashMap<String, String>()));
 		LOG.info("Knowledge base ready ...");
 	}
 

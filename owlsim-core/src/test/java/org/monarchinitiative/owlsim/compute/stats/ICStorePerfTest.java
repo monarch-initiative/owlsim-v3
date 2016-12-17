@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.compute.stats;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -83,7 +85,7 @@ public class ICStorePerfTest {
 				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals, avgClassesPerIndividual).getOntology();
 
 		OWLReasonerFactory rf = new ElkReasonerFactory();
-		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf, new CurieUtil(new HashMap<String, String>()));
 		icc = new ICStatsCalculator(kb);
 		LOG.info("creating ICStoreSummary");
 		long t1 = System.currentTimeMillis();

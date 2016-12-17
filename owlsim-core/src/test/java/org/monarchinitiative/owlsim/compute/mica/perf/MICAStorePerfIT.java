@@ -1,6 +1,7 @@
 package org.monarchinitiative.owlsim.compute.mica.perf;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -14,6 +15,7 @@ import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.io.JSONWriter;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -82,7 +84,7 @@ public class MICAStorePerfIT {
 		OWLOntology ontology = 
 				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals).getOntology();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
-		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf, new CurieUtil(new HashMap<String, String>()));
 		kbsc = new KBStatsCalculator(kb);
 		LOG.info("creating MICAStore");
 		long t1 = System.currentTimeMillis();

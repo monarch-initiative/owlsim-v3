@@ -1,11 +1,16 @@
 package org.monarchinitiative.owlsim.compute.mica;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
 import org.monarchinitiative.owlsim.eval.RandomOntologyMaker;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -27,7 +32,6 @@ public class MICAStoreBench extends Benchmark {
 	protected MICAStore micaStore;
 	private Logger LOG = Logger.getLogger(MICAStoreBench.class);
 	protected boolean writeToStdout = false;
-
 
 	public static class Benchmark1 {
 		void timeNanoTime(int reps) {
@@ -55,7 +59,7 @@ public class MICAStoreBench extends Benchmark {
 		OWLOntology ontology = 
 				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals).getOntology();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
-		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf, new CurieUtil(new HashMap<String, String>()));
 		LOG.info("creating MICAStore");
 		MICAStore micaStore = new MICAStoreImpl(kb);
 		LOG.info("created MICAStore");

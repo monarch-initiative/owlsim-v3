@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2014 The OwlSim authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.monarchinitiative.owlsim.services.resources;
 
 import java.util.Set;
@@ -33,7 +18,6 @@ import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCa
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.prefixcommons.CurieUtil;
 
 import com.codahale.metrics.annotation.Timed;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -54,9 +38,6 @@ public class AncestorResource {
   @Inject
   BMKnowledgeBase knowledgeBase;
 
-  @Inject
-  CurieUtil curieUtil;
-
   @GET
   @Path("/ancestors")
   @Timed
@@ -71,10 +52,7 @@ public class AncestorResource {
       @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
       throws UnknownFilterException, IncoherentStateException {
 
-
-    Set<String> resolvedClassIds =
-        classIds.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
-    EWAHCompressedBitmap superBM = knowledgeBase.getSuperClassesBM(resolvedClassIds);
+    EWAHCompressedBitmap superBM = knowledgeBase.getSuperClassesBM(classIds);
     return knowledgeBase.getClassIds(superBM);
   }
 
@@ -92,14 +70,8 @@ public class AncestorResource {
       @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
       throws UnknownFilterException, IncoherentStateException {
 
-
-    Set<String> resolvedClassIds1 =
-        classIds1.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
-    Set<String> resolvedClassIds2 =
-        classIds2.stream().map(id -> curieUtil.getIri(id).or(id)).collect(Collectors.toSet());
-
     ClassInformationContentPair mica =
-        micaCalculator.getMostInformativeCommonAncestorWithIC(resolvedClassIds1, resolvedClassIds2);
+        micaCalculator.getMostInformativeCommonAncestorWithIC(classIds1, classIds2);
     return mica;
   }
 

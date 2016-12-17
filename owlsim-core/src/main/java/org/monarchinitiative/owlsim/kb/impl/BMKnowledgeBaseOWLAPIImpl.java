@@ -142,9 +142,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     }
   }
 
-  public static BMKnowledgeBase create(OWLOntology owlOntology, OWLReasonerFactory rf) {
-    return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf,
-        new CurieUtil(new HashMap<String, String>())); // TODO CURIE support?
+  public static BMKnowledgeBase create(OWLOntology owlOntology, OWLReasonerFactory rf,
+      CurieUtil curieUtil) {
+    return new BMKnowledgeBaseOWLAPIImpl(owlOntology, null, rf, curieUtil);
   }
 
   /**
@@ -154,9 +154,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
    * @return
    */
   public static BMKnowledgeBase create(OWLOntology owlOntology, OWLOntology owlDataOntology,
-      OWLReasonerFactory rf) {
-    return new BMKnowledgeBaseOWLAPIImpl(owlOntology, owlDataOntology, rf,
-        new CurieUtil(new HashMap<String, String>())); // TODO CURIE support?
+      OWLReasonerFactory rf, CurieUtil curieUtil) {
+    return new BMKnowledgeBaseOWLAPIImpl(owlOntology, owlDataOntology, rf, curieUtil);
   }
 
 
@@ -174,9 +173,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 
   private String getShortForm(IRI iri) {
-    LOG.info("getShortForm: " + iri.toString());
-    //return curieUtil.getCurie(iri.toString()).or(iri.toString());
-    return curieMapper.getShortForm(iri);
+    // TODO not great to have a mix of IRI and CURIE
+    return curieUtil.getCurie(iri.toString()).or(iri.toString());
   }
 
   private void populateLabelsFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
@@ -393,8 +391,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
           if (obj instanceof OWLLiteral) {
             addPropertyValue(pvm, pid, ((OWLLiteral) obj).getLiteral());
           } else if (obj instanceof OWLNamedIndividual) {
-            addPropertyValue(pvm, pid,
-                getShortForm(((OWLNamedIndividual) obj).getIRI()));
+            addPropertyValue(pvm, pid, getShortForm(((OWLNamedIndividual) obj).getIRI()));
 
           }
 
@@ -404,8 +401,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
           if (obj instanceof OWLLiteral) {
             addPropertyValue(pvm, pid, ((OWLLiteral) obj).getLiteral());
           } else if (obj instanceof OWLNamedIndividual) {
-            addPropertyValue(pvm, pid,
-                getShortForm(((OWLNamedIndividual) obj).getIRI()));
+            addPropertyValue(pvm, pid, getShortForm(((OWLNamedIndividual) obj).getIRI()));
 
           }
 
@@ -995,12 +991,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
   }
 
   /**
-   * @param id
+   * @param id CURIE-style
    * @return OWLAPI Class object
    */
   protected OWLClass getOWLClass(String id) {
     Preconditions.checkNotNull(id);
-    return getOWLClass(IRI.create(id));
+    // TODO not great to have a mix of IRI and CURIE
+    String iri = curieUtil.getIri(id).or(id);
+    return getOWLClass(IRI.create(iri));
   }
 
   /**
@@ -1020,12 +1018,14 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
   }
 
   /**
-   * @param id
+   * @param id CURIE-style
    * @return OWLAPI Class object
    */
   public OWLNamedIndividual getOWLNamedIndividual(String id) {
     Preconditions.checkNotNull(id);
-    return getOWLNamedIndividual(IRI.create(id));
+    // TODO not great to have a mix of IRI and CURIE
+    String iri = curieUtil.getIri(id).or(id);
+    return getOWLNamedIndividual(IRI.create(iri));
   }
 
   public Attribute getAttribute(String id) {

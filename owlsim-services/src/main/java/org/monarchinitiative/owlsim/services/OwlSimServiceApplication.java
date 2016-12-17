@@ -101,8 +101,6 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
         configureSwagger(environment);
         configureJackson(environment);
         
-        System.out.println(configuration.getCuries());
-        
         Concurrency concurrency = Concurrency.CONCURRENT;
         LOG.info("Creating injector...");
         Injector i = Guice.createInjector(
