@@ -48,7 +48,7 @@ public class OWLLoader {
   OWLReasonerFactory owlReasonerFactory = new ElkReasonerFactory();
 
   @Inject
-  CurieUtil curieUtil;
+  CurieUtil curieUtil = new CurieUtil(new HashMap<String, String>());
 
   /**
    * @param iri
@@ -230,10 +230,6 @@ public class OWLLoader {
    */
   public BMKnowledgeBase createKnowledgeBaseInterface() {
     // TODO: use factories, or injection
-    // TODO hack for unit tests
-    if (curieUtil == null) {
-      curieUtil = new CurieUtil(new HashMap<String, String>());
-    }
     return BMKnowledgeBaseOWLAPIImpl.create(owlOntology, owlDataOntology, owlReasonerFactory,
         curieUtil);
   }
