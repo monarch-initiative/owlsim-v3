@@ -170,11 +170,12 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     this.kbMetdata = kbMetdata;
   }
 
-
-
   private String getShortForm(IRI iri) {
-    // TODO not great to have a mix of IRI and CURIE
-    return curieUtil.getCurie(iri.toString()).or(iri.toString());
+    if (curieUtil.getCurieMap().isEmpty()) {
+      return iri.toString();
+    } else {
+      return curieUtil.getCurie(iri.toString()).get();
+    }
   }
 
   private void populateLabelsFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
@@ -996,9 +997,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
    */
   protected OWLClass getOWLClass(String id) {
     Preconditions.checkNotNull(id);
-    // TODO not great to have a mix of IRI and CURIE
-    String iri = curieUtil.getIri(id).or(id);
-    return getOWLClass(IRI.create(iri));
+    if (curieUtil.getCurieMap().isEmpty()) {
+      return getOWLClass(IRI.create(id));
+    } else {
+      return getOWLClass(IRI.create(curieUtil.getIri(id).get()));
+    }
   }
 
   /**
@@ -1023,9 +1026,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
    */
   public OWLNamedIndividual getOWLNamedIndividual(String id) {
     Preconditions.checkNotNull(id);
-    // TODO not great to have a mix of IRI and CURIE
-    String iri = curieUtil.getIri(id).or(id);
-    return getOWLNamedIndividual(IRI.create(iri));
+    if (curieUtil.getCurieMap().isEmpty()) {
+      return getOWLNamedIndividual(IRI.create(id));
+    } else {
+      return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).get()));
+    }
   }
 
   public Attribute getAttribute(String id) {
