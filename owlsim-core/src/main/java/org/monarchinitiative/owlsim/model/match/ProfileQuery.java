@@ -23,12 +23,6 @@ public interface ProfileQuery {
 	public Set<String> getQueryClassIds();
 	
 	/**
-     * @param classIds classIds to set 
-     */
-    public void setQueryClassIds(Set<String> classIds);
-	
-	
-	/**
 	 * @return query filter
 	 */
 	public Filter getFilter();

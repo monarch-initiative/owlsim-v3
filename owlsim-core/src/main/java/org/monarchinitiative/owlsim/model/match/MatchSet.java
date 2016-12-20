@@ -19,19 +19,9 @@ public interface MatchSet {
 	public ProfileQuery getQuery();
 	
 	/**
-     * @param profileQuery a profile query
-     */
-    public void setQuery(ProfileQuery query);
-	
-	/**
 	 * @return all matches
 	 */
 	public List<Match> getMatches();
-	
-	/**
-     * @param matches List of matches
-     */
-    public void setMatches(List<Match> matches);
 
 	/**
 	 * @return all matches with rank
