@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.compute.eval.data;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,7 @@ import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.kb.impl.CURIEMapperImpl;
 import org.monarchinitiative.owlsim.kb.impl.LabelMapperImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -420,7 +422,7 @@ public class SimulatedDataTest {
 		OWLOntology ontology = 
 				RandomOntologyMaker.create(numClasses, avgParents).addRandomIndividuals(numIndividuals).getOntology();
 		OWLReasonerFactory rf = new ElkReasonerFactory();
-		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf);
+		kb = BMKnowledgeBaseOWLAPIImpl.create(ontology, rf, new CurieUtil(new HashMap<String, String>()));
 	}
 	
 }

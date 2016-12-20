@@ -17,6 +17,8 @@ package org.monarchinitiative.owlsim.services.configuration;
 
 import io.dropwizard.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -31,6 +33,8 @@ public class ApplicationConfiguration extends Configuration {
 
     @NotNull
     private Set<String> dataTsvs;
+    
+    private Map<String, String> curies = new HashMap<String, String>();
 
     public Set<String> getOntologyUris() {
         return ontologyUris;
@@ -42,6 +46,10 @@ public class ApplicationConfiguration extends Configuration {
 
     public Set<String> getDataTsvs() {
         return dataTsvs;
+    }
+
+    public Map<String, String> getCuries() {
+        return curies;
     }
 
 }

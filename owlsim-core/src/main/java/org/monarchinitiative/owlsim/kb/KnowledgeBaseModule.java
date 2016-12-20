@@ -7,8 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.zip.GZIPInputStream;
 
 import javax.inject.Singleton;
@@ -18,21 +18,16 @@ import org.monarchinitiative.owlsim.kb.bindings.IndicatesDataTsvs;
 import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlDataOntologies;
 import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlOntologies;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
+import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.HasAxioms;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
-import uk.ac.manchester.cs.owl.owlapi.concurrent.NoOpReadWriteLock;
-
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -48,14 +43,17 @@ public class KnowledgeBaseModule extends AbstractModule {
 	private final ImmutableCollection<String> ontologyUris;
     private final ImmutableCollection<String> ontologyDataUris;
     private final ImmutableCollection<String> dataTsvs;
+    private final ImmutableMap<String, String> curies;
 	private final UrlValidator urlValdiator = UrlValidator.getInstance();
 
 	public KnowledgeBaseModule(Collection<String> ontologyUris, 
 	        Collection<String> ontologyDataUris, 
-	        Set<String> dataTsvs) {
+	        Set<String> dataTsvs,
+	        Map<String, String> curies) {
 		this.ontologyUris = new ImmutableSet.Builder<String>().addAll(ontologyUris).build();
         this.ontologyDataUris = new ImmutableSet.Builder<String>().addAll(ontologyDataUris).build();
         this.dataTsvs = new ImmutableSet.Builder<String>().addAll(dataTsvs).build();
+        this.curies = new ImmutableMap.Builder<String, String>().putAll(curies).build();
 	}
 
 	@Override
@@ -63,6 +61,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 	    
 		bind(BMKnowledgeBase.class).to(BMKnowledgeBaseOWLAPIImpl.class).in(Singleton.class);
 		bind(OWLReasonerFactory.class).to(ElkReasonerFactory.class);
+		bind(CurieUtil.class).toInstance(new CurieUtil(curies));
 //		bind(OWLOntologyManager.class).to(OWLOntologyManagerImpl.class);
 //		bind(ReadWriteLock.class).to(NoOpReadWriteLock.class);
 //        bind(OWLDataFactory.class).to(OWLDataFactoryImpl.class);

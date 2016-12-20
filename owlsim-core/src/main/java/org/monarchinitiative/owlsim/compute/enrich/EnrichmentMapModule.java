@@ -1,15 +1,12 @@
 package org.monarchinitiative.owlsim.compute.enrich;
 
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.enrich.impl.HypergeometricEnrichmentEngine;
-import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
 
-import com.google.common.reflect.ClassPath;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;

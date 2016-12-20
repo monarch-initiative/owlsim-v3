@@ -12,7 +12,7 @@ public interface CURIEMapper {
 
 	/**
 	 * @param iri
-	 * @return Shorform (aka ID, CURIE)
+	 * @return Short form (aka ID, CURIE)
 	 */
 	public String getShortForm(IRI iri);
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014 The SciGraph authors
+ * Copyright (C) 2014 The OwlSim authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,8 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
                 new KnowledgeBaseModule(
                         configuration.getOntologyUris(),
                         configuration.getOntologyDataUris(),
-                        configuration.getDataTsvs()
+                        configuration.getDataTsvs(),
+                        configuration.getCuries()
                         ),
                         new EnrichmentMapModule(),
                         new MatcherMapModule());
