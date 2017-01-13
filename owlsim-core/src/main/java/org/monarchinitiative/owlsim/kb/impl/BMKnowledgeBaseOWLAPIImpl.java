@@ -52,6 +52,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 import com.hp.hpl.jena.query.Query;
@@ -174,7 +175,13 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     if (curieUtil.getCurieMap().isEmpty()) {
       return iri.toString();
     } else {
-      return curieUtil.getCurie(iri.toString()).get();
+        Optional<String> curie = curieUtil.getCurie(iri.toString());
+        if (curie.isPresent()) {
+            return curie.get();
+        }
+        else {
+            return iri.toString();
+        }
     }
   }
 
