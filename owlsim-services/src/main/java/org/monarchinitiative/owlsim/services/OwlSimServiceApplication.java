@@ -15,14 +15,14 @@
  */
 package org.monarchinitiative.owlsim.services;
 
-import io.dropwizard.Application;
-import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-
+import java.util.EnumSet;
 import java.util.Set;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentMapModule;
 import org.monarchinitiative.owlsim.compute.matcher.MatcherMapModule;
 import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
@@ -30,23 +30,21 @@ import org.monarchinitiative.owlsim.services.configuration.ApplicationConfigurat
 import org.semanticweb.owlapi.OWLAPIParsersModule;
 import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
 
-import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
-import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.wordnik.swagger.config.ConfigFactory;
-import com.wordnik.swagger.config.ScannerFactory;
-import com.wordnik.swagger.config.SwaggerConfig;
-import com.wordnik.swagger.jaxrs.config.DefaultJaxrsScanner;
-import com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider;
-import com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON;
-import com.wordnik.swagger.jaxrs.listing.ResourceListingProvider;
-import com.wordnik.swagger.jaxrs.reader.DefaultJaxrsApiReader;
-import com.wordnik.swagger.reader.ClassReaders;
+
+import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
+import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 
 public class OwlSimServiceApplication extends Application<ApplicationConfiguration> {
 
@@ -75,14 +73,27 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
      * @param environment
      */
     void configureSwagger(Environment environment) {
-        environment.jersey().register(new ApiListingResourceJSON());
-        environment.jersey().register(new ApiDeclarationProvider());
-        environment.jersey().register(new ResourceListingProvider());
-        ScannerFactory.setScanner(new DefaultJaxrsScanner());
-        ClassReaders.setReader(new DefaultJaxrsApiReader());
-        SwaggerConfig config = ConfigFactory.config();
-        config.setApiVersion("1.0.1");
-        config.setBasePath(".." + environment.getApplicationContext().getContextPath());
+        environment.jersey().register(new ApiListingResource());
+        environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        BeanConfig config = new BeanConfig();
+        config.setTitle("Swagger sample app");
+        config.setVersion("1.0.0");
+        config.setResourcePackage("org.monarchinitiative.owlsim.services.resources");
+        config.setScan(true);
+        config.setBasePath(environment.getApplicationContext().getContextPath());
+    }
+
+    void configureCors(Environment environment) {
+        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+  
+        // Configure CORS parameters
+        cors.setInitParameter("allowedOrigins", "*");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+  
+        // Add URL mapping
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
     
     /***
@@ -100,6 +111,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
         environment.getApplicationContext().setContextPath("/api");
         configureSwagger(environment);
         configureJackson(environment);
+        configureCors(environment);
         
         Concurrency concurrency = Concurrency.CONCURRENT;
         LOG.info("Creating injector...");
