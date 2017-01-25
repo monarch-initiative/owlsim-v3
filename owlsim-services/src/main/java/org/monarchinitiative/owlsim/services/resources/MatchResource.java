@@ -59,8 +59,8 @@ public class MatchResource {
   public MatchSet getMatches(
       @ApiParam(value = "The name of the matcher to use",
           required = true) @PathParam("matcher") String matcherName,
-      @ApiParam(value = "Class IDs to be matched", required = false,
-          allowMultiple = true) @QueryParam("id") Set<String> ids,
+      @ApiParam(value = "Class IDs to be matched",
+          required = false) @QueryParam("id") Set<String> ids,
       @ApiParam(value = "Negated Class IDs",
           required = false) @QueryParam("negatedId") Set<String> negatedIds,
       @ApiParam(value = "Target Class IDs",

@@ -60,4 +60,4 @@ or for some versions of dropwizard:
 
 Example query using default config:
 
-http://localhost:8080/api/match/jaccard?id=X:Fheart-morphology&id=X:brain-morphology
+http://localhost:8080/api/match/jaccard?id=X:heart-morphology&id=X:brain-morphology
