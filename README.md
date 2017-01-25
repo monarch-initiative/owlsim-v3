@@ -58,6 +58,6 @@ or for some versions of dropwizard:
  * http://localhost:8080/api/docs/
  * http://localhost:8080/api/match/matchers 
 
-Example query using default config (TODO: map URIs to CURIEs)
+Example query using default config:
 
-http://localhost:8080/api/match/jaccard?id=http%3A%2F%2Fx.org%2Fheart-morphology&http%3A%2F%2Fx.org%2Fbrain-morphology
+http://localhost:8080/api/match/jaccard?id=X:Fheart-morphology&id=X:brain-morphology
