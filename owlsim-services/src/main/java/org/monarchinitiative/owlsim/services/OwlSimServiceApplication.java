@@ -77,7 +77,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
         environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         BeanConfig config = new BeanConfig();
-        config.setTitle("Swagger sample app");
+        config.setTitle("owlsim - Web Services");
         config.setVersion("1.0.0");
         config.setResourcePackage("org.monarchinitiative.owlsim.services.resources");
         config.setScan(true);
