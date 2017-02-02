@@ -1007,7 +1007,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     if (curieUtil.getCurieMap().isEmpty()) {
       return getOWLClass(IRI.create(id));
     } else {
-      return getOWLClass(IRI.create(curieUtil.getIri(id).get()));
+      return getOWLClass(IRI.create(curieUtil.getIri(id).or(id)));
     }
   }
 
@@ -1036,7 +1036,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     if (curieUtil.getCurieMap().isEmpty()) {
       return getOWLNamedIndividual(IRI.create(id));
     } else {
-      return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).get()));
+      return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).or(id)));
     }
   }
 
