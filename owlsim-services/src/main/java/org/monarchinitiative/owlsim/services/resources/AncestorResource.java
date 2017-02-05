@@ -39,7 +39,7 @@ public class AncestorResource {
   BMKnowledgeBase knowledgeBase;
 
   @GET
-  @Path("/ancestors")
+  @Path("/ancestors/{matcher}")
   @Timed
   @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
   @ApiOperation(value = "Match", response = MatchSet.class,
@@ -62,7 +62,7 @@ public class AncestorResource {
   @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
   @ApiOperation(value = "ICPair", response = ClassInformationContentPair.class,
       notes = "Additional notes on the match resource.")
-  public ClassInformationContentPair getMatches(
+  public ClassInformationContentPair getMicaMatches(
       @ApiParam(value = "Class IDs to be matched",
           required = false) @QueryParam("classIds1") Set<String> classIds1,
       @ApiParam(value = "Class IDs to be matched",
