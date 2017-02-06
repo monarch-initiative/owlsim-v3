@@ -39,14 +39,12 @@ public class AncestorResource {
   BMKnowledgeBase knowledgeBase;
 
   @GET
-  @Path("/ancestors/{matcher}")
+  @Path("/ancestors")
   @Timed
   @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
   @ApiOperation(value = "Match", response = MatchSet.class,
       notes = "Additional notes on the match resource.")
   public Set<String> getAncestors(
-      @ApiParam(value = "The name of the matcher to use",
-          required = true) @PathParam("matcher") String matcherName,
       @ApiParam(value = "Class IDs to be matched",
           required = false) @QueryParam("classIds") Set<String> classIds,
       @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
