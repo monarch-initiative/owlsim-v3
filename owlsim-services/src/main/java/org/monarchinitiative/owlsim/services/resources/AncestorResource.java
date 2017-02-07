@@ -45,8 +45,6 @@ public class AncestorResource {
   @ApiOperation(value = "Match", response = MatchSet.class,
       notes = "Additional notes on the match resource.")
   public Set<String> getAncestors(
-      @ApiParam(value = "The name of the matcher to use",
-          required = true) @PathParam("matcher") String matcherName,
       @ApiParam(value = "Class IDs to be matched",
           required = false) @QueryParam("classIds") Set<String> classIds,
       @ApiParam(value = "cutoff limit", required = false) @QueryParam("limit") Integer limit)
@@ -62,7 +60,7 @@ public class AncestorResource {
   @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
   @ApiOperation(value = "ICPair", response = ClassInformationContentPair.class,
       notes = "Additional notes on the match resource.")
-  public ClassInformationContentPair getMatches(
+  public ClassInformationContentPair getMicaMatches(
       @ApiParam(value = "Class IDs to be matched",
           required = false) @QueryParam("classIds1") Set<String> classIds1,
       @ApiParam(value = "Class IDs to be matched",

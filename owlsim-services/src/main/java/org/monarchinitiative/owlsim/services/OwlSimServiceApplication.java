@@ -79,6 +79,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
         BeanConfig config = new BeanConfig();
         config.setTitle("owlsim - Web Services");
         config.setVersion("1.0.0");
+        config.setTermsOfServiceUrl("https://github.com/monarch-initiative/owlsim-v3"); // TODO proper TOS
         config.setResourcePackage("org.monarchinitiative.owlsim.services.resources");
         config.setScan(true);
         config.setBasePath(environment.getApplicationContext().getContextPath());

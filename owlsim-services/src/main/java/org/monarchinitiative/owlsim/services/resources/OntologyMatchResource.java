@@ -50,7 +50,7 @@ public class OntologyMatchResource {
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
     @ApiOperation(value = "Match", response = MatchSet.class,
     notes = "Additional notes on the match resource.")
-    public List<SimpleClassMatch> getMatches(
+    public List<SimpleClassMatch> getOntoMatches(
             @ApiParam(value = "base ontology, e.g. MP",
             required = true) @PathParam("queryOntology") String queryOntology,
             @ApiParam(value = "ontology to be matched, e.g. HP",
