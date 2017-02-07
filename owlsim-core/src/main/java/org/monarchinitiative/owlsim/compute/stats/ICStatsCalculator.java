@@ -205,7 +205,7 @@ public class ICStatsCalculator {
 		for (String cid : classIds) {
 			positions.add(knowledgeBase.getClassIndex(cid));
 		}
-		return EWAHUtils.converIndexSetToBitmap(positions);
+		return EWAHUtils.convertIndexSetToBitmap(positions);
 	}
 
 }

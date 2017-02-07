@@ -19,7 +19,7 @@ public class EWAHUtils {
 	 * @param bits - set of bits
 	 * @return Bitmap representation of set of ints
 	 */
-	public static EWAHCompressedBitmap converIndexSetToBitmap(Set<Integer> bits) {
+	public static EWAHCompressedBitmap convertIndexSetToBitmap(Set<Integer> bits) {
 		EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
 		ArrayList<Integer> bitlist = new ArrayList<Integer>(bits);
 		Collections.sort(bitlist); // EWAH assumes sorted, otherwise silent failure

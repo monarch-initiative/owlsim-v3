@@ -86,7 +86,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
         for (String cid : q.getQueryClassIds()) {
             positions.add(knowledgeBase.getClassIndex(cid));
         }
-        return EWAHUtils.converIndexSetToBitmap(positions);
+        return EWAHUtils.convertIndexSetToBitmap(positions);
     }
 
     // given an array of class IDs c1...cn, return an array S1...Sn,
@@ -114,7 +114,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
             int ci = knowledgeBase.getClassIndex(id);
             bits.addAll( knowledgeBase.getSubClasses(ci).getPositions() );
         }
-        return EWAHUtils.converIndexSetToBitmap(bits);
+        return EWAHUtils.convertIndexSetToBitmap(bits);
     }
 
     protected EWAHCompressedBitmap getDirectNegatedProfileBM(QueryWithNegation q) {
@@ -124,7 +124,7 @@ public abstract class AbstractProfileMatcher implements ProfileMatcher {
             int ci = knowledgeBase.getClassIndex(id);
             bits.add(ci);
         }
-        return EWAHUtils.converIndexSetToBitmap(bits);
+        return EWAHUtils.convertIndexSetToBitmap(bits);
     }
 
     protected Match createMatch(String matchId, String matchLabel, double s) {

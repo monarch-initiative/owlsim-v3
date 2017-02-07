@@ -230,7 +230,7 @@ public class HypergeometricEnrichmentEngine implements EnrichmentEngine {
             return kb.getIndividualsBM(q.getClassId());
         else if (q.getIndividualIds() != null) {
             Set<Integer> ixs = q.getIndividualIds().stream().map( x -> kb.getIndividualIndex(x)).collect(Collectors.toSet());
-            return EWAHUtils.converIndexSetToBitmap(ixs);
+            return EWAHUtils.convertIndexSetToBitmap(ixs);
         }
         else {
             return null;

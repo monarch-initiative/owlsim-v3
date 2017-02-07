@@ -41,7 +41,7 @@ public class LiftOneSimulatedData extends AbstractSimulatedData {
 	private EWAHCompressedBitmap[] createAttributeSetsRecursive(EWAHCompressedBitmap atts, EWAHCompressedBitmap[] derivedAtts) {
 
 		int thing = this.getKnowledgeBase().getRootIndex(); //is this OWL:Thing?
-		EWAHCompressedBitmap thingBM = EWAHUtils.converIndexSetToBitmap(new HashSet<Integer>(thing));
+		EWAHCompressedBitmap thingBM = EWAHUtils.convertIndexSetToBitmap(new HashSet<Integer>(thing));
 		EWAHCompressedBitmap[] attrSets = new EWAHCompressedBitmap[atts.cardinality()];
 
 		List<Integer> aList = atts.getPositions();

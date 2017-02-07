@@ -97,7 +97,7 @@ public class NaiveBayesFixedWeightTwoStateProfileMatcher extends AbstractProfile
 			}
 		}
 
-		return onQueryNodesBM.or(EWAHUtils.converIndexSetToBitmap(nodesWithOnParents));
+		return onQueryNodesBM.or(EWAHUtils.convertIndexSetToBitmap(nodesWithOnParents));
 	}
 
 	/**

@@ -62,7 +62,7 @@ public class RemoveByICThresholdSimulatedData extends AbstractSimulatedData {
 			}
 		}
 		if (s.size() > 0) {
-			attrSets[0] = EWAHUtils.converIndexSetToBitmap(s);
+			attrSets[0] = EWAHUtils.convertIndexSetToBitmap(s);
 		}
 		
 		return attrSets;
