@@ -232,7 +232,7 @@ public class RemoveByCategorySimulatedData extends AbstractSimulatedData {
 					j++;
 				}
 				//make BM from set
-				bm = EWAHUtils.converIndexSetToBitmap(s);
+				bm = EWAHUtils.convertIndexSetToBitmap(s);
 				double finalSumIC= calc.getICStatsForAttributesByBM(bm).getSum();
 				LOG.info("finalIC= "+(finalSumIC)+" targetIC="+(sumIC-categorySumIC)+" removed |n|="+(atts.cardinality()-bm.cardinality()));
 				if (bm.cardinality() > 0) {

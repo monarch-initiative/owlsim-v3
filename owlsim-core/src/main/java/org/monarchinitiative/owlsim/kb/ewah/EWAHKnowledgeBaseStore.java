@@ -216,7 +216,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @return all classes directly instantiated by individual, that are subclasses of classIndex
 	 */
 	public EWAHCompressedBitmap getDirectTypes(Set<Integer> clsIndices, int classIndex) {
-		EWAHCompressedBitmap bm = EWAHUtils.converIndexSetToBitmap(clsIndices);
+		EWAHCompressedBitmap bm = EWAHUtils.convertIndexSetToBitmap(clsIndices);
 		EWAHCompressedBitmap subclasses = getSubClasses(classIndex);
 		return bm.and(subclasses);
 	}
@@ -267,7 +267,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param superClasses
 	 */
 	public void setSuperClasses(int clsIndex, Set<Integer> superClasses) {
-		 storedSuperClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(superClasses);
+		 storedSuperClasses[clsIndex] = EWAHUtils.convertIndexSetToBitmap(superClasses);
 	}
 
 	/**
@@ -278,7 +278,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param superClasses
 	 */
 	public void setDirectSuperClasses(int clsIndex, Set<Integer> superClasses) {
-		 storedDirectSuperClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(superClasses);
+		 storedDirectSuperClasses[clsIndex] = EWAHUtils.convertIndexSetToBitmap(superClasses);
 	}
 	
 	
@@ -304,7 +304,7 @@ public class EWAHKnowledgeBaseStore {
 	 */
 	public void setDirectSubClasses(int clsIndex,
 			Set<Integer> subClasses) {
-		storedDirectSubClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(subClasses);
+		storedDirectSubClasses[clsIndex] = EWAHUtils.convertIndexSetToBitmap(subClasses);
 	}
 	
 	/**
@@ -313,7 +313,7 @@ public class EWAHKnowledgeBaseStore {
 	 */
 	public void setSubClasses(int clsIndex,
 			Set<Integer> subClasses) {
-		storedSubClasses[clsIndex] = EWAHUtils.converIndexSetToBitmap(subClasses);
+		storedSubClasses[clsIndex] = EWAHUtils.convertIndexSetToBitmap(subClasses);
 	}
 	
 	
@@ -327,7 +327,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param types 
 	 */
 	public void setTypes(int individualIndex, Set<Integer> types) {
-		 storedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+		 storedTypes[individualIndex] = EWAHUtils.convertIndexSetToBitmap(types);
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param types 
 	 */
 	public void setDirectTypes(int individualIndex, Set<Integer> types) {
-		 storedDirectTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+		 storedDirectTypes[individualIndex] = EWAHUtils.convertIndexSetToBitmap(types);
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param types
 	 */
 	public void setNegatedTypes(int individualIndex, Set<Integer> types) {
-		 storedNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+		 storedNegatedTypes[individualIndex] = EWAHUtils.convertIndexSetToBitmap(types);
 	}
 	
 	/**
@@ -355,7 +355,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param types
 	 */
 	public void setDirectNegatedTypes(int individualIndex, Set<Integer> types) {
-		 storedDirectNegatedTypes[individualIndex] = EWAHUtils.converIndexSetToBitmap(types);
+		 storedDirectNegatedTypes[individualIndex] = EWAHUtils.convertIndexSetToBitmap(types);
 	}
 
 	
@@ -370,7 +370,7 @@ public class EWAHKnowledgeBaseStore {
 	 * @param individuals
 	 */
 	public void setDirectIndividuals(int classIndex, Set<Integer> individuals) {
-		storedDirectIndividuals[classIndex] = EWAHUtils.converIndexSetToBitmap(individuals);
+		storedDirectIndividuals[classIndex] = EWAHUtils.convertIndexSetToBitmap(individuals);
 	}
 
 	

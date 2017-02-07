@@ -257,7 +257,7 @@ public class SimulatedDataTest {
 			}
 			//for each individual, the things removed == original
 			LOG.info("i= "+i+" orig="+origBM.toString()+" removed="+removedCBits.toString()+" in "+derivedBMs.length+" sets");
-			Assert.assertTrue("Bits missing: "+origBM.andNot(EWAHUtils.converIndexSetToBitmap(removedCBits)), origBM.andNotCardinality(EWAHUtils.converIndexSetToBitmap(removedCBits))==0);
+			Assert.assertTrue("Bits missing: "+origBM.andNot(EWAHUtils.convertIndexSetToBitmap(removedCBits)), origBM.andNotCardinality(EWAHUtils.convertIndexSetToBitmap(removedCBits))==0);
 		}
 	}
 	

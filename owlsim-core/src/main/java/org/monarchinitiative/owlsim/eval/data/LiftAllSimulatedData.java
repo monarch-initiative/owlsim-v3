@@ -41,7 +41,7 @@ public class LiftAllSimulatedData extends AbstractSimulatedData {
 			throws Exception {
 
 		int thing = this.getKnowledgeBase().getRootIndex(); //is this OWL:Thing?
-		EWAHCompressedBitmap thingBM = EWAHUtils.converIndexSetToBitmap(new HashSet<Integer>(thing));
+		EWAHCompressedBitmap thingBM = EWAHUtils.convertIndexSetToBitmap(new HashSet<Integer>(thing));
 
 		EWAHCompressedBitmap liftAll = new EWAHCompressedBitmap();
 		EWAHCompressedBitmap[] attrSets = new EWAHCompressedBitmap[numLevels];

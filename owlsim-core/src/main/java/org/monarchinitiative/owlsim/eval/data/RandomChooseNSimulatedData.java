@@ -97,7 +97,7 @@ public class RandomChooseNSimulatedData extends AbstractSimulatedData {
 		//do this in a while loop instead of for loop
 		while ((subsetCounter < numSets) ) { //&& (subsetTries < 7*maxNumSets)
 			Set<Integer> randomSet = makeRandomSubset(atts, setLength);
-			sets.add(EWAHUtils.converIndexSetToBitmap(randomSet));
+			sets.add(EWAHUtils.convertIndexSetToBitmap(randomSet));
 //			LOG.info("Set size="+sets.size());
 			subsetCounter++;
 		}

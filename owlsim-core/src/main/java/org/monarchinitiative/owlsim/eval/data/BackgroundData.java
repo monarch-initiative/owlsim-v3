@@ -74,7 +74,7 @@ public class BackgroundData {
 			for (int j=0; j<setLength; j++) {
 				ibits.add(rand.nextInt(max));
 			}
-			bm = EWAHUtils.converIndexSetToBitmap(ibits);
+			bm = EWAHUtils.convertIndexSetToBitmap(ibits);
 //			LOG.info("Created random set with length "+setLength);
 			newbms[i] = bm;
 		}		
@@ -118,7 +118,7 @@ public class BackgroundData {
 			for (int j=0; j<setLength; j++) {
 				ibits.add(allClasses.get(rand.nextInt(max)));
 			}
-			bm = EWAHUtils.converIndexSetToBitmap(ibits);
+			bm = EWAHUtils.convertIndexSetToBitmap(ibits);
 //			LOG.info("Created random set with length "+setLength);
 			newbms[i] = bm;
 		}				

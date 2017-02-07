@@ -64,7 +64,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 			}
 		}
 
-		return onQueryNodesBM.or(EWAHUtils.converIndexSetToBitmap(nodesWithOnParents));
+		return onQueryNodesBM.or(EWAHUtils.convertIndexSetToBitmap(nodesWithOnParents));
 	}
 
 	// any negated query node that has at least one negated parent;
@@ -82,7 +82,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 			}
 		}
 
-		return EWAHUtils.converIndexSetToBitmap(nodes);
+		return EWAHUtils.convertIndexSetToBitmap(nodes);
 	}
 
 
@@ -148,10 +148,10 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
 			}
 
 		}
-		EWAHCompressedBitmap nodesQuPtBM = EWAHUtils.converIndexSetToBitmap(nodesQuPt);
-		EWAHCompressedBitmap nodesQuPuBM = EWAHUtils.converIndexSetToBitmap(nodesQuPu);
-		EWAHCompressedBitmap nodesQfPtBM = EWAHUtils.converIndexSetToBitmap(nodesQfPtu);
-		EWAHCompressedBitmap nodesQfPuBM = EWAHUtils.converIndexSetToBitmap(nodesQfPu);
+		EWAHCompressedBitmap nodesQuPtBM = EWAHUtils.convertIndexSetToBitmap(nodesQuPt);
+		EWAHCompressedBitmap nodesQuPuBM = EWAHUtils.convertIndexSetToBitmap(nodesQuPu);
+		EWAHCompressedBitmap nodesQfPtBM = EWAHUtils.convertIndexSetToBitmap(nodesQfPtu);
+		EWAHCompressedBitmap nodesQfPuBM = EWAHUtils.convertIndexSetToBitmap(nodesQfPu);
 
 
 		// include subclasses
