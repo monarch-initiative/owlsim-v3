@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.monarchinitiative.owlsim.compute.enrich.EnrichmentQuery;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentResult;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentResultSet;
 
@@ -11,14 +12,34 @@ public class EnrichmentResultSetImpl implements EnrichmentResultSet {
 
     boolean isSorted = false;
     private List<EnrichmentResult> results;
+    EnrichmentQuery query;
     
-    public EnrichmentResultSet create(List<EnrichmentResult> results) {
-        return new EnrichmentResultSetImpl(results);
+    
+    public EnrichmentResultSet create(EnrichmentQuery query, List<EnrichmentResult> results) {
+        return new EnrichmentResultSetImpl(query, results);
     }
     
-    public EnrichmentResultSetImpl(List<EnrichmentResult> results) {
+    public EnrichmentResultSetImpl(EnrichmentQuery query, List<EnrichmentResult> results) {
+        this.query = query;
         this.results = results;
     }
+    
+    
+    
+    /**
+     * @return the query
+     */
+    public EnrichmentQuery getQuery() {
+        return query;
+    }
+
+    /**
+     * @param query the query to set
+     */
+    public void setQuery(EnrichmentQuery query) {
+        this.query = query;
+    }
+
     /**
      * @return the results
      */

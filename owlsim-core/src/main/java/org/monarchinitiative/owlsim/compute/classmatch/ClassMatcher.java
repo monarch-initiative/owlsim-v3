@@ -35,11 +35,11 @@ public class ClassMatcher {
      * 
      * @param qOnt
      * @param tOnt
-     * @return
+     * @return list of matches
      */
     public List<SimpleClassMatch> matchOntologies(String qOnt, String tOnt) {
-        Set<String> qids = getClassIdsByOntology(qOnt);
-        Set<String> tids = getClassIdsByOntology(tOnt);
+        Set<String> qids = kb.getClassIdsByOntology(qOnt);
+        Set<String> tids = kb.getClassIdsByOntology(tOnt);
         return matchClassSets(qids, tids);
     }
 
@@ -79,15 +79,6 @@ public class ClassMatcher {
                 bestEqScore,
                 subClassScore,
                 superClassScore);
-    }
-
-    public Set<String> getClassIdsByOntology(String ont) {
-        return kb.getClassIdsInSignature().stream().filter(x -> isIn(x, ont)).collect(Collectors.toSet());
-    }
-
-    public boolean isIn(String id, String ont) {
-        // TODO - use curie util
-        return id.startsWith(ont+":") || id.contains("/"+ont+"_");      
     }
 
 }

@@ -83,6 +83,14 @@ public class CosineSimilarityProfileMatcher extends AbstractProfileMatcher imple
 		return mp;
 	}
 
+	/**
+	 * scaled square root
+	 * 
+	 * hypothesis is that working with integers is faster than floats, but this remains to be tested
+	 * 
+	 * @param n
+	 * @return sqrt(n) * 100
+	 */
 	public int getScaledSqrt(int n) {
 		return  (int) (Math.sqrt(n) * SCALE);
 	}

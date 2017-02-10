@@ -10,15 +10,14 @@ import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-public class HypergeometricEnrichmentEngineTest {
+public class HypergeometricEnrichmentEngineTest extends AbstractEnrichmentTest {
 
     private Logger LOG = Logger.getLogger(HypergeometricEnrichmentEngineTest.class);
-
-    BMKnowledgeBase kb;
 
     @Test
     public void test() throws OWLOntologyCreationException {
         load("simple-pheno-with-negation.owl");
+        LOG.info("doing enrichment");
         EnrichmentEngine ee = HypergeometricEnrichmentEngine.create(kb);
 
         for (String cid : kb.getClassIdsInSignature()) {
@@ -38,16 +37,6 @@ public class HypergeometricEnrichmentEngineTest {
         }
     }
 
-    /**
-     * Load an ontology from resources folder
-     * 
-     * @param fn
-     * @throws OWLOntologyCreationException
-     */
-    protected void load(String fn) throws OWLOntologyCreationException {
-        OWLLoader loader = new OWLLoader();
-        loader.load("src/test/resources/"+fn);
-        kb = loader.createKnowledgeBaseInterface();
-    }
+   
 
 }

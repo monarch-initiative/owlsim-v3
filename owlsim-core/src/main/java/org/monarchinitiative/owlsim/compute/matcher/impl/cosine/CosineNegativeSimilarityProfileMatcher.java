@@ -58,6 +58,7 @@ public class CosineNegativeSimilarityProfileMatcher extends CosineSimilarityProf
 	 */
 	public MatchSet findMatchProfileImpl(ProfileQuery q) throws UnknownFilterException {
 		
+        final int SCALE=1000;
 		final int SCALE_SQ=SCALE*SCALE;
 
 		EWAHCompressedBitmap qp = getProfileBM(q);
@@ -66,7 +67,6 @@ public class CosineNegativeSimilarityProfileMatcher extends CosineSimilarityProf
 		// TODO
 		MatchSet mp =  MatchSetImpl.create(q);
 		
-		final int SCALE=1000;
 		int sqrtQC = getScaledSqrt(qp.cardinality() + qn.cardinality());
 		EWAHCompressedBitmap onQueryNodesBM = getProfileBM(q);
 

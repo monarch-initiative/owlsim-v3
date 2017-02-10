@@ -283,6 +283,17 @@ public interface BMKnowledgeBase {
 	public Set<String> getClassIds(EWAHCompressedBitmap bm);
 	
 	/**
+	 * Returns class ids in the specified ontology.
+	 * 
+	 * Note: makes assumption about belonging to ontology based on IRI/ID
+	 * 
+	 * @param ont
+	 * @return classIds
+	 */
+	public Set<String> getClassIdsByOntology(String ont);
+
+	
+	/**
 	 * @return array indexed by classIndex yielding the number of individuals per class
 	 */
 	public int[] getIndividualCountPerClassArray();

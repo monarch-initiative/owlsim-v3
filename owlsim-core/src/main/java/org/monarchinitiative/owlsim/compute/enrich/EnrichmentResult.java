@@ -7,5 +7,8 @@ public interface EnrichmentResult {
     public void setRank(int rank);
     
     public String getEnrichedClassId();
+    
+    public double getpCorrected();
+    public double getpUnderRepresentedCorrected();
 
 }
