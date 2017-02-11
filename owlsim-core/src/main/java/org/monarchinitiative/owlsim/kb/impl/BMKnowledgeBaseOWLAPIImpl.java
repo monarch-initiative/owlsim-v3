@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -233,6 +234,20 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
       ids.add(getShortForm(i.getIRI()));
     }
     return ids;
+  }
+
+  public Set<String> getClassIdsByOntology(String ont) {
+      return getClassIdsInSignature().stream().filter(x -> isIn(x, ont)).collect(Collectors.toSet());
+  }
+
+  /**
+   * @param id
+   * @param ont
+   * @return true if id is in ontology
+   */
+  public boolean isIn(String id, String ont) {
+      // TODO - use curie util
+      return id.startsWith(ont+":") || id.contains("/"+ont+"_");
   }
 
   public int getNumClassNodes() {
