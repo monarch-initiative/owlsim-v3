@@ -181,10 +181,19 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
         double pvector[] = new double[indIds.size()];
         String indArr[] = new String[indIds.size()];
         int n=0;
+        
+        // pr(Q=f | H=t)
         double prFalseNegative = 0.000001;
-        double prFalsePositive = 0.00001; // 
-        double prFalseMiss = 0.01;       // like a weaker false negative
-        double prTrueMiss = 0.85;        // failure to make a call when hidden is false
+        
+        // pr(Q=t | H=f)
+        double prFalsePositive = 0.00001; 
+        
+        // pr(Q=u | H=t)  -- like a weaker false negative
+        double prFalseMiss = 0.01;
+        
+        // pr(Q=u | H=f) -- failure to make a call when hidden is false
+        double prTrueMiss = 0.85;        
+        
         //double prWeakFalsePositive = prFalsePositive * 100;
         //double prWeakFalsePositive = Math.exp(Math.log(prFalsePositive) /4 );
         double prWeakFalsePositive = 0.1;
@@ -211,11 +220,13 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
             // 3^3=27 combos for q (query), h (hidden) and p (parents)
             //  with states t, f and u 
 
+            // ---
             // *** Hidden/Target=TRUE
+            // ---
 
             // ** T,T
 
-            // P(qi=TRUE | hi=TRUE, p(qi)=TRUE) = 1-(FN + FALSEMISS)
+            // 1. P(qi=TRUE | hi=TRUE, p(qi)=TRUE) = 1-(FN + FALSEMISS)
             // note that if Q=t and H=t then it's impossible for P=u OR P=f;
             // hence we use QtBM
             int nQtHtPt = nodesQtBM.andCardinality(nodesHtBM);
@@ -266,7 +277,9 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
             }
 
 
+            // ---
             // *** Hidden/Target is FALSE
+            // ---
 
             // F,T
 
@@ -323,7 +336,9 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
             }
 
 
+            // ---
             // Hidden/Target is UNKNOWN (aka FALSE')
+            // ---
             // 'unknown' for a hidden state makes no sense; also it would introduce combinatorial explosions.
             // here we interpret the 3rd state as being logically FALSE, but as being false in a non-obvious way, with lower penalties for
             //  not observing the falseness
