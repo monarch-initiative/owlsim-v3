@@ -48,95 +48,113 @@ import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 
 public class OwlSimServiceApplication extends Application<ApplicationConfiguration> {
 
-    private Logger LOG = Logger.getLogger(OwlSimServiceApplication.class);
+	private Logger LOG = Logger.getLogger(OwlSimServiceApplication.class);
 
-    public static void main(String[] args) throws Exception {
-        new OwlSimServiceApplication().run(args);
-    }
+	public static void main(String[] args) throws Exception {
+		new OwlSimServiceApplication().run(args);
+	}
 
-    @Override
-    public String getName() {
-        return "owlsim Web Services";
-    }
+	@Override
+	public String getName() {
+		return "owlsim Web Services";
+	}
 
-    @Override
-    public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
-        initializeSwaggger(bootstrap);
-    }
+	@Override
+	public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
+		initializeSwaggger(bootstrap);
+	}
 
-    void initializeSwaggger(Bootstrap<ApplicationConfiguration> bootstrap) {
-        bootstrap.addBundle(new AssetsBundle("/swagger/", "/docs", "index.html"));
-    }
+	void initializeSwaggger(Bootstrap<ApplicationConfiguration> bootstrap) {
+		bootstrap.addBundle(new AssetsBundle("/swagger/", "/docs", "index.html"));
+	}
 
-    /***
-     * The context path must be set before configuring swagger
-     * @param environment
-     */
-    void configureSwagger(Environment environment) {
-        environment.jersey().register(new ApiListingResource());
-        environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+	/***
+	 * The context path must be set before configuring swagger
+	 * 
+	 * @param environment
+	 */
+	void configureSwagger(Environment environment) {
+		environment.jersey().register(new ApiListingResource());
+		environment.getObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        BeanConfig config = new BeanConfig();
-        config.setTitle("owlsim - Web Services");
-        config.setVersion("1.0.0");
-        config.setTermsOfServiceUrl("https://github.com/monarch-initiative/owlsim-v3"); // TODO proper TOS
-        config.setResourcePackage("org.monarchinitiative.owlsim.services.resources");
-        config.setScan(true);
-        config.setBasePath(environment.getApplicationContext().getContextPath());
-    }
+		BeanConfig config = new BeanConfig();
 
-    void configureCors(Environment environment) {
-        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
-  
-        // Configure CORS parameters
-        cors.setInitParameter("allowedOrigins", "*");
-        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
-        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
-  
-        // Add URL mapping
-        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-    }
-    
-    /***
-     * Configure Jackson parameters
-     * @param environment
-     */
-    void configureJackson(Environment environment) {
-      // Some classes from commons-math do not have members to serialized. Ignore those or Jackson
-      // will throw an exception.
-      environment.getObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-    }
+		// TODO does not work -
+		// https://github.com/swagger-api/swagger-core/issues/1594
+		// Info info = new Info();
+		// info.setVersion("1.0.0");
+		// Contact contact = new Contact();
+		// contact.setEmail("contact email");
+		// contact.setName("contact name");
+		// contact.setUrl("http://owlsim3.monarchinitiative.org/api/docs/");
+		// info.setContact(contact);
+		// config.setInfo(info);
 
-    @Override
-    public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-        environment.getApplicationContext().setContextPath("/api");
-        configureSwagger(environment);
-        configureJackson(environment);
-        configureCors(environment);
-        
-        Concurrency concurrency = Concurrency.CONCURRENT;
-        LOG.info("Creating injector...");
-        Injector i = Guice.createInjector(
-                new OWLAPIImplModule(concurrency),
-                new OWLAPIParsersModule(),
-                new OWLAPIServiceLoaderModule(),
-                new KnowledgeBaseModule(
-                        configuration.getOntologyUris(),
-                        configuration.getOntologyDataUris(),
-                        configuration.getDataTsvs(),
-                        configuration.getCuries()
-                        ),
-                        new EnrichmentMapModule(),
-                        new MatcherMapModule());
-        LOG.info("BINDINGS ="+i.getAllBindings());
-        //Add resources
-        Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
-                .getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");
-        for (ClassInfo resourceClass: resourceClasses) {
-            Class<?> c = resourceClass.load();
-            environment.jersey().register(i.getInstance(c));
-        }
+		// Manually copy/paste that in the swagger.json to register it to
+		// smartAPI
+		// "contact":{
+		// "responsibleDeveloper":"John Do",
+		// "responsibleOrganization":"LBNL",
+		// "url":"http://owlsim3.monarchinitiative.org/api/docs/",
+		// "email":"JohnDo@lbl.gov"
+		// },
 
-    }
+		config.setTitle("owlsim - Web Services");
+		config.setVersion("1.0.0");
+		// TODO proper TOS
+		config.setTermsOfServiceUrl("https://github.com/monarch-initiative/owlsim-v3");
+		config.setResourcePackage("org.monarchinitiative.owlsim.services.resources");
+		config.setScan(true);
+		config.setBasePath(environment.getApplicationContext().getContextPath());
+	}
+
+	void configureCors(Environment environment) {
+		final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+
+		// Configure CORS parameters
+		cors.setInitParameter("allowedOrigins", "*");
+		cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+		cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+
+		// Add URL mapping
+		cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+	}
+
+	/***
+	 * Configure Jackson parameters
+	 * 
+	 * @param environment
+	 */
+	void configureJackson(Environment environment) {
+		// Some classes from commons-math do not have members to serialized.
+		// Ignore those or Jackson
+		// will throw an exception.
+		environment.getObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	}
+
+	@Override
+	public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
+		environment.getApplicationContext().setContextPath("/api");
+		configureSwagger(environment);
+		configureJackson(environment);
+		configureCors(environment);
+
+		Concurrency concurrency = Concurrency.CONCURRENT;
+		LOG.info("Creating injector...");
+		Injector i = Guice.createInjector(new OWLAPIImplModule(concurrency), new OWLAPIParsersModule(),
+				new OWLAPIServiceLoaderModule(),
+				new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris(),
+						configuration.getDataTsvs(), configuration.getCuries()),
+				new EnrichmentMapModule(), new MatcherMapModule());
+		LOG.info("BINDINGS =" + i.getAllBindings());
+		// Add resources
+		Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
+				.getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");
+		for (ClassInfo resourceClass : resourceClasses) {
+			Class<?> c = resourceClass.load();
+			environment.jersey().register(i.getInstance(c));
+		}
+
+	}
 
 }
