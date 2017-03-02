@@ -82,10 +82,9 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
                 // note: scores may deiverge slightly; this is because
                 // disjointness axioms are used for to populate negative class
                 // assertions for individuals at KB creation time 
-                System.out.println("COMPARING: "+i+" -vs- "+j);
-                System.out.println(pairMatch);
-                System.out.println(match);
-                System.out.println("---");
+                LOG.debug("COMPARING: "+i+" -vs- "+j);
+                LOG.debug(pairMatch);
+                LOG.debug(match);
             }
 
         }
