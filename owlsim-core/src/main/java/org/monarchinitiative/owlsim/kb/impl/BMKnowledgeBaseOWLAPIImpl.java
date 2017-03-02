@@ -559,7 +559,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
                       }
                   }
                   if (lv.isInteger()) {
-                      if (prop.getIRI().toString().contains("frequenct")) {
+                      if (prop.getIRI().toString().contains("frequency")) {
                           wmap.put(cix, lv.parseInteger());
                       }
                       
