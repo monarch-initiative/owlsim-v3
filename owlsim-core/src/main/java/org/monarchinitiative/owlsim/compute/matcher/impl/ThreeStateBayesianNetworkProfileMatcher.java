@@ -191,7 +191,7 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 			indArr[n] = itemId;
 			sumOfProbs += p;
 			n++;
-			LOG.info("p for "+itemId+" = "+p);
+			//LOG.info("p for "+itemId+" = "+p);
 		}
 		for (n = 0; n<pvector.length; n++) {
 			double p = pvector[n] / sumOfProbs;
