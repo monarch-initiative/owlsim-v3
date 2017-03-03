@@ -56,8 +56,18 @@ Paths:
 or for some versions of dropwizard:
 
  * http://localhost:8080/api/docs/
- * http://localhost:8080/api/match/matchers 
+ * http://localhost:8080/api/match/matchers
 
 Example query using default config:
 
 http://localhost:8080/api/match/jaccard?id=X:heart-morphology&id=X:brain-morphology
+
+## Build with Docker
+
+Run those commands from the root directory:
+
+```
+mvn package
+docker build -t owlsim .
+docker run -p 8080:8080 owlsim
+```
