@@ -1,7 +1,5 @@
 package org.monarchinitiative.owlsim.compute.enrich;
 
-import javax.inject.Inject;
-
 public class EnrichmentConfig {
     
     public enum AnalysisType {OVER, UNDER, BOTH};

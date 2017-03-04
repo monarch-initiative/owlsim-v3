@@ -1,7 +1,5 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -24,7 +22,6 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	/**
 	 * @param kb
 	 */
-	@Inject
 	public GridNegatedProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

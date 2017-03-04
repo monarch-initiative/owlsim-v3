@@ -7,51 +7,53 @@ import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 
-import com.google.inject.ImplementedBy;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
- * An interface to an ontology in which the fundamental unit of representation of 
- * a set of classes or a set of individuals (elements, items) is a Bitmap vector.
+ * An interface to an ontology in which the fundamental unit of representation
+ * of a set of classes or a set of individuals (elements, items) is a Bitmap
+ * vector.
  * 
  * <h4>KB formalism</h4>
  * <ul>
  * <li>A KB is a collection of classes (features) and individuals (entities)
  * <li>Features are connected in a Directed Acyclic Graph (DAG)
  * <li>Each DAG has a single root, called owl:Thing - this is always included
- * <li>Individuals can be described with one or more features. If an individual I is described using C, it is implicitly described by ancestors of C
- * <li>Individuals can be also be described by negating one or more features, i.e. I not(C). If an individual is described using not(C), the this propagates to descendants of C
+ * <li>Individuals can be described with one or more features. If an individual
+ * I is described using C, it is implicitly described by ancestors of C
+ * <li>Individuals can be also be described by negating one or more features,
+ * i.e. I not(C). If an individual is described using not(C), the this
+ * propagates to descendants of C
  * <li>TODO: individuals can have one or more features associated by frequency
  * </ul>
  * 
- * Note that OWLAPI terminology is used (e.g. superclasses), but this may be refactored in future to use neutral DAG terminology (e.g. ancestors)
+ * Note that OWLAPI terminology is used (e.g. superclasses), but this may be
+ * refactored in future to use neutral DAG terminology (e.g. ancestors)
  * 
- * <h4>Mapping to Bitmap positions</h4>
- * Bitmap vectors are used for fast set-wise operations.
- * <br/>
+ * <h4>Mapping to Bitmap positions</h4> Bitmap vectors are used for fast
+ * set-wise operations. <br/>
  * 
- * Each class or individual is identified by a String identifier (e.g a CURIE), but behind the scenes,
- * this is mapped to an integer denoting a position in the bitmap. A set of classes or
- * a set of individuals can then be represented by a {@link EWAHCompressedBitmap}.
- * <br/>
+ * Each class or individual is identified by a String identifier (e.g a CURIE),
+ * but behind the scenes, this is mapped to an integer denoting a position in
+ * the bitmap. A set of classes or a set of individuals can then be represented
+ * by a {@link EWAHCompressedBitmap}. <br/>
  * 
- * Note that classes and individuals are mutually exclusive, so the ID to Index mapping
- * is dependent on the datatype.
- * <br/>
+ * Note that classes and individuals are mutually exclusive, so the ID to Index
+ * mapping is dependent on the datatype. <br/>
  * 
- * <b>Guarantee:</b>Note that the index assigned to a class node is ordered according to
- * informativeness. if <code>Ix(C1) < Ix(C2)</code>, then <code>Informativeness(C1) =< Informativeness(C2)</code>.
- * Here Informativeness is the IC (with ties broken according to number of ancestors,
- * with more ancestors being more informative).
- * This means that an iterator starts with the classes
- * with the lowest probability (and highest information content), allowing for
- * fast MICA implementations.
- *  
+ * <b>Guarantee:</b>Note that the index assigned to a class node is ordered
+ * according to informativeness. if <code>Ix(C1) < Ix(C2)</code>, then
+ * <code>Informativeness(C1) =< Informativeness(C2)</code>. Here Informativeness
+ * is the IC (with ties broken according to number of ancestors, with more
+ * ancestors being more informative). This means that an iterator starts with
+ * the classes with the lowest probability (and highest information content),
+ * allowing for fast MICA implementations.
+ * 
  * The JavaEWAH library is used for fast bitmap operations.
- * <h4>Usage notes</h4>
- * Note that it is assumed that the ontology is static - most information is
- * cached in-memory. If the underlying ontology changes, it is currently necessary to
- * create a new KB object - there is no incremental change model
+ * <h4>Usage notes</h4> Note that it is assumed that the ontology is static -
+ * most information is cached in-memory. If the underlying ontology changes, it
+ * is currently necessary to create a new KB object - there is no incremental
+ * change model
  * 
  * <h4>Implementations</h4>
  * 
@@ -60,19 +62,18 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * 
  * <h4>Labels and IDs</h4>
  * 
- * A KB uses an internal integer to refer to all objects. For convenience, these can also
- * be referred to by an optional String id, which follows whatever form the input source provides.
+ * A KB uses an internal integer to refer to all objects. For convenience, these
+ * can also be referred to by an optional String id, which follows whatever form
+ * the input source provides.
  * 
- * A separate {@link LabelMapper} is used to retrieve labels given an ID, or conversely to look
- * up an ID given a label.
+ * A separate {@link LabelMapper} is used to retrieve labels given an ID, or
+ * conversely to look up an ID given a label.
  * 
  * 
  * @author cjm
  */
-@ImplementedBy(BMKnowledgeBaseOWLAPIImpl.class)
 public interface BMKnowledgeBase {
-	
-	
+
 	/**
 	 * Note: there can be >1 class in a node
 	 * 
@@ -93,16 +94,15 @@ public interface BMKnowledgeBase {
 	 * @return set of all individual identifiers
 	 */
 	public Set<String> getIndividualIdsInSignature();
-	
+
 	/**
 	 * @param individualId
 	 * @return
 	 */
 	public int getIndividualIndex(String individualId);
 
-	
 	public String getIndividualId(int index);
-	
+
 	/**
 	 * TODO
 	 * 
@@ -124,7 +124,7 @@ public interface BMKnowledgeBase {
 	 * @return direct superclasses of classId as bitmap
 	 */
 	public EWAHCompressedBitmap getDirectSuperClassesBM(String classId);
-	
+
 	/**
 	 * @param classIds
 	 * @return union of all direct superclasses as a bitmap
@@ -136,17 +136,17 @@ public interface BMKnowledgeBase {
 	 * @return subclasses (direct and indirect and equivalent)
 	 */
 	public EWAHCompressedBitmap getSubClasses(int classIndex);
-	
+
 	/**
 	 * @param classId
 	 * @return direct subclasses of classId as bitmap
 	 */
 	public EWAHCompressedBitmap getDirectSubClassesBM(String classId);
 
-
 	/**
 	 * @param classIds
-	 * @return union of all superclasses (direct and indirect and equivalent) as a bitmap
+	 * @return union of all superclasses (direct and indirect and equivalent) as
+	 *         a bitmap
 	 */
 	public EWAHCompressedBitmap getSubClassesBM(Set<String> classIds);
 
@@ -170,7 +170,8 @@ public interface BMKnowledgeBase {
 
 	/**
 	 * @param classId
-	 * @return superclasses (direct, indirect and equivalent) of classId as bitmap
+	 * @return superclasses (direct, indirect and equivalent) of classId as
+	 *         bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(String classId);
 
@@ -179,35 +180,38 @@ public interface BMKnowledgeBase {
 	 * @return union of all superclasses as a bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(Set<String> classIds);
-	
+
 	/**
 	 * @param classIndex
-	 * @return  superclasses (direct and indirect and equivalent) of classId as bitmap
+	 * @return superclasses (direct and indirect and equivalent) of classId as
+	 *         bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(int classIndex);
 
 	/**
-     * @param classIds
-     * @return direct translation of a classId list to a bitmap
-     */
-    public EWAHCompressedBitmap getClassesBM(Set<String> classIds);
+	 * @param classIds
+	 * @return direct translation of a classId list to a bitmap
+	 */
+	public EWAHCompressedBitmap getClassesBM(Set<String> classIds);
 
-		
 	/**
-	 * @param id - an individual
+	 * @param id
+	 *            - an individual
 	 * @return types (direct and indirect) as bitmap
 	 */
 	public EWAHCompressedBitmap getTypesBM(String id);
 
 	/**
-	 * @param id - an individual
+	 * @param id
+	 *            - an individual
 	 * @return direct types as bitmap
 	 */
 	public EWAHCompressedBitmap getDirectTypesBM(String id);
-	
+
 	/**
 	 * @param itemId
-	 * @return bitmap representation of all (direct and indirect) classes known to be NOT instantiated
+	 * @return bitmap representation of all (direct and indirect) classes known
+	 *         to be NOT instantiated
 	 */
 	public EWAHCompressedBitmap getNegatedTypesBM(String itemId);
 
@@ -218,36 +222,44 @@ public interface BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectNegatedTypesBM(String itemId);
 
 	/**
-	 * @param id - individual ID
-	 * @param classId - the class with which to filter the classes mapped to the individual ID
+	 * @param id
+	 *            - individual ID
+	 * @param classId
+	 *            - the class with which to filter the classes mapped to the
+	 *            individual ID
 	 * @return
 	 */
 	public EWAHCompressedBitmap getFilteredDirectTypesBM(String id, String classId);
 
 	/**
-	 * @param ids - a set of class ids
-	 * @param classId - the class with which to filter the class set
-	 * @return a bitmap representation of only the original ids tha are subclasses of classId
+	 * @param ids
+	 *            - a set of class ids
+	 * @param classId
+	 *            - the class with which to filter the class set
+	 * @return a bitmap representation of only the original ids tha are
+	 *         subclasses of classId
 	 */
 	public EWAHCompressedBitmap getFilteredDirectTypesBM(Set<String> ids, String classId);
 
-	
 	/**
-	 * @param ids - a set of class ids
-	 * @param classId - the class with which to filter the class set
-	 * @return a bitmap representation of only the original ids tha are subclasses of classId
+	 * @param ids
+	 *            - a set of class ids
+	 * @param classId
+	 *            - the class with which to filter the class set
+	 * @return a bitmap representation of only the original ids tha are
+	 *         subclasses of classId
 	 */
 	public EWAHCompressedBitmap getFilteredTypesBM(Set<String> ids, String classId);
 
-	
 	/**
 	 * @return utility object to map labels to ids
 	 */
 	public LabelMapper getLabelMapper();
-	
+
 	/**
-	 * Note: each index can correspond to multiple classes c1...cn if this set is an equivalence set.
-	 * In this case the *representative* classId is returned
+	 * Note: each index can correspond to multiple classes c1...cn if this set
+	 * is an equivalence set. In this case the *representative* classId is
+	 * returned
 	 * 
 	 * @param index
 	 * @return classId
@@ -263,25 +275,25 @@ public interface BMKnowledgeBase {
 	/**
 	 * Return all classIds corresponding to a single index.
 	 * 
-	 * Note each index corresponds to a single equivalence set. This returns
-	 * all members of the equivalence set
+	 * Note each index corresponds to a single equivalence set. This returns all
+	 * members of the equivalence set
 	 * 
 	 * @param index
 	 * @return classIds
 	 */
 	public Set<String> getClassIds(int index);
-	
+
 	/**
 	 * Return all classIds corresponding to a bitmap.
 	 * 
-	 * Note each index corresponds to a single equivalence set. This returns
-	 * all members of the equivalence set
+	 * Note each index corresponds to a single equivalence set. This returns all
+	 * members of the equivalence set
 	 * 
 	 * @param bm
 	 * @return classIds
 	 */
 	public Set<String> getClassIds(EWAHCompressedBitmap bm);
-	
+
 	/**
 	 * Returns class ids in the specified ontology.
 	 * 
@@ -292,23 +304,25 @@ public interface BMKnowledgeBase {
 	 */
 	public Set<String> getClassIdsByOntology(String ont);
 
-	
 	/**
-	 * @return array indexed by classIndex yielding the number of individuals per class
+	 * @return array indexed by classIndex yielding the number of individuals
+	 *         per class
 	 */
 	public int[] getIndividualCountPerClassArray();
 
 	/**
-	 * @param classId - an identifier for a class
-	 * @return a bitmap representation of only the individuals that (directly or indirectly)
-	 *   instantiate classId
+	 * @param classId
+	 *            - an identifier for a class
+	 * @return a bitmap representation of only the individuals that (directly or
+	 *         indirectly) instantiate classId
 	 */
 	public EWAHCompressedBitmap getIndividualsBM(String classId);
 
 	/**
-	 * @param classIndex - index for a class
-	 * @return a bitmap representation of only the individuals that (directly or indirectly)
-	 *   instantiate classId
+	 * @param classIndex
+	 *            - index for a class
+	 * @return a bitmap representation of only the individuals that (directly or
+	 *         indirectly) instantiate classId
 	 */
 	public EWAHCompressedBitmap getIndividualsBM(int classIndex);
 
@@ -316,8 +330,8 @@ public interface BMKnowledgeBase {
 	 * @param individualId
 	 * @return property-value map
 	 */
-	public Map<String,Set<Object>> getPropertyValueMap(String individualId);
-	
+	public Map<String, Set<Object>> getPropertyValueMap(String individualId);
+
 	/**
 	 * @param individualId
 	 * @param property
@@ -338,11 +352,5 @@ public interface BMKnowledgeBase {
 	 * @return root class Id
 	 */
 	public int getRootIndex();
-
-
-
-
-
-
 
 }

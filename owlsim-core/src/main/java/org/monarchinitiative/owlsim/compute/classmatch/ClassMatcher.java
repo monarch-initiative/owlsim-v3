@@ -3,9 +3,6 @@ package org.monarchinitiative.owlsim.compute.classmatch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
@@ -20,65 +17,57 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  */
 public class ClassMatcher {
 
-    BMKnowledgeBase kb;
-    
-   
-    @Inject
-    public ClassMatcher(BMKnowledgeBase kb) {
-        super();
-        this.kb = kb;
-    }
+	BMKnowledgeBase kb;
 
-    /**
-     * Find best match for every class in ont1, where the best
-     * match is in ont2
-     * 
-     * @param qOnt
-     * @param tOnt
-     * @return list of matches
-     */
-    public List<SimpleClassMatch> matchOntologies(String qOnt, String tOnt) {
-        Set<String> qids = kb.getClassIdsByOntology(qOnt);
-        Set<String> tids = kb.getClassIdsByOntology(tOnt);
-        return matchClassSets(qids, tids);
-    }
+	public ClassMatcher(BMKnowledgeBase kb) {
+		super();
+		this.kb = kb;
+	}
 
-    public List<SimpleClassMatch> matchClassSets(Set<String> qids,
-            Set<String> tids) {
-        ArrayList<SimpleClassMatch> matches = new ArrayList<>();
-        for (String q : qids) {
-            matches.add(getBestMatch(q, tids));
-        }
-        return matches;
-    }
+	/**
+	 * Find best match for every class in ont1, where the best match is in ont2
+	 * 
+	 * @param qOnt
+	 * @param tOnt
+	 * @return list of matches
+	 */
+	public List<SimpleClassMatch> matchOntologies(String qOnt, String tOnt) {
+		Set<String> qids = kb.getClassIdsByOntology(qOnt);
+		Set<String> tids = kb.getClassIdsByOntology(tOnt);
+		return matchClassSets(qids, tids);
+	}
 
-    private SimpleClassMatch getBestMatch(String q, Set<String> tids) {
-        EWAHCompressedBitmap qbm = kb.getSuperClassesBM(q);
-        double bestEqScore = 0.0;
-        String best = null;
-        for (String t : tids) {
-            EWAHCompressedBitmap tbm = kb.getSuperClassesBM(t);
-            int numInQueryAndInTarget = qbm.andCardinality(tbm);
-            int numInQueryOrInTarget = qbm.orCardinality(tbm);
-            double eqScore = numInQueryAndInTarget / (double) numInQueryOrInTarget;
-            if (eqScore > bestEqScore) {
-                bestEqScore = eqScore;
-                best = t;
-            }
-        }
-            
-        EWAHCompressedBitmap tbm = kb.getSuperClassesBM(best);
-        int numInQueryAndInTarget = qbm.andCardinality(tbm);
-        double subClassScore = numInQueryAndInTarget / (double) qbm.cardinality();
-        double superClassScore = numInQueryAndInTarget / (double) tbm.cardinality();
-            
-        LabelMapper lm = kb.getLabelMapper();
-        return new SimpleClassMatch(q, best,
-                lm.getArbitraryLabel(q),
-                lm.getArbitraryLabel(best),
-                bestEqScore,
-                subClassScore,
-                superClassScore);
-    }
+	public List<SimpleClassMatch> matchClassSets(Set<String> qids, Set<String> tids) {
+		ArrayList<SimpleClassMatch> matches = new ArrayList<>();
+		for (String q : qids) {
+			matches.add(getBestMatch(q, tids));
+		}
+		return matches;
+	}
+
+	private SimpleClassMatch getBestMatch(String q, Set<String> tids) {
+		EWAHCompressedBitmap qbm = kb.getSuperClassesBM(q);
+		double bestEqScore = 0.0;
+		String best = null;
+		for (String t : tids) {
+			EWAHCompressedBitmap tbm = kb.getSuperClassesBM(t);
+			int numInQueryAndInTarget = qbm.andCardinality(tbm);
+			int numInQueryOrInTarget = qbm.orCardinality(tbm);
+			double eqScore = numInQueryAndInTarget / (double) numInQueryOrInTarget;
+			if (eqScore > bestEqScore) {
+				bestEqScore = eqScore;
+				best = t;
+			}
+		}
+
+		EWAHCompressedBitmap tbm = kb.getSuperClassesBM(best);
+		int numInQueryAndInTarget = qbm.andCardinality(tbm);
+		double subClassScore = numInQueryAndInTarget / (double) qbm.cardinality();
+		double superClassScore = numInQueryAndInTarget / (double) tbm.cardinality();
+
+		LabelMapper lm = kb.getLabelMapper();
+		return new SimpleClassMatch(q, best, lm.getArbitraryLabel(q), lm.getArbitraryLabel(best), bestEqScore,
+				subClassScore, superClassScore);
+	}
 
 }
