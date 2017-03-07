@@ -75,7 +75,7 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
                 Set<String> tcids = kb.getClassIds(kb.getDirectTypesBM(j));
                 ProfileQuery tp = profileMatcher.createProfileQueryFromClasses(tcids, null);
 
-                                String fn = i.replaceAll(".*/", "");
+                String fn = i.replaceAll(".*/", "");
                 //eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
                 Match pairMatch = profileMatcher.compareProfilePair(qp, tp);
                 
