@@ -109,10 +109,13 @@ public class AbstractProfileMatcherTest {
 		kb = loader.createKnowledgeBaseInterface();
 	}
 	
-	protected void loadSimplePhenoWithNegation() throws OWLOntologyCreationException {
-		load("simple-pheno-with-negation.owl");
-		
-	}
+    protected void loadSimplePhenoWithNegation() throws OWLOntologyCreationException {
+        load("simple-pheno-with-negation.owl"); 
+    }
+
+    protected void loadSimplePhenoWithFrequency() throws OWLOntologyCreationException {
+        load("simple-pheno-with-freqs.owl"); 
+    }
 
 	@Deprecated
 	protected void search(ProfileMatcher profileMatcher,
@@ -187,6 +190,18 @@ public class AbstractProfileMatcherTest {
 		}
 		LOG.info("Rank of match "+matchId+" is "+matchRank+" which is last or joint last");
 		return true;
+	}
+	
+	protected boolean isRankedAt(String matchId, MatchSet matchSet, int expectedRank) {
+	    int matchRank = 0;
+	    for (Match m : matchSet.getMatches()) {
+	        int rank = m.getRank();
+
+	        if (m.getMatchId().equals(matchId)) {
+	            return (rank == expectedRank);
+	        }
+	    }
+	    return false;
 	}
 
 }

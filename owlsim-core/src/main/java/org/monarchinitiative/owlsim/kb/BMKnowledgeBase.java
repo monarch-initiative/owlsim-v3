@@ -144,12 +144,13 @@ public interface BMKnowledgeBase {
 	public EWAHCompressedBitmap getDirectSubClassesBM(String classId);
 
 
-	/**
-	 * @param classIds
-	 * @return union of all superclasses (direct and indirect and equivalent) as a bitmap
-	 */
-	public EWAHCompressedBitmap getSubClassesBM(Set<String> classIds);
+    /**
+     * @param classIds
+     * @return union of all superclasses (direct and indirect and equivalent) as a bitmap
+     */
+    public EWAHCompressedBitmap getSubClassesBM(Set<String> classIds);
 
+ 
 	/**
 	 * @param classIds
 	 * @return union of all direct subclasses as a bitmap
@@ -179,7 +180,13 @@ public interface BMKnowledgeBase {
 	 * @return union of all superclasses as a bitmap
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(Set<String> classIds);
-	
+
+	/**
+     * @param classIds
+     * @return union of all superclasses (direct and indirect and equivalent) as a bitmap
+     */
+    public EWAHCompressedBitmap getSuperClassesBM(EWAHCompressedBitmap classesBM);
+
 	/**
 	 * @param classIndex
 	 * @return  superclasses (direct and indirect and equivalent) of classId as bitmap
@@ -199,12 +206,18 @@ public interface BMKnowledgeBase {
 	 */
 	public EWAHCompressedBitmap getTypesBM(String id);
 
-	/**
-	 * @param id - an individual
-	 * @return direct types as bitmap
-	 */
-	public EWAHCompressedBitmap getDirectTypesBM(String id);
-	
+    /**
+     * @param id - an individual
+     * @return direct types as bitmap
+     */
+    public EWAHCompressedBitmap getDirectTypesBM(String id);
+
+    /**
+     * @param id - an individual
+     * @return map between Type class index and 0<weight<=100, where probability = weight/100
+     */
+    public Map<Integer, Integer> getDirectWeightedTypes(String id);
+
 	/**
 	 * @param itemId
 	 * @return bitmap representation of all (direct and indirect) classes known to be NOT instantiated

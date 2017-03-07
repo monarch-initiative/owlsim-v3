@@ -1,5 +1,6 @@
 package org.monarchinitiative.owlsim.kb.ewah;
 
+import java.util.Collection;
 import java.util.Set;
 
 import com.googlecode.javaewah.EWAHCompressedBitmap;
@@ -63,7 +64,7 @@ public class EWAHKnowledgeBaseStore {
 		return storedSuperClasses[clsIndex];
 	}
 
-    public EWAHCompressedBitmap getClasses(Set<Integer> clsIndices) {
+    public EWAHCompressedBitmap getClasses(Collection<Integer> clsIndices) {
         EWAHCompressedBitmap bm = new EWAHCompressedBitmap();
         for (int i : clsIndices) {
                 bm.set(i);

@@ -213,7 +213,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
             // any node which has an off query parent is discounted
             //EWAHCompressedBitmap maskedTargetProfileBM = nodesHtBM.and(queryBlanketProfileBM);
 
-            LOG.info("TARGET PROFILE for "+itemId+" "+nodesHtBM);
+            //LOG.info("TARGET PROFILE for "+itemId+" "+nodesHtBM);
 
             // cumulative log-probability
             double logp = 0.0;
@@ -398,7 +398,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
             indArr[n] = itemId;
             sumOfProbs += p;
             n++;
-            LOG.info("logp for "+itemId+" = "+logp+"   sumOfLogProbs="+sumOfProbs);
+            //LOG.info("logp for "+itemId+" = "+logp+"   sumOfLogProbs="+sumOfProbs);
         }
         for (n = 0; n<pvector.length; n++) {
             double p = pvector[n] / sumOfProbs;
