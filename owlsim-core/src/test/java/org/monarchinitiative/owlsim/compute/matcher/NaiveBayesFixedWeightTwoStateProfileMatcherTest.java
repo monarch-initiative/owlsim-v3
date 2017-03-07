@@ -81,7 +81,7 @@ public class NaiveBayesFixedWeightTwoStateProfileMatcherTest extends AbstractPro
 	}
 	
     @Test
-    public void testFrequencyWare() throws Exception {
+    public void testFrequencyAware() throws Exception {
         loadSimplePhenoWithFrequency();
         //LOG.info("INDS="+kb.getIndividualIdsInSignature());
         ProfileMatcher profileMatcher = createProfileMatcher(kb);
