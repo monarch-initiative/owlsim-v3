@@ -6,16 +6,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.commons.math3.distribution.HypergeometricDistribution;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentConfig;
+import org.monarchinitiative.owlsim.compute.enrich.EnrichmentConfig.AnalysisType;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentEngine;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentQuery;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentResult;
 import org.monarchinitiative.owlsim.compute.enrich.EnrichmentResultSet;
-import org.monarchinitiative.owlsim.compute.enrich.EnrichmentConfig.AnalysisType;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHUtils;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
@@ -44,7 +42,6 @@ public class HypergeometricEnrichmentEngine implements EnrichmentEngine {
 
     protected EnrichmentConfig enrichmentConfig = new EnrichmentConfig();
 
-    @Inject
     public HypergeometricEnrichmentEngine(BMKnowledgeBase kb) {
         super();
         this.kb = kb;

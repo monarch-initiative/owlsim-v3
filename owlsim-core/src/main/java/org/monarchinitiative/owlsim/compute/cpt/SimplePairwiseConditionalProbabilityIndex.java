@@ -1,7 +1,5 @@
 package org.monarchinitiative.owlsim.compute.cpt;
 
-import java.util.Map;
-
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**

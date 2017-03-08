@@ -2,20 +2,16 @@ package org.monarchinitiative.owlsim.compute.mica;
 
 import java.util.Set;
 
-import org.monarchinitiative.owlsim.compute.mica.impl.MostInformativeCommonAncestorCalculatorImpl;
-
-import com.google.inject.ImplementedBy;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
- * Calculator for Most Informative Common Ancestor (MICA), where MICA
- * is defined as the set of common ancestors with the highest information content
- * (lowest frequency)
+ * Calculator for Most Informative Common Ancestor (MICA), where MICA is defined
+ * as the set of common ancestors with the highest information content (lowest
+ * frequency)
  * 
  * @author cjm
  *
  */
-@ImplementedBy(MostInformativeCommonAncestorCalculatorImpl.class)
 public interface MostInformativeCommonAncestorCalculator {
 
 	/**
@@ -39,7 +35,7 @@ public interface MostInformativeCommonAncestorCalculator {
 		 * Index of class
 		 */
 		public int classIndex;
-		
+
 		/**
 		 * @param classId
 		 * @param frequency
@@ -52,9 +48,8 @@ public interface MostInformativeCommonAncestorCalculator {
 			this.classIndex = classIndex;
 		}
 
-
 	}
-	
+
 	/**
 	 * Representation for a (classId, IC) pair
 	 * 
@@ -71,7 +66,7 @@ public interface MostInformativeCommonAncestorCalculator {
 		 * -log(freq(C)/corpusSize)
 		 */
 		public Double ic;
-		
+
 		/**
 		 * @param classId
 		 * @param ic
@@ -83,13 +78,13 @@ public interface MostInformativeCommonAncestorCalculator {
 		}
 
 		public String toString() {
-			return classId + " IC="+ic;
+			return classId + " IC=" + ic;
 		}
 	}
 
-
 	// All methods exploit:
-	// the BM is guaranteed to be ordered such that the first integer is either least frequent
+	// the BM is guaranteed to be ordered such that the first integer is either
+	// least frequent
 	// or joint least frequent
 
 	/**
@@ -97,17 +92,19 @@ public interface MostInformativeCommonAncestorCalculator {
 	 * @param targetProfileBM
 	 * @return frequency of MICA
 	 */
-	public int getFrequencyOfMostInformativeCommonAncestor(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
+	public int getFrequencyOfMostInformativeCommonAncestor(EWAHCompressedBitmap queryProfileBM,
+			EWAHCompressedBitmap targetProfileBM);
 
 	/**
-     * Note closure assumed for BM
-     * 
+	 * Note closure assumed for BM
+	 * 
 	 * @param queryProfileBM
 	 * @param targetProfileBM
 	 * @return frequency of MICA plus MICA
 	 */
-	public ClassFrequencyPair getMostInformativeCommonAncestorWithFrequency(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
-	
+	public ClassFrequencyPair getMostInformativeCommonAncestorWithFrequency(EWAHCompressedBitmap queryProfileBM,
+			EWAHCompressedBitmap targetProfileBM);
+
 	/**
 	 * Note closure assumed for BM
 	 * 
@@ -115,14 +112,14 @@ public interface MostInformativeCommonAncestorCalculator {
 	 * @param targetProfileBM
 	 * @return frequency of MICA plus IC
 	 */
-    public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(EWAHCompressedBitmap queryProfileBM, EWAHCompressedBitmap targetProfileBM);
+	public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(EWAHCompressedBitmap queryProfileBM,
+			EWAHCompressedBitmap targetProfileBM);
 
-    /**
-     * @param queryClassIds
-     * @param targetClassIds
-     * @return frequency of MICA plus IC
-     */
-    public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(
-            Set<String> queryClassIds,
-            Set<String> targetClassIds) ;
+	/**
+	 * @param queryClassIds
+	 * @param targetClassIds
+	 * @return frequency of MICA plus IC
+	 */
+	public ClassInformationContentPair getMostInformativeCommonAncestorWithIC(Set<String> queryClassIds,
+			Set<String> targetClassIds);
 }

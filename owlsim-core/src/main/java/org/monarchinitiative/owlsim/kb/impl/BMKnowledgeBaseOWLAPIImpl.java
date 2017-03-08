@@ -10,15 +10,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlDataOntologies;
-import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlOntologies;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
@@ -123,9 +119,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
    * @param owlDataOntology TODO - fix this
    * @param rf
    */
-  @Inject
-  public BMKnowledgeBaseOWLAPIImpl(@IndicatesOwlOntologies OWLOntology owlOntology,
-      @IndicatesOwlDataOntologies OWLOntology owlDataOntology, OWLReasonerFactory rf,
+  public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
+      OWLOntology owlDataOntology, OWLReasonerFactory rf,
       CurieUtil curieUtil) {
     super();
     curieMapper = new CURIEMapperImpl();

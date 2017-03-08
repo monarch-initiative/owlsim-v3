@@ -7,7 +7,6 @@ import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 
-import com.google.inject.ImplementedBy;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
@@ -69,7 +68,6 @@ import com.googlecode.javaewah.EWAHCompressedBitmap;
  * 
  * @author cjm
  */
-@ImplementedBy(BMKnowledgeBaseOWLAPIImpl.class)
 public interface BMKnowledgeBase {
 	
 	

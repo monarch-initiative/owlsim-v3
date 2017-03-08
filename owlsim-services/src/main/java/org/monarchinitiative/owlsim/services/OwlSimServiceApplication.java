@@ -23,10 +23,10 @@ import javax.servlet.FilterRegistration;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.monarchinitiative.owlsim.compute.enrich.EnrichmentMapModule;
-import org.monarchinitiative.owlsim.compute.matcher.MatcherMapModule;
-import org.monarchinitiative.owlsim.kb.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
+import org.monarchinitiative.owlsim.services.modules.EnrichmentMapModule;
+import org.monarchinitiative.owlsim.services.modules.KnowledgeBaseModule;
+import org.monarchinitiative.owlsim.services.modules.MatcherMapModule;
 import org.semanticweb.owlapi.OWLAPIParsersModule;
 import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
 

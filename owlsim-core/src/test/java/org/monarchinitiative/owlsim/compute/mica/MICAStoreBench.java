@@ -2,8 +2,6 @@ package org.monarchinitiative.owlsim.compute.mica;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;

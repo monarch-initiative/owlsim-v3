@@ -1,7 +1,5 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
-import javax.inject.Inject;
-
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
@@ -10,11 +8,10 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
  */
 public class NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher extends NaiveBayesFixedWeightTwoStateProfileMatcher {
 
-	@Inject
 	private NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
-	
+
 	/**
 	 * @param kb
 	 * @return new instance
@@ -23,15 +20,13 @@ public class NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher extends NaiveB
 		return new NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher(kb);
 	}
 
-
 	public boolean isUseBlanket() {
 		return false;
 	}
-	
+
 	@Override
 	public String getShortName() {
 		return "naive-bayes-fixed-weight-two-state-NOBLANKET";
 	}
 
-	
 }
