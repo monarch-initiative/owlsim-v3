@@ -1,13 +1,6 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -49,7 +42,6 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 import com.hp.hpl.jena.query.Query;
@@ -100,7 +92,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	// private Set<OWLClass> classesInSignature;
 	private Set<OWLNamedIndividual> individualsInSignature;
 	private Map<String, Map<String, Set<Object>>> propertyValueMapMap;
-	Map<OWLClass, Set<OWLClassExpression>> opposingClassMap = new HashMap<OWLClass, Set<OWLClassExpression>>();
+	Map<OWLClass, Set<OWLClassExpression>> opposingClassMap = new HashMap<>();
 
 	private int[] individualCountPerClassArray;
 
@@ -187,7 +179,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		}
 		if (n == 0) {
 			LOG.info("Setting labels from fragments");
-			Set<OWLNamedObject> objs = new HashSet<OWLNamedObject>();
+			Set<OWLNamedObject> objs = new HashSet<>();
 			objs.addAll(ontology.getClassesInSignature());
 			objs.addAll(ontology.getIndividualsInSignature());
 			for (OWLNamedObject obj : objs) {
@@ -216,7 +208,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return set of all class identifiers
 	 */
 	public Set<String> getClassIdsInSignature() {
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new HashSet<>();
 		for (OWLClass i : getClassesInSignature()) {
 			ids.add(getShortForm(i.getIRI()));
 		}
@@ -252,7 +244,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return ids
 	 */
 	public Set<String> getIndividualIdsInSignature() {
-		Set<String> ids = new HashSet<String>();
+		Set<String> ids = new HashSet<>();
 		for (OWLNamedIndividual i : getIndividualsInSignature()) {
 			ids.add(getShortForm(i.getIRI()));
 		}
@@ -284,8 +276,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	// Each OWLClass and OWLIndividual is mapped to an Integer index
 	private void createMap() {
 		LOG.info("Creating mapping from ontology objects to integers");
-		classNodes = new HashSet<Node<OWLClass>>();
-		individualNodes = new HashSet<Node<OWLNamedIndividual>>();
+		classNodes = new HashSet<>();
+		individualNodes = new HashSet<>();
 		Set<OWLClass> classesInSignature;
 		classesInSignature = owlOntology.getClassesInSignature(true);
 		LOG.info("|classes|=" + classesInSignature.size());
@@ -293,13 +285,13 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		classesInSignature.remove(getOWLNothing());
 		individualsInSignature = owlOntology.getIndividualsInSignature(true);
 		LOG.info("|individuals|=" + individualsInSignature.size());
-		classToNodeMap = new HashMap<OWLClass, Node<OWLClass>>();
-		individualToNodeMap = new HashMap<OWLNamedIndividual, Node<OWLNamedIndividual>>();
-		classNodeToIntegerMap = new HashMap<Node<OWLClass>, Integer>();
-		individualNodeToIntegerMap = new HashMap<Node<OWLNamedIndividual>, Integer>();
-		propertyValueMapMap = new HashMap<String, Map<String, Set<Object>>>();
-		final HashMap<Node<OWLClass>, Integer> classNodeToFrequencyMap = new HashMap<Node<OWLClass>, Integer>();
-		final HashMap<Node<OWLClass>, Double> classNodeToFreqDepthMap = new HashMap<Node<OWLClass>, Double>();
+		classToNodeMap = new HashMap<>();
+		individualToNodeMap = new HashMap<>();
+		classNodeToIntegerMap = new HashMap<>();
+		individualNodeToIntegerMap = new HashMap<>();
+		propertyValueMapMap = new HashMap<>();
+		final HashMap<Node<OWLClass>, Integer> classNodeToFrequencyMap = new HashMap<>();
+		final HashMap<Node<OWLClass>, Double> classNodeToFreqDepthMap = new HashMap<>();
 		for (OWLClass c : classesInSignature) {
 			if (owlReasoner.getInstances(c, false).isEmpty()) {
 				// TODO: deal with subclasses
@@ -346,17 +338,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		// Content)
 		// nodes are have LOWER indices
 		// TODO: use depth as a tie breaker
-		List<Node<OWLClass>> classNodesSorted = new ArrayList<Node<OWLClass>>(classNodes);
-		Collections.sort(classNodesSorted, new Comparator<Node<OWLClass>>() {
-			public int compare(Node<OWLClass> n1, Node<OWLClass> n2) {
-				double f1 = classNodeToFreqDepthMap.get(n1);
-				double f2 = classNodeToFreqDepthMap.get(n2);
-				if (f1 < f2)
-					return -1;
-				if (f1 > f2)
-					return 1;
-				return 0;
-			}
+		List<Node<OWLClass>> classNodesSorted = new ArrayList<>(classNodes);
+		classNodesSorted.sort((n1, n2) -> {
+			double f1 = classNodeToFreqDepthMap.get(n1);
+			double f2 = classNodeToFreqDepthMap.get(n2);
+			if (f1 < f2)
+				return -1;
+			if (f1 > f2)
+				return 1;
+			return 0;
 		});
 		int numClassNodes = classNodesSorted.size();
 		classNodeArray = classNodesSorted.toArray(new Node[numClassNodes]);
@@ -378,7 +368,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	private void setPropertyValues(OWLOntology ont, OWLNamedIndividual i) {
 		Preconditions.checkNotNull(i);
-		Map<String, Set<Object>> pvm = new HashMap<String, Set<Object>>();
+		Map<String, Set<Object>> pvm = new HashMap<>();
 		String id = getShortForm(i.getIRI());
 		propertyValueMapMap.put(id, pvm);
 		for (OWLIndividualAxiom ax : ont.getAxioms(i)) {
@@ -418,7 +408,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	private void addPropertyValue(Map<String, Set<Object>> pvm, String pid, String v) {
 		// LOG.debug("PV="+pid+"="+v);
 		if (!pvm.containsKey(pid))
-			pvm.put(pid, new HashSet<Object>());
+			pvm.put(pid, new HashSet<>());
 		pvm.get(pid).add(v);
 	}
 
@@ -430,7 +420,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	private void addOpposingClassPairAsym(OWLClass c, OWLClassExpression d) {
 		if (!opposingClassMap.containsKey(c))
-			opposingClassMap.put(c, new HashSet<OWLClassExpression>());
+			opposingClassMap.put(c, new HashSet<>());
 		opposingClassMap.get(c).add(d);
 	}
 
@@ -476,7 +466,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 			// direct individuals are those asserted to be of type c or anything
 			// equivalent to c
-			Set<Integer> individualInts = new HashSet<Integer>();
+			Set<Integer> individualInts = new HashSet<>();
 			for (OWLClass ec : owlReasoner.getEquivalentClasses(c).getEntities()) {
 				for (OWLClassAssertionAxiom ax : owlOntology.getClassAssertionAxioms(ec)) {
 					if (ax.getIndividual().isNamed()) {
@@ -494,8 +484,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 			ontoEWAHStore.setTypes(individualIndex, getIntegersForClassSet(owlReasoner.getTypes(i, false)));
 
 			// Treat CLassAssertion( ComplementOf(c) i) as a negative assertion
-			Set<Integer> ncs = new HashSet<Integer>();
-			Set<Integer> ncsDirect = new HashSet<Integer>();
+			Set<Integer> ncs = new HashSet<>();
+			Set<Integer> ncsDirect = new HashSet<>();
 			for (OWLClassAssertionAxiom cx : owlOntology.getClassAssertionAxioms(i)) {
 				// TODO: investigate efficiency - number of items set may be
 				// high
@@ -595,7 +585,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	}
 
 	private Set<Integer> getIntegersForClassSet(NodeSet<OWLClass> nodeset) {
-		Set<Integer> bits = new HashSet<Integer>();
+		Set<Integer> bits = new HashSet<>();
 		for (Node<OWLClass> n : nodeset.getNodes()) {
 			if (n.contains(getOWLNothing()))
 				continue;
@@ -605,7 +595,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	}
 
 	private Set<Integer> getIntegersForIndividualSet(NodeSet<OWLNamedIndividual> nodeset) {
-		Set<Integer> bits = new HashSet<Integer>();
+		Set<Integer> bits = new HashSet<>();
 		for (Node<OWLNamedIndividual> n : nodeset.getNodes()) {
 			bits.add(getIndexForIndividualNode(n));
 		}
@@ -702,7 +692,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	public Set<String> getClassIds(int index) {
 		Node<OWLClass> n = getClassNode(index);
-		Set<String> cids = new HashSet<String>();
+		Set<String> cids = new HashSet<>();
 		for (OWLClass c : n.getEntities()) {
 			cids.add(getShortForm(c.getIRI()));
 		}
@@ -710,7 +700,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	}
 
 	public Set<String> getClassIds(EWAHCompressedBitmap bm) {
-		Set<String> cids = new HashSet<String>();
+		Set<String> cids = new HashSet<>();
 		for (int x : bm) {
 			Node<OWLClass> n = getClassNode(x);
 			for (OWLClass c : n.getEntities()) {
@@ -799,7 +789,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 *         class
 	 */
 	protected EWAHCompressedBitmap getSuperClassesBMByOWLClassSet(Set<OWLClass> clsSet) {
-		Set<Integer> classIndices = new HashSet<Integer>();
+		Set<Integer> classIndices = new HashSet<>();
 		for (OWLClass c : clsSet) {
 			classIndices.add(getIndex(c));
 		}
@@ -847,7 +837,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return union of all subClasses (direct and indirect) of any input class
 	 */
 	public EWAHCompressedBitmap getSubClassesBM(Set<String> clsIds) {
-		Set<Integer> classIndices = new HashSet<Integer>();
+		Set<Integer> classIndices = new HashSet<>();
 		for (String id : clsIds) {
 			classIndices.add(getClassIndex(id));
 		}
@@ -859,7 +849,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 * @return union of all direct subClasses of all input classes
 	 */
 	public EWAHCompressedBitmap getDirectSubClassesBM(Set<String> clsIds) {
-		Set<Integer> classIndices = new HashSet<Integer>();
+		Set<Integer> classIndices = new HashSet<>();
 		for (String id : clsIds) {
 			classIndices.add(getClassIndex(id));
 		}
@@ -872,7 +862,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 *         class
 	 */
 	public EWAHCompressedBitmap getSuperClassesBM(Set<String> clsIds) {
-		Set<Integer> classIndices = new HashSet<Integer>();
+		Set<Integer> classIndices = new HashSet<>();
 		for (String id : clsIds) {
 			classIndices.add(getClassIndex(id));
 		}
@@ -1016,7 +1006,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		if (curieUtil.getCurieMap().isEmpty()) {
 			return getOWLClass(IRI.create(id));
 		} else {
-			return getOWLClass(IRI.create(curieUtil.getIri(id).or(id)));
+			return getOWLClass(IRI.create(curieUtil.getIri(id).orElse(id)));
 		}
 	}
 
@@ -1046,7 +1036,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 		if (curieUtil.getCurieMap().isEmpty()) {
 			return getOWLNamedIndividual(IRI.create(id));
 		} else {
-			return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).or(id)));
+			return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id)));
 		}
 	}
 
@@ -1075,7 +1065,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	public Set<Object> getPropertyValues(String individualId, String property) {
 		Map<String, Set<Object>> m = getPropertyValueMap(individualId);
 		if (m.containsKey(property))
-			return new HashSet<Object>(m.get(property));
+			return new HashSet<>(m.get(property));
 		else
 			return Collections.emptySet();
 	}
@@ -1099,7 +1089,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	@Override
 	public EWAHCompressedBitmap getFilteredTypesBM(Set<String> ids, String classId) {
 
-		Set<Integer> classBits = new HashSet<Integer>();
+		Set<Integer> classBits = new HashSet<>();
 		for (String id : ids) {
 			classBits.add(this.getClassIndex(id));
 		}
@@ -1110,7 +1100,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 	public EWAHCompressedBitmap getFilteredDirectTypesBM(Set<String> classIds, String classId) {
 
-		Set<Integer> classBits = new HashSet<Integer>();
+		Set<Integer> classBits = new HashSet<>();
 		for (String id : classIds) {
 			classBits.add(this.getClassIndex(id));
 		}
