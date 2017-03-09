@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -29,6 +31,7 @@ public class NaiveBayesFixedWeightThreeStateProfileMatcher extends AbstractProfi
     private Logger LOG = Logger.getLogger(NaiveBayesFixedWeightThreeStateProfileMatcher.class);
 
 
+    @Inject
     private NaiveBayesFixedWeightThreeStateProfileMatcher(BMKnowledgeBase kb) {
         super(kb);
     }

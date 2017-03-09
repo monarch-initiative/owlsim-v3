@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.compute.cpt.impl.NodeProbabilities;
@@ -35,6 +37,7 @@ public class ThreeStateBayesianNetworkProfileMatcher extends AbstractProfileMatc
 	private ThreeStateConditionalProbabilityIndex cpi = null;
 	private Map<BitMapPair,NodeProbabilities[]> targetToQueryCache;
 
+    @Inject
 	private ThreeStateBayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

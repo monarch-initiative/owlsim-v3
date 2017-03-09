@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import javax.inject.Inject;
+
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
@@ -8,6 +10,7 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
  */
 public class NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher extends NaiveBayesFixedWeightTwoStateProfileMatcher {
 
+  @Inject
 	private NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

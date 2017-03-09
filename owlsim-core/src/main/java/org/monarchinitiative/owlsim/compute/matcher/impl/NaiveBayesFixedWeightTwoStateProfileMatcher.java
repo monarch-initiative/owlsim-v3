@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -76,6 +78,7 @@ public class NaiveBayesFixedWeightTwoStateProfileMatcher extends AbstractProfile
 	// for maps a pair of (Individual, InterpretationIndex) to a set of inferred (self, direct, indirect) types
 	private Map<Integer,Map<Integer,WeightedTypesBM>> individualToInterpretationToTypesBM = new HashMap<>();
 
+    @Inject
 	protected NaiveBayesFixedWeightTwoStateProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
