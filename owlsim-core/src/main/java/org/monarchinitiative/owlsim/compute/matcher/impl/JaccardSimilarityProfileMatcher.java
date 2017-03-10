@@ -15,25 +15,23 @@ import org.monarchinitiative.owlsim.model.match.impl.MatchSetImpl;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
- * Given a query profile (a set of classes c1, .., cn) return a match profile, 
+ * Given a query profile (a set of classes c1, .., cn) return a match profile,
  * where each candidate individual is assigned a semantic similarity
  * 
  * @author cjm
  *
  */
 public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher implements ProfileMatcher {
-	
+
 	private Logger LOG = Logger.getLogger(JaccardSimilarityProfileMatcher.class);
 
-	
 	/**
 	 * @param kb
 	 */
-	@Inject
+    @Inject
 	public JaccardSimilarityProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
-	
 
 	/**
 	 * @param kb
@@ -51,20 +49,20 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 	/**
 	 * @param q
 	 * @return match profile containing probabilities of each individual
-	 * @throws UnknownFilterException 
+	 * @throws UnknownFilterException
 	 */
 	public MatchSet findMatchProfileImpl(ProfileQuery q) throws UnknownFilterException {
-		
+
 		EWAHCompressedBitmap queryProfileBM = getProfileBM(q);
-		
+
 		// TODO
-		MatchSet mp =  MatchSetImpl.create(q);
-		
+		MatchSet mp = MatchSetImpl.create(q);
+
 		List<String> indIds = getFilteredIndividualIds(q.getFilter());
 		for (String itemId : indIds) {
 			EWAHCompressedBitmap targetProfileBM = knowledgeBase.getTypesBM(itemId);
-			
-			//LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
+
+			// LOG.info("TARGET PROFILE for "+itemId+" "+targetProfileBM);
 			int numInQueryAndInTarget = queryProfileBM.andCardinality(targetProfileBM);
 			int numInQueryOrInTarget = queryProfileBM.orCardinality(targetProfileBM);
 			double j = numInQueryAndInTarget / (double) numInQueryOrInTarget;
@@ -74,9 +72,5 @@ public class JaccardSimilarityProfileMatcher extends AbstractProfileMatcher impl
 		mp.sortMatches();
 		return mp;
 	}
-
-
-
-
 
 }

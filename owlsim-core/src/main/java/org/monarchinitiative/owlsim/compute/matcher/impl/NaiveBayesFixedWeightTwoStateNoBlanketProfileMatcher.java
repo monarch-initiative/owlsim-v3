@@ -10,11 +10,11 @@ import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
  */
 public class NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher extends NaiveBayesFixedWeightTwoStateProfileMatcher {
 
-	@Inject
+  @Inject
 	private NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}
-	
+
 	/**
 	 * @param kb
 	 * @return new instance
@@ -23,15 +23,13 @@ public class NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher extends NaiveB
 		return new NaiveBayesFixedWeightTwoStateNoBlanketProfileMatcher(kb);
 	}
 
-
 	public boolean isUseBlanket() {
 		return false;
 	}
-	
+
 	@Override
 	public String getShortName() {
 		return "naive-bayes-fixed-weight-two-state-NOBLANKET";
 	}
 
-	
 }

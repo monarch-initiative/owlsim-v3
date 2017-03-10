@@ -75,17 +75,16 @@ public class PhenodigmICProfileMatcherTest extends AbstractProfileMatcherTest {
                 Set<String> tcids = kb.getClassIds(kb.getDirectTypesBM(j));
                 ProfileQuery tp = profileMatcher.createProfileQueryFromClasses(tcids, null);
 
-                                String fn = i.replaceAll(".*/", "");
+                String fn = i.replaceAll(".*/", "");
                 //eval.writeJsonTo("target/pdgm-test-results-"+fn+".json");
                 Match pairMatch = profileMatcher.compareProfilePair(qp, tp);
                 
                 // note: scores may deiverge slightly; this is because
                 // disjointness axioms are used for to populate negative class
                 // assertions for individuals at KB creation time 
-                System.out.println("COMPARING: "+i+" -vs- "+j);
-                System.out.println(pairMatch);
-                System.out.println(match);
-                System.out.println("---");
+                LOG.debug("COMPARING: "+i+" -vs- "+j);
+                LOG.debug(pairMatch);
+                LOG.debug(match);
             }
 
         }

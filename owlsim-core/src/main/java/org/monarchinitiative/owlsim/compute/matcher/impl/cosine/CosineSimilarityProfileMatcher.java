@@ -2,8 +2,6 @@ package org.monarchinitiative.owlsim.compute.matcher.impl.cosine;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.impl.AbstractProfileMatcher;
@@ -31,7 +29,6 @@ public class CosineSimilarityProfileMatcher extends AbstractProfileMatcher imple
 	/**
 	 * @param kb
 	 */
-	@Inject
 	public CosineSimilarityProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

@@ -10,15 +10,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.CURIEMapper;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlDataOntologies;
-import org.monarchinitiative.owlsim.kb.bindings.IndicatesOwlOntologies;
 import org.monarchinitiative.owlsim.kb.ewah.EWAHKnowledgeBaseStore;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
@@ -26,7 +22,9 @@ import org.monarchinitiative.owlsim.model.kb.KBMetadata;
 import org.prefixcommons.CurieUtil;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -106,6 +104,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
   private Map<String, Map<String, Set<Object>>> propertyValueMapMap;
   Map<OWLClass, Set<OWLClassExpression>> opposingClassMap =
       new HashMap<OWLClass, Set<OWLClassExpression>>();
+  
+  Map<Integer, Map<Integer, Integer>> individualToWeightedDirectTypeMap = new HashMap<>();
+
 
   private int[] individualCountPerClassArray;
 
@@ -118,9 +119,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
    * @param owlDataOntology TODO - fix this
    * @param rf
    */
-  @Inject
-  public BMKnowledgeBaseOWLAPIImpl(@IndicatesOwlOntologies OWLOntology owlOntology,
-      @IndicatesOwlDataOntologies OWLOntology owlDataOntology, OWLReasonerFactory rf,
+  public BMKnowledgeBaseOWLAPIImpl(OWLOntology owlOntology,
+      OWLOntology owlDataOntology, OWLReasonerFactory rf,
       CurieUtil curieUtil) {
     super();
     curieMapper = new CURIEMapperImpl();
@@ -511,6 +511,9 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
       ontoEWAHStore.setDirectIndividuals(clsIndex, individualInts);
 
     }
+    
+    // populate frequency-awareness map
+    individualToWeightedDirectTypeMap = new HashMap<>();
     for (OWLNamedIndividual i : individualsInSignature) {
       int individualIndex = getIndex(i);
       // LOG.info("String inferences for "+i+" --> " +individualIndex);
@@ -518,8 +521,49 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
           getIntegersForClassSet(owlReasoner.getTypes(i, true)));
       ontoEWAHStore.setTypes(individualIndex,
           getIntegersForClassSet(owlReasoner.getTypes(i, false)));
+      
+      // TODO - ensure robust for equivalent individuals
+      Map<Integer, Integer> wmap = new HashMap<>();
+      individualToWeightedDirectTypeMap.put(individualIndex, wmap);
+      for (OWLClassAssertionAxiom caax : owlOntology.getClassAssertionAxioms(i)) {
+          int cix;
+          
+          // only associations to named classes
+          if (caax.getClassExpression().isAnonymous()) {
+              continue;
+          }
+          cix = getIndex(caax.getClassExpression().asOWLClass());
+          
+          // we use reification to store probability
+          for (OWLAnnotation ann : caax.getAnnotations()) {
+              OWLAnnotationProperty prop = ann.getProperty();
+              OWLAnnotationValue v = ann.getValue();
+              if (v instanceof OWLLiteral) {
+                  OWLLiteral lv = v.asLiteral().get();
+                  Double pr = null;
+                  if (lv.isDouble()) {
+                      pr = lv.parseDouble();
+                  }
+                  if (lv.isFloat()) {
+                      pr = (double) lv.parseFloat();
+                  }
+                  if (pr != null) {
+                      // TODO : decide on a vocabulary
+                      if (prop.getIRI().toString().contains("probability")) {
+                          wmap.put(cix, (int) (pr * 100));
+                      }
+                  }
+                  if (lv.isInteger()) {
+                      if (prop.getIRI().toString().contains("frequency")) {
+                          wmap.put(cix, lv.parseInteger());
+                      }
+                      
+                  }
+              }
+          }
+      }
 
-      // Treat CLassAssertion( ComplementOf(c) i) as a negative assertion
+      // Treat ClassAssertion( ComplementOf(c) i) as a negative assertion
       Set<Integer> ncs = new HashSet<Integer>();
       Set<Integer> ncsDirect = new HashSet<Integer>();
       for (OWLClassAssertionAxiom cx : owlOntology.getClassAssertionAxioms(i)) {
@@ -813,6 +857,13 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     return ontoEWAHStore.getSuperClasses(classIndices);
   }
 
+  /* (non-Javadoc)
+ * @see org.monarchinitiative.owlsim.kb.BMKnowledgeBase#getSuperClassesBM(com.googlecode.javaewah.EWAHCompressedBitmap)
+ */
+  public EWAHCompressedBitmap getSuperClassesBM(EWAHCompressedBitmap classesBM) {
+      return ontoEWAHStore.getSuperClasses(new HashSet<>(classesBM.getPositions()));      
+  }
+
   public EWAHCompressedBitmap getSuperClassesBM(String cid) {
     return ontoEWAHStore.getSuperClasses(getClassIndex(cid));
   }
@@ -950,6 +1001,15 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
   public EWAHCompressedBitmap getTypesBM(int individualIndex) {
     return ontoEWAHStore.getTypes(individualIndex);
   }
+  
+  /* (non-Javadoc)
+   * @see org.monarchinitiative.owlsim.kb.BMKnowledgeBase#getDirectWeightedTypes(java.lang.String)
+   */
+  public Map<Integer, Integer> getDirectWeightedTypes(String id) {
+      int iix = getIndividualIndex(id);
+      return individualToWeightedDirectTypeMap.get(iix);
+  }
+
 
   /**
    * @param id

@@ -7,31 +7,26 @@ import org.monarchinitiative.owlsim.compute.mica.impl.MostInformativeCommonAnces
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
 /**
- *  common methods and variables for all ProfileMatcher that
- *  implement semantic similarity techniques, i.e. those involving a MRCA  
+ * common methods and variables for all ProfileMatcher that implement semantic
+ * similarity techniques, i.e. those involving a MRCA
  * 
  * @author cjm
  *
  */
 public abstract class AbstractSemanticSimilarityProfileMatcher extends AbstractProfileMatcher {
-	
-	//private Logger LOG = Logger.getLogger(AbstractSemanticSimilarityProfileMatcher.class);
+
+	// private Logger LOG =
+	// Logger.getLogger(AbstractSemanticSimilarityProfileMatcher.class);
 
 	private MostInformativeCommonAncestorCalculator micaCalculator;
-	
-
 
 	/**
 	 * @param knowledgeBase
 	 */
-	@Inject // TODO
-	public AbstractSemanticSimilarityProfileMatcher(
-			BMKnowledgeBase knowledgeBase) {
+	public AbstractSemanticSimilarityProfileMatcher(BMKnowledgeBase knowledgeBase) {
 		super(knowledgeBase);
 		micaCalculator = new MostInformativeCommonAncestorCalculatorImpl(knowledgeBase);
 	}
-
-
 
 	/**
 	 * @return object used for calculation of most informative common ancestors
@@ -43,10 +38,8 @@ public abstract class AbstractSemanticSimilarityProfileMatcher extends AbstractP
 	/**
 	 * @param micaCalculator
 	 */
-	private void setMicaCalculator(
-			MostInformativeCommonAncestorCalculator micaCalculator) {
+	private void setMicaCalculator(MostInformativeCommonAncestorCalculator micaCalculator) {
 		this.micaCalculator = micaCalculator;
 	}
-	
 
 }

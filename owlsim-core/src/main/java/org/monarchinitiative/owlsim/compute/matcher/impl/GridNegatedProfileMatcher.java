@@ -24,7 +24,7 @@ public class GridNegatedProfileMatcher extends AbstractSemanticSimilarityProfile
 	/**
 	 * @param kb
 	 */
-	@Inject
+    @Inject
 	public GridNegatedProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

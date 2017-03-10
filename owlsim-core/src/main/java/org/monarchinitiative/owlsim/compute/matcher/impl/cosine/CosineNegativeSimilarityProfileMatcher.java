@@ -2,12 +2,9 @@ package org.monarchinitiative.owlsim.compute.matcher.impl.cosine;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.NegationAwareProfileMatcher;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.AbstractProfileMatcher;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -32,7 +29,6 @@ public class CosineNegativeSimilarityProfileMatcher extends CosineSimilarityProf
 	/**
 	 * @param kb
 	 */
-	@Inject
 	public CosineNegativeSimilarityProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

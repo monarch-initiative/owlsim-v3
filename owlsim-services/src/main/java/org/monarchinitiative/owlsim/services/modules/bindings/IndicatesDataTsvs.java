@@ -1,4 +1,4 @@
-package org.monarchinitiative.owlsim.kb.bindings;
+package org.monarchinitiative.owlsim.services.modules.bindings;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -9,5 +9,8 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
-@BindingAnnotation @Target({ FIELD, PARAMETER, METHOD }) @Retention(RUNTIME)
-public @interface IndicatesDataTsvs {}
+@BindingAnnotation
+@Target({ FIELD, PARAMETER, METHOD })
+@Retention(RUNTIME)
+public @interface IndicatesDataTsvs {
+}
