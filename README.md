@@ -64,10 +64,18 @@ http://localhost:8080/api/match/jaccard?id=X:heart-morphology&id=X:brain-morphol
 
 ## Build with Docker
 
-Run those commands from the root directory:
+Run those commands from the root directory (with Docker >= 1.9):
 
 ```
 mvn package
-docker build -t owlsim .
-docker run -p 8080:8080 owlsim
+docker build -t owlsim-all . # by default contains all the species
+docker run -p 8080:8080 owlsim-all
+```
+
+To restrict to specific species:
+
+```
+docker build --build-arg species=all -t owlsim-all . # default if no args is provided or not matching any species
+docker build --build-arg species=human -t owlsim-human
+
 ```

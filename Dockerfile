@@ -8,6 +8,8 @@
 # Pull base image.
 FROM ubuntu:16.04
 
+ARG species=all
+
 RUN apt-get -y update && apt-get install -y software-properties-common python-software-properties
 
 # Install Java.
@@ -27,8 +29,12 @@ WORKDIR /data
 ADD owlsim-services/target/owlsim-services-3.0-SNAPSHOT.jar /data/
 ADD configuration-samples/configuration-all.yaml /data/configuration.yaml
 
-ADD http://ci.monarchinitiative.org/view/dev/job/create-owlsim-files-on-dev/lastSuccessfulBuild/artifact/server/all.owl /data/
-ADD https://raw.githubusercontent.com/monarch-initiative/monarch-owlsim-data/master/data/Homo_sapiens/Hs_disease_phenotype.txt /data/
+RUN if [ $species = "human" ];  \
+  then \
+    wget https://data.monarchinitiative.org/owl/all-hp.owl -O /data/all.owl; \
+  else \
+    wget http://ci.monarchinitiative.org/view/dev/job/create-owlsim-files-on-dev/lastSuccessfulBuild/artifact/server/all.owl -O /data/all.owl; \
+  fi
 
 CMD java -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
 
