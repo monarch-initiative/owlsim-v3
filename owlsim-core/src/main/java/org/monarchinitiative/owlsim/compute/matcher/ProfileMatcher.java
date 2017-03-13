@@ -111,6 +111,4 @@ public interface ProfileMatcher {
 	 */
 	BMKnowledgeBase getKnowledgeBase();
 
-
-
 }

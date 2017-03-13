@@ -1,5 +1,7 @@
 package org.monarchinitiative.owlsim.compute.matcher.impl;
 
+import javax.inject.Inject;
+
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator;
 import org.monarchinitiative.owlsim.compute.mica.impl.MostInformativeCommonAncestorCalculatorImpl;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;

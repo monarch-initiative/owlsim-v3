@@ -14,6 +14,11 @@ import java.util.zip.GZIPInputStream;
 import javax.inject.Singleton;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.monarchinitiative.owlsim.compute.classmatch.ClassMatcher;
+import org.monarchinitiative.owlsim.compute.enrich.impl.HypergeometricEnrichmentEngine;
+import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
+import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator;
+import org.monarchinitiative.owlsim.compute.mica.impl.MostInformativeCommonAncestorCalculatorImpl;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.services.modules.bindings.IndicatesDataTsvs;
@@ -122,6 +127,26 @@ public class KnowledgeBaseModule extends AbstractModule {
 	OWLOntology getDataTsvs(OWLOntologyManager manager)
 			throws OWLOntologyCreationException, FileNotFoundException, IOException {
 		return mergeOntologies(manager, dataTsvs);
+	}
+	
+	@Provides
+	MostInformativeCommonAncestorCalculator getMostInformativeCommonAncestorCalculator(BMKnowledgeBase knowledgeBase) {
+        return new MostInformativeCommonAncestorCalculatorImpl(knowledgeBase);
+	}
+	
+	@Provides
+	HypergeometricEnrichmentEngine getHypergeometricEnrichmentEngine(BMKnowledgeBase knowledgeBase) {
+	    return new HypergeometricEnrichmentEngine(knowledgeBase);
+	}
+	
+	@Provides
+	BayesianNetworkProfileMatcher getBayesianNetworkProfileMatcher(BMKnowledgeBase knowledgeBase) {
+	    return BayesianNetworkProfileMatcher.create(knowledgeBase);
+	}
+	
+	@Provides
+	ClassMatcher getClassMatcher(BMKnowledgeBase knowledgeBase) {
+	    return new ClassMatcher(knowledgeBase);
 	}
 
 }

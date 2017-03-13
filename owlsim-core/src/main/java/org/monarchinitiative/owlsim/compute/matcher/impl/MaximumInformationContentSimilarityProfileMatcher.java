@@ -2,6 +2,8 @@ package org.monarchinitiative.owlsim.compute.matcher.impl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.compute.mica.MostInformativeCommonAncestorCalculator.ClassInformationContentPair;
@@ -28,6 +30,7 @@ public class MaximumInformationContentSimilarityProfileMatcher extends AbstractS
 	/**
 	 * @param kb
 	 */
+    @Inject
 	private MaximumInformationContentSimilarityProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 	}

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.compute.cpt.ConditionalProbabilityIndex;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
@@ -101,6 +103,7 @@ public class BayesianNetworkProfileMatcher extends AbstractProfileMatcher implem
 	private Calculator[] calculatorCache;
 	private Double[][] targetClassProbabilityCache;
 
+    @Inject
 	private BayesianNetworkProfileMatcher(BMKnowledgeBase kb) {
 		super(kb);
 		int N = kb.getIndividualIdsInSignature().size();
