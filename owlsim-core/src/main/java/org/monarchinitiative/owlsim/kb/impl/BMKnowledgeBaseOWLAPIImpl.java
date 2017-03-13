@@ -1,13 +1,6 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -51,7 +44,6 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 import com.hp.hpl.jena.query.Query;
@@ -1082,7 +1074,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     if (curieUtil.getCurieMap().isEmpty()) {
       return getOWLClass(IRI.create(id));
     } else {
-      return getOWLClass(IRI.create(curieUtil.getIri(id).or(id)));
+      return getOWLClass(IRI.create(curieUtil.getIri(id).orElse(id)));
     }
   }
 
@@ -1111,7 +1103,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
     if (curieUtil.getCurieMap().isEmpty()) {
       return getOWLNamedIndividual(IRI.create(id));
     } else {
-      return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).or(id)));
+      return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id)));
     }
   }
 
