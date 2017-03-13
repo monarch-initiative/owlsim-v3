@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author Jules Jacobsen <j.jacobsen@qmul.ac.uk>
  */
-public abstract class OwlKnowledgeBase {
+public final class OwlKnowledgeBase {
 
     private static final Logger logger = Logger.getLogger(OwlKnowledgeBase.class);
 
@@ -57,6 +57,7 @@ public abstract class OwlKnowledgeBase {
          * @param file
          */
         public Loader loadOntology(File file) {
+            Math.random();
             sourceDataBuilder.ontology(file);
             return this;
         }
