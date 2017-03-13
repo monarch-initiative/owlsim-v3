@@ -1,15 +1,6 @@
 package org.monarchinitiative.owlsim.io;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
+import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
@@ -17,23 +8,22 @@ import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.prefixcommons.CurieUtil;
 import org.semanticweb.elk.owlapi.ElkReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.base.Preconditions;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Object for loading OWL ontologies into a {@link BMKnowledgeBase}
  * 
  * Note that a KB consists of classes and individuals, both of which can be
  * loaded from an ontology
- * 
+ *
+ * @deprecated - Use the OwlKnowledgeBase.loader() instead.
  * @author cjm
  *
  */
@@ -52,7 +42,7 @@ public class OWLLoader {
 	 * @return OWL Ontology
 	 * @throws OWLOntologyCreationException
 	 */
-	public OWLOntology loadOWL(IRI iri) throws OWLOntologyCreationException {
+	private OWLOntology loadOWL(IRI iri) throws OWLOntologyCreationException {
 		return getOWLOntologyManager().loadOntology(iri);
 	}
 
@@ -61,7 +51,7 @@ public class OWLLoader {
 	 * @return OWL Ontology
 	 * @throws OWLOntologyCreationException
 	 */
-	public OWLOntology loadOWL(File file) throws OWLOntologyCreationException {
+	private OWLOntology loadOWL(File file) throws OWLOntologyCreationException {
 		IRI iri = IRI.create(file);
 		return getOWLOntologyManager().loadOntologyFromOntologyDocument(iri);
 	}
@@ -73,7 +63,7 @@ public class OWLLoader {
 	 * @return OWL Ontology
 	 * @throws OWLOntologyCreationException
 	 */
-	public OWLOntology loadOWL(String path) throws OWLOntologyCreationException {
+	private OWLOntology loadOWL(String path) throws OWLOntologyCreationException {
 		if (path.startsWith("http")) {
 			return loadOWL(IRI.create(path));
 		} else {

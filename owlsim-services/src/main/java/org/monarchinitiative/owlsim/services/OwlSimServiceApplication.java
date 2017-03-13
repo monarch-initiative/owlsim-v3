@@ -15,12 +15,18 @@
  */
 package org.monarchinitiative.owlsim.services;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.monarchinitiative.owlsim.services.configuration.ApplicationConfiguration;
@@ -29,22 +35,13 @@ import org.monarchinitiative.owlsim.services.modules.KnowledgeBaseModule;
 import org.monarchinitiative.owlsim.services.modules.MatcherMapModule;
 import org.semanticweb.owlapi.OWLAPIParsersModule;
 import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
-import io.dropwizard.Application;
-import io.dropwizard.assets.AssetsBundle;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jaxrs.listing.ApiListingResource;
 import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
 import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import java.util.EnumSet;
+import java.util.Set;
 
 public class OwlSimServiceApplication extends Application<ApplicationConfiguration> {
 
@@ -146,7 +143,7 @@ public class OwlSimServiceApplication extends Application<ApplicationConfigurati
 				new KnowledgeBaseModule(configuration.getOntologyUris(), configuration.getOntologyDataUris(),
 						configuration.getDataTsvs(), configuration.getCuries()),
 				new EnrichmentMapModule(), new MatcherMapModule());
-		LOG.info("BINDINGS =" + i.getAllBindings());
+		//removed binding info as this caused things to explode. Wasn't helpful.
 		// Add resources
 		Set<ClassInfo> resourceClasses = ClassPath.from(getClass().getClassLoader())
 				.getTopLevelClasses("org.monarchinitiative.owlsim.services.resources");

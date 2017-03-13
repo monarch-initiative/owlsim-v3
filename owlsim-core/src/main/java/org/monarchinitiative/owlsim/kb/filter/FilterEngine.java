@@ -1,13 +1,12 @@
 package org.monarchinitiative.owlsim.kb.filter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import com.googlecode.javaewah.EWAHCompressedBitmap;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 
-import com.googlecode.javaewah.EWAHCompressedBitmap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Applies a {@link Filter} on a set of individuals.
@@ -92,7 +91,7 @@ public class FilterEngine {
             else {
                 typesBM = knowledgeBase.getTypesBM(id);
             }
-            LOG.info("typeId = " + tf.getTypeId());
+//            LOG.info("typeId = " + tf.getTypeId());
             int ix = knowledgeBase.getClassIndex(tf.getTypeId());
             return typesBM.getPositions().contains(ix) ^ tf.isNegated();
 		}
