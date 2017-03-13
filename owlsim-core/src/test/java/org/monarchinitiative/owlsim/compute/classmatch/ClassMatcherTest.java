@@ -1,25 +1,20 @@
 package org.monarchinitiative.owlsim.compute.classmatch;
 
-import static org.junit.Assert.*;
-
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.monarchinitiative.owlsim.compute.mica.AbstractMICAStoreTest;
-import org.monarchinitiative.owlsim.compute.mica.MICAStore;
-import org.monarchinitiative.owlsim.compute.mica.impl.MICAStoreImpl;
 import org.monarchinitiative.owlsim.compute.mica.impl.NoRootException;
-import org.monarchinitiative.owlsim.compute.stats.KBStatsCalculator;
-import org.monarchinitiative.owlsim.io.OWLLoader;
+import org.monarchinitiative.owlsim.io.OwlKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import com.google.monitoring.runtime.instrumentation.common.com.google.common.io.Resources;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
 
 public class ClassMatcherTest {
 
@@ -28,18 +23,26 @@ public class ClassMatcherTest {
     private Logger LOG = Logger.getLogger(ClassMatcherTest.class);
 
     protected void load(String fn, String... ontfns) throws OWLOntologyCreationException, URISyntaxException, NoRootException {
-        OWLLoader loader = new OWLLoader();
-        LOG.info("Loading: "+fn);
-        loader.load(IRI.create(Resources.getResource(fn)));
-        for (String ontfn : ontfns) {
-            URL res = getClass().getResource(ontfn);
-            LOG.info("RES="+res);
-            loader.loadOntologies(res.getFile());
-        }
-        kb = loader.createKnowledgeBaseInterface();
+//        OWLLoader loader = new OWLLoader();
+//        LOG.info("Loading: "+fn);
+//        loader.load(IRI.create(Resources.getResource(fn)));
+//        for (String ontfn : ontfns) {
+//            URL res = getClass().getResource(ontfn);
+//            LOG.info("RES="+res);
+//            loader.ontologies(res.getFile());
+//        }
+//        kb = loader.createKnowledgeBaseInterface();
+        kb = OwlKnowledgeBase.loader()
+                .loadOntology(filePath(fn))
+                .loadOntologies(Arrays.stream(ontfns).map(ontfn -> filePath(ontfn)).collect(Collectors.toList()))
+                .createKnowledgeBase();
         classMatcher = new ClassMatcher(kb);
     }
-    
+
+    private String filePath(String filename) {
+        return Paths.get("src/test/resources/", filename).toString();
+    }
+
     @Test
     public void selfTest() throws OWLOntologyCreationException, URISyntaxException, NoRootException {
         load("mp-subset.ttl");

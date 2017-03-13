@@ -1,14 +1,12 @@
 package org.monarchinitiative.owlsim.compute.matcher.mp;
 
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
 import org.monarchinitiative.owlsim.io.JSONWriter;
-import org.monarchinitiative.owlsim.io.OWLLoader;
+import org.monarchinitiative.owlsim.io.OwlKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.model.match.Match;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
@@ -16,7 +14,8 @@ import org.monarchinitiative.owlsim.model.match.ProfileQuery;
 import org.monarchinitiative.owlsim.model.match.impl.ProfileQueryImpl;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Tests a ProfileMatcher using the sample mp-subset.ttl ontology
@@ -229,13 +228,11 @@ public abstract class AbstractProfileMatcherMPTest {
 	}
 
 	private void load(String fn) throws OWLOntologyCreationException {
-		//Injector injector = Guice.createInjector(new ConfigModule());
-		OWLLoader loader = new OWLLoader();
-		loader.load("src/test/resources/"+fn);
-		ontology = loader.createKnowledgeBaseInterface();
-		//profileMatcher = 
-		//		injector.getInstance(ProfileMatcher.class);
-		//profileMatcher = new MaximumInformationContentSimilarityProfileMatcher(ontology);
+//		OWLLoader loader = new OWLLoader();
+//		loader.load("src/test/resources/"+fn);
+//		ontology = loader.createKnowledgeBaseInterface();
+
+		ontology = OwlKnowledgeBase.loader().loadOntology("src/test/resources/" + fn).createKnowledgeBase();
 
 		profileMatcher = createProfileMatcher(ontology);
 	}

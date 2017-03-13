@@ -1,27 +1,20 @@
 package org.monarchinitiative.owlsim.compute.matcher.perf;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.compute.matcher.AbstractProfileMatcherTest;
 import org.monarchinitiative.owlsim.compute.matcher.ProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.JaccardSimilarityProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.MaximumInformationContentSimilarityProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.NaiveBayesFixedWeightTwoStateProfileMatcher;
-import org.monarchinitiative.owlsim.compute.matcher.impl.PhenodigmICProfileMatcher;
+import org.monarchinitiative.owlsim.compute.matcher.impl.*;
 import org.monarchinitiative.owlsim.eval.ProfileMatchEvaluator;
-import org.monarchinitiative.owlsim.io.OWLLoader;
+import org.monarchinitiative.owlsim.io.OwlKnowledgeBase;
 import org.monarchinitiative.owlsim.io.ReadMappingsUtil;
 import org.monarchinitiative.owlsim.kb.filter.Filter;
 import org.monarchinitiative.owlsim.kb.filter.TypeFilter;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Tests phenotype matcher by finding rank of each homolog when using that matcher
@@ -126,12 +119,19 @@ public class HomologyPhenoPerfIT extends AbstractProfileMatcherTest {
     }
 
     private void load() throws OWLOntologyCreationException, IOException {
-        OWLLoader loader = new OWLLoader();
-        loader.loadGzippdOntology(getClass().getResource("/ontologies/mammal.obo.gz").getFile());
-        loader.loadDataFromTsvGzip(getClass().getResource("/data/gene2taxon.tsv.gz").getFile());
-        loader.loadDataFromTsvGzip(getClass().getResource("/data/mouse-pheno.assocs.gz").getFile());
-        loader.loadDataFromTsvGzip(getClass().getResource("/data/human-pheno.assocs.gz").getFile());
-        kb = loader.createKnowledgeBaseInterface();
+        Map<String, String> curies = new LinkedHashMap<>();
+        curies.put("HP", "http://purl.obolibrary.org/obo/HP_");
+        curies.put("MP", "http://purl.obolibrary.org/obo/MP_");
+        curies.put("NCBITaxon", "http://purl.obolibrary.org/obo/NCBITaxon_");
+
+        kb = OwlKnowledgeBase.loader()
+                .loadCuries(curies)
+                .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
+                .loadDataFromTsv(
+                        "src/test/resources/data/gene2taxon.tsv.gz",
+                        "src/test/resources/data/mouse-pheno.assocs.gz",
+                        "src/test/resources/data/human-pheno.assocs.gz")
+                .createKnowledgeBase();
 
     }
 

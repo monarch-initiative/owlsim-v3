@@ -1,19 +1,13 @@
 package org.monarchinitiative.owlsim.services.modules;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.zip.GZIPInputStream;
-
-import javax.inject.Singleton;
-
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.jboss.logging.Logger;
 import org.monarchinitiative.owlsim.compute.classmatch.ClassMatcher;
 import org.monarchinitiative.owlsim.compute.enrich.impl.HypergeometricEnrichmentEngine;
 import org.monarchinitiative.owlsim.compute.matcher.impl.BayesianNetworkProfileMatcher;
@@ -32,19 +26,18 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
+import java.io.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 /**
- * TODO - rewrite this
- * 
- * Reduce duplication of code with OWLLoader
- *
+ * TODO: Uncomment the OwlKnowledgeBase code and remove unecessary code once happy.
  */
 public class KnowledgeBaseModule extends AbstractModule {
+
+	Logger logger = Logger.getLogger(KnowledgeBaseModule.class);
 
 	private final ImmutableCollection<String> ontologyUris;
 	private final ImmutableCollection<String> ontologyDataUris;
@@ -52,12 +45,32 @@ public class KnowledgeBaseModule extends AbstractModule {
 	private final ImmutableMap<String, String> curies;
 	private final UrlValidator urlValdiator = UrlValidator.getInstance();
 
-	public KnowledgeBaseModule(Collection<String> ontologyUris, Collection<String> ontologyDataUris,
-			Set<String> dataTsvs, Map<String, String> curies) {
+//	private final BMKnowledgeBase bmKnowledgeBase;
+
+	public KnowledgeBaseModule(Collection<String> ontologyUris, Collection<String> ontologyDataUris, Set<String> dataTsvs, Map<String, String> curies) {
 		this.ontologyUris = new ImmutableSet.Builder<String>().addAll(ontologyUris).build();
 		this.ontologyDataUris = new ImmutableSet.Builder<String>().addAll(ontologyDataUris).build();
 		this.dataTsvs = new ImmutableSet.Builder<String>().addAll(dataTsvs).build();
 		this.curies = new ImmutableMap.Builder<String, String>().putAll(curies).build();
+
+		logger.info("Loading ontologyUris:");
+		ontologyUris.forEach(logger::info);
+		logger.info("Loading ontologyDataUris:");
+		ontologyDataUris.forEach(logger::info);
+		logger.info("Loading dataTsvs:");
+		dataTsvs.forEach(logger::info);
+		logger.info("Loading curies:");
+		curies.entrySet().forEach(logger::info);
+
+//		//The OwlKnowledgeBase.Loader uses the ELKReasonerFactory and Concurrency.CONCURRENT as defaults.
+//		this.bmKnowledgeBase = OwlKnowledgeBase.loader()
+//				.loadOntologies(ontologyUris)
+//				.loadDataFromOntologies(ontologyDataUris)
+//				.loadDataFromTsv(dataTsvs)
+//				.loadCuries(curies)
+//				.createKnowledgeBase();
+//
+//		logger.info("Created BMKnowledgebase");
 	}
 
 	@Override
@@ -65,18 +78,22 @@ public class KnowledgeBaseModule extends AbstractModule {
 		bind(BMKnowledgeBase.class).to(BMKnowledgeBaseOWLAPIImpl.class).in(Singleton.class);
 		bind(OWLReasonerFactory.class).to(ElkReasonerFactory.class);
 		bind(CurieUtil.class).toInstance(new CurieUtil(curies));
+
 		// bind(OWLOntologyManager.class).to(OWLOntologyManagerImpl.class);
 		// bind(ReadWriteLock.class).to(NoOpReadWriteLock.class);
 		// bind(OWLDataFactory.class).to(OWLDataFactoryImpl.class);
 		// bind(OWLOntologyManager.class).toInstance(OWLManager.createOWLOntologyManager());
 	}
 
+//	@Provides
+//	BMKnowledgeBase provideBMKnowledgeBaseOWLAPIImpl() {
+//		return bmKnowledgeBase;
+//	}
+
 	@Provides
 	BMKnowledgeBaseOWLAPIImpl provideBMKnowledgeBaseOWLAPIImpl(@IndicatesOwlOntologies OWLOntology owlOntology,
 			@IndicatesOwlDataOntologies OWLOntology owlDataOntology, OWLReasonerFactory rf, CurieUtil curieUtil) {
-		BMKnowledgeBaseOWLAPIImpl bMKnowledgeBaseOWLAPIImpl = new BMKnowledgeBaseOWLAPIImpl(owlOntology,
-				owlDataOntology, rf, curieUtil);
-		return bMKnowledgeBaseOWLAPIImpl;
+		return new BMKnowledgeBaseOWLAPIImpl(owlOntology,owlDataOntology, rf, curieUtil);
 	}
 
 	OWLOntology loadOntology(OWLOntologyManager manager, String uri) throws OWLOntologyCreationException {

@@ -1,18 +1,16 @@
 package org.monarchinitiative.owlsim.compute.kb.impl;
 
-import java.net.URISyntaxException;
-import java.util.Set;
-
+import com.googlecode.javaewah.EWAHCompressedBitmap;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import org.monarchinitiative.owlsim.io.OWLLoader;
+import org.monarchinitiative.owlsim.io.OwlKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.NonUniqueLabelException;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import com.google.monitoring.runtime.instrumentation.common.com.google.common.io.Resources;
-import com.googlecode.javaewah.EWAHCompressedBitmap;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Set;
 
 /**
  * Tests a OWLAPI implementation of a KB
@@ -27,10 +25,12 @@ public class AbstractOwlTest {
 	private Logger LOG = Logger.getLogger(AbstractOwlTest.class);
 
 	protected BMKnowledgeBase kb;
+
 	protected void load(String fn) throws OWLOntologyCreationException, URISyntaxException {
-		OWLLoader loader = new OWLLoader();
-		loader.load(IRI.create(Resources.getResource(fn)));
-		kb = loader.createKnowledgeBaseInterface();
+//		OWLLoader loader = new OWLLoader();
+//		loader.load(IRI.create(Resources.getResource(fn)));
+//		kb = loader.createKnowledgeBaseInterface();
+		kb = OwlKnowledgeBase.loader().loadOntology(Paths.get("src/test/resources", fn).toString()).createKnowledgeBase();
 	}
 
 	protected void checkContains(EWAHCompressedBitmap bm,
