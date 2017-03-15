@@ -57,7 +57,6 @@ public final class OwlKnowledgeBase {
          * @param file
          */
         public Loader loadOntology(File file) {
-            Math.random();
             sourceDataBuilder.ontology(file);
             return this;
         }
@@ -115,6 +114,11 @@ public final class OwlKnowledgeBase {
 
         public Loader loadDataFromTsv(Collection<String> paths) {
             sourceDataBuilder.dataTsv(paths);
+            return this;
+        }
+
+        public Loader loadDataFromMap(Map<String, ? extends Collection<String>> data) {
+            sourceDataBuilder.data(data);
             return this;
         }
 

@@ -1,0 +1,24 @@
+Sharktopus	shark, octopus
+SquidMan	squid, human
+SpiderMan	spider, human
+DolphinCat	dolphin, cat
+DogMouse	dog, mouse
+SpongeBob	poriferan, human
+JellyChimp	jelly, chimp
+GreatOldOne	amphibian, cephalopod, human
+PorpoiseMarmosetFly	porpoise, marmoset, fruitfly
+SuperMammal	human, dolphin, chimp, dog, cat, rat, mouse
+ProtoSpider	spider
+ProtoHuman	human
+ProtoChimp	chimp
+ProtoWhale	cetacean
+ProtoMammal	mammal
+ProtoShark	shark
+TranslucentTrait	jelly, salp
+CuteTrait	cat, dolphin, koala
+WeirdTrait	platypus, cephalopod, hammerhead
+ScaryTrait	tarantula, octopus, shark
+BigTrait	blueWhale, greatWhiteShark
+SmallTrait	rat, mouse, insect, xenopus
+SwimmingTrait	shark, cetacean, teleost
+StupidTrait	poriferan, tunicate, jelly
