@@ -1,10 +1,12 @@
 package org.monarchinitiative.owlsim.kb.impl;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.googlecode.javaewah.EWAHCompressedBitmap;
+import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.apache.log4j.Logger;
 import org.monarchinitiative.owlsim.io.OWLLoader;
 import org.monarchinitiative.owlsim.io.Ontology;
@@ -16,49 +18,16 @@ import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 import org.monarchinitiative.owlsim.model.kb.KBMetadata;
 import org.prefixcommons.CurieUtil;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAnnotationValue;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLIndividualAxiom;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLNamedObject;
-import org.semanticweb.owlapi.model.OWLObjectComplementOf;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLPropertyAssertionObject;
-import org.semanticweb.owlapi.model.OWLPropertyExpression;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
-import com.google.common.base.Preconditions;
-import com.googlecode.javaewah.EWAHCompressedBitmap;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link BMKnowledgeBase} that uses the OWLAPI.
@@ -435,7 +404,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	}
 
 	private void storeInferences() {
-
+		LOG.info("Storing inferences...");
 		// Note: if there are any nodes containing >1 class or individual, then
 		// the store method is called redundantly. This is unlikely to affect performance,
 		// and the semantics are unchanged
@@ -1065,7 +1034,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 *            CURIE-style
 	 * @return OWLAPI Class object
 	 */
-	public OWLNamedIndividual getOWLNamedIndividual(String id) {
+	private OWLNamedIndividual getOWLNamedIndividual(String id) {
 		Preconditions.checkNotNull(id);
 		//TODO: check - this is redundant code simply return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id))); will suffice
 		if (curieUtil.getCurieMap().isEmpty()) {
