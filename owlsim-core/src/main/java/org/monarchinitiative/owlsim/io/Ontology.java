@@ -105,8 +105,8 @@ public class Ontology {
         //Order matters here - don't change it.
         mergeOntologies(sourceData.getOntologies());
         mergeOntologies(sourceData.getDataOntologies());
-        loadDataFromTsv(sourceData.getDataTsvs());
-        loadDataFromMap(sourceData.getIndividuals());
+        loadIndividualAssociationsFromTsv(sourceData.getIndividualAssociationTsvs());
+        loadIndividualAssociationsFromMap(sourceData.getIndividualAssociations());
         logger.info("Ontology loaded");
     }
 
@@ -136,10 +136,6 @@ public class Ontology {
     private OWLOntology mergeOntologies(Collection<String> uris) {
         uris.forEach(uri -> mergeOntology(uri));
         return owlOntology;
-    }
-
-    private ChangeApplied addAxiom(OWLAxiom axiom) {
-        return ontologyManager.addAxiom(owlOntology, axiom);
     }
 
     private ChangeApplied addAxioms(Set<OWLAxiom> axioms) {
@@ -179,12 +175,12 @@ public class Ontology {
         }
     }
 
-    private OWLOntology loadDataFromTsv(Collection<String> paths) {
-        paths.forEach(this::loadDataFromTsv);
+    private OWLOntology loadIndividualAssociationsFromTsv(Collection<String> paths) {
+        paths.forEach(this::loadIndividualAssociationsFromTsv);
         return owlOntology;
     }
 
-    private OWLOntology loadDataFromTsv(String path) {
+    private OWLOntology loadIndividualAssociationsFromTsv(String path) {
         if (path.endsWith(".gz")) {
             return loadDataFromTsvGzip(path);
         }
@@ -211,7 +207,7 @@ public class Ontology {
         return owlOntology;
     }
 
-    private void loadDataFromMap(Map<String, Collection<String>> individuals) {
+    private void loadIndividualAssociationsFromMap(Map<String, Collection<String>> individuals) {
         if(!individuals.isEmpty()){
             logger.info("Loading individuals from map");
         }
@@ -245,6 +241,10 @@ public class Ontology {
             OWLClassAssertionAxiom axiom = owlDataFactory.getOWLClassAssertionAxiom(owlClass, owlNamedIndividual);
             addAxiom(axiom);
         }
+    }
+
+    private ChangeApplied addAxiom(OWLAxiom axiom) {
+        return ontologyManager.addAxiom(owlOntology, axiom);
     }
 
     IRI toIri(String id) {

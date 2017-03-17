@@ -76,7 +76,7 @@ public class OwlKnowledgeBaseTest {
     @Test(expected = OntologyLoadException.class)
     public void testLoadGzippedDataFileNoOntology() {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
-                .loadDataFromTsv("src/test/resources/data/human-pheno.assocs.gz")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/human-pheno.assocs.gz")
                 .createKnowledgeBase();
     }
 
@@ -102,8 +102,9 @@ public class OwlKnowledgeBaseTest {
     public void loadDataFromTsv() {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
-                .loadOntology("src/test/resources/species-no-individuals.owl")
-                .loadDataFromTsv("src/test/resources/data/species-individuals.tsv")
+//                .loadOntology("src/test/resources/species-no-individuals.owl")
+                .loadOntology("src/test/resources/species.owl")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/species-individuals.tsv")
                 .createKnowledgeBase();
     }
 
@@ -112,7 +113,7 @@ public class OwlKnowledgeBaseTest {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
                 .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv("src/test/resources/data/human-pheno.assocs.gz")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/human-pheno.assocs.gz")
                 .createKnowledgeBase();
     }
 
@@ -121,7 +122,7 @@ public class OwlKnowledgeBaseTest {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
                 .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv(Arrays.asList(
+                .loadIndividualAssociationsFromTsv(Arrays.asList(
                         "src/test/resources/data/gene2taxon.tsv.gz",
                         "src/test/resources/data/mouse-pheno.assocs.gz",
                         "src/test/resources/data/human-pheno.assocs.gz"))
@@ -154,7 +155,7 @@ public class OwlKnowledgeBaseTest {
         BMKnowledgeBase knowledgeBase = BMKnowledgeBase.owlLoader()
                 .loadOntology("src/test/resources/species-no-individuals.owl")
                 .loadCuries(curies)
-                .loadDataFromMap(data)
+                .loadIndividualAssociations(data)
                 .createKnowledgeBase();
 
         System.out.println("knowledgebase individuals are: " + knowledgeBase.getIndividualIdsInSignature());

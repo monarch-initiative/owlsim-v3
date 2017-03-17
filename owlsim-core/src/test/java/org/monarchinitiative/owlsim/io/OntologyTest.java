@@ -33,7 +33,7 @@ public class OntologyTest {
         OntologySourceData sourceData = OntologySourceData.builder()
                 .ontology("src/test/resources/species-no-individuals.owl")
                 .curies(curies)
-                .data(data)
+                .individualAssociations(data)
                 .build();
 
         return Ontology.load(sourceData);
@@ -61,7 +61,7 @@ public class OntologyTest {
         OntologySourceData sourceData = OntologySourceData.builder()
                 .ontology("src/test/resources/species-no-individuals.owl")
                 .curies(curies)
-                .data(data)
+                .individualAssociations(data)
                 .build();
 
         Ontology.load(sourceData);
@@ -77,7 +77,7 @@ public class OntologyTest {
         OntologySourceData sourceData = OntologySourceData.builder()
                 .ontology("src/test/resources/species-no-individuals.owl")
                 .curies(curies)
-                .data(data)
+                .individualAssociations(data)
                 .build();
 
         Ontology.load(sourceData);
@@ -97,7 +97,7 @@ public class OntologyTest {
         OntologySourceData sourceData = OntologySourceData.builder()
                 .ontology("src/test/resources/species-no-individuals.owl")
                 .curies(curies)
-                .data(data)
+                .individualAssociations(data)
                 .build();
 
         Ontology ontology = Ontology.load(sourceData);

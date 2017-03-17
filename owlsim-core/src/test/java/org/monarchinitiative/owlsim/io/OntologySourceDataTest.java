@@ -47,10 +47,10 @@ public class OntologySourceDataTest {
         OntologySourceData sourceData = OntologySourceData.builder()
                 .curies(curies)
                 .ontology("src/test/resources/ontologies/mammal.obo.gz")
-                .dataTsv("src/test/resources/data/gene2taxon.tsv.gz")
-                .dataTsv("src/test/resources/data/mouse-pheno.assocs.gz")
-                .dataTsv("src/test/resources/data/human-pheno.assocs.gz")
-                .data(individuals)
+                .individualAssociationsTsv("src/test/resources/data/gene2taxon.tsv.gz")
+                .individualAssociationsTsv("src/test/resources/data/mouse-pheno.assocs.gz")
+                .individualAssociationsTsv("src/test/resources/data/human-pheno.assocs.gz")
+                .individualAssociations(individuals)
                 .build();
 
         System.out.println(sourceData);
@@ -60,7 +60,7 @@ public class OntologySourceDataTest {
     public void testThrowsExceptionWhenCuriesEmptyAndDataIncludedFromTsv() {
 
         OntologySourceData sourceData = OntologySourceData.builder()
-                .dataTsv("src/test/resources/data/gene2taxon.tsv.gz")
+                .individualAssociationsTsv("src/test/resources/data/gene2taxon.tsv.gz")
                 .build();
 
         System.out.println(sourceData);
