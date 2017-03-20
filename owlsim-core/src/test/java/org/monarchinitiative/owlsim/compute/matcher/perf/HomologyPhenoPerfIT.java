@@ -127,7 +127,7 @@ public class HomologyPhenoPerfIT extends AbstractProfileMatcherTest {
         kb = OwlKnowledgeBase.loader()
                 .loadCuries(curies)
                 .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv(
+                .loadIndividualAssociationsFromTsv(
                         "src/test/resources/data/gene2taxon.tsv.gz",
                         "src/test/resources/data/mouse-pheno.assocs.gz",
                         "src/test/resources/data/human-pheno.assocs.gz")

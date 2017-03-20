@@ -20,16 +20,16 @@ public class OntologySourceData {
     private final List<String> dataOntologies;
 
     private final Map<String, String> curies;
-    private final List<String> dataTsvs;
-    //TODO: add these so people can programmatically add individual assertions
-    private final Map<String, String> pairwiseMappings;
+    private final List<String> individualAssociationTsvs;
+    private final Map<String, Collection<String>> individualAssociations;
+    //TODO - labels?
 
     private OntologySourceData(Builder builder) {
         this.ontologies = distinctImmutableListOf(builder.ontologies);
         this.dataOntologies = distinctImmutableListOf(builder.dataOntologies);
         this.curies = ImmutableMap.copyOf(builder.curies);
-        this.dataTsvs = distinctImmutableListOf(builder.dataTsvs);
-        this.pairwiseMappings = ImmutableMap.copyOf(builder.pairwiseMappings);
+        this.individualAssociationTsvs = distinctImmutableListOf(builder.individualAssociationTsvs);
+        this.individualAssociations = ImmutableMap.copyOf(builder.individualAssociations);
     }
 
     private ImmutableList<String> distinctImmutableListOf(List<String> list) {
@@ -48,12 +48,12 @@ public class OntologySourceData {
         return curies;
     }
 
-    public List<String> getDataTsvs() {
-        return dataTsvs;
+    public List<String> getIndividualAssociationTsvs() {
+        return individualAssociationTsvs;
     }
 
-    public Map<String, String> getPairwiseMappings() {
-        return pairwiseMappings;
+    public Map<String, Collection<String>> getIndividualAssociations() {
+        return individualAssociations;
     }
 
     @Override
@@ -64,13 +64,13 @@ public class OntologySourceData {
         return Objects.equals(ontologies, that.ontologies) &&
                 Objects.equals(dataOntologies, that.dataOntologies) &&
                 Objects.equals(curies, that.curies) &&
-                Objects.equals(dataTsvs, that.dataTsvs) &&
-                Objects.equals(pairwiseMappings, that.pairwiseMappings);
+                Objects.equals(individualAssociationTsvs, that.individualAssociationTsvs) &&
+                Objects.equals(individualAssociations, that.individualAssociations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ontologies, dataOntologies, curies, dataTsvs, pairwiseMappings);
+        return Objects.hash(ontologies, dataOntologies, curies, individualAssociationTsvs, individualAssociations);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class OntologySourceData {
                 "ontologies=" + ontologies +
                 ", dataOntologies=" + dataOntologies +
                 ", curies=" + curies +
-                ", dataTsvs=" + dataTsvs +
-                ", pairwiseMappings=" + pairwiseMappings +
+                ", individualAssociationTsvs=" + individualAssociationTsvs +
+                ", individualAssociations=" + individualAssociations +
                 '}';
     }
 
@@ -93,8 +93,8 @@ public class OntologySourceData {
         private List<String> dataOntologies = new ArrayList<>();
         //Curies need to be supplied if people are adding data using TSV files or pairwise mappings using curies.
         private Map<String, String> curies = Collections.emptyMap();
-        private List<String> dataTsvs = new ArrayList<>();
-        private Map<String, String> pairwiseMappings = Collections.emptyMap();
+        private List<String> individualAssociationTsvs = new ArrayList<>();
+        private Map<String, Collection<String>> individualAssociations = new HashMap<>();
 
         private Builder(){
             //use the static method.
@@ -161,18 +161,23 @@ public class OntologySourceData {
             return this;
         }
 
-        public Builder dataTsv(String path) {
-            dataTsvs.add(path);
+        public Builder individualAssociationsTsv(String path) {
+            individualAssociationTsvs.add(path);
             return this;
         }
 
-        public Builder dataTsv(String... paths) {
-            dataTsvs.addAll(Arrays.asList(paths));
+        public Builder individualAssociationsTsv(String... paths) {
+            individualAssociationTsvs.addAll(Arrays.asList(paths));
             return this;
         }
 
-        public Builder dataTsv(Collection<String> paths) {
-            dataTsvs.addAll(paths);
+        public Builder individualAssociationsTsv(Collection<String> paths) {
+            individualAssociationTsvs.addAll(paths);
+            return this;
+        }
+
+        public Builder individualAssociations(Map<String, ? extends Collection<String>> mappings) {
+            individualAssociations.putAll(mappings);
             return this;
         }
 
@@ -180,14 +185,14 @@ public class OntologySourceData {
             if(ontologies.isEmpty()) {
                 throw new OntologyLoadException("No ontology defined.");
             }
-            if (curies.isEmpty() && hasNonOntologyData()) {
-                throw new OntologyLoadException("Cannot load TSV data sources or pairwise mappings when curies have not been defined.");
+            if (curies.isEmpty() && hasIndividualAssociationData()) {
+                throw new OntologyLoadException("Cannot load individual class associations when curies have not been defined.");
             }
             return new OntologySourceData(this);
         }
 
-        private boolean hasNonOntologyData() {
-            return !dataTsvs.isEmpty() || !pairwiseMappings.isEmpty();
+        private boolean hasIndividualAssociationData() {
+            return !individualAssociationTsvs.isEmpty() || !individualAssociations.isEmpty();
         }
     }
 }
