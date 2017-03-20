@@ -192,6 +192,17 @@ public class AbstractProfileMatcherTest {
 		return true;
 	}
 	
+	protected boolean isNotInMatchSet(String matchId, MatchSet matchSet) {
+	    for (Match m : matchSet.getMatches()) {
+	        if (m.getMatchId().equals(matchId)) {
+	           return false;
+	        }
+	    }
+	    return true;
+	}
+
+
+	
 	protected boolean isRankedAt(String matchId, MatchSet matchSet, int expectedRank) {
 	    int matchRank = 0;
 	    for (Match m : matchSet.getMatches()) {
