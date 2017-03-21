@@ -28,7 +28,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 		ontologyUris.forEach(logger::info);
 		logger.info("Loading ontologyDataUris:");
 		ontologyDataUris.forEach(logger::info);
-		logger.info("Loading dataTsvs:");
+		logger.info("Loading individual associations Tsvs:");
 		dataTsvs.forEach(logger::info);
 		logger.info("Loading curies:");
 		curies.entrySet().forEach(logger::info);
@@ -37,7 +37,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 		this.bmKnowledgeBase = OwlKnowledgeBase.loader()
 				.loadOntologies(ontologyUris)
 				.loadDataFromOntologies(ontologyDataUris)
-				.loadDataFromTsv(dataTsvs)
+				.loadIndividualAssociationsFromTsv(dataTsvs)
 				.loadCuries(curies)
 				.createKnowledgeBase();
 

@@ -57,7 +57,6 @@ public final class OwlKnowledgeBase {
          * @param file
          */
         public Loader loadOntology(File file) {
-            Math.random();
             sourceDataBuilder.ontology(file);
             return this;
         }
@@ -103,18 +102,23 @@ public final class OwlKnowledgeBase {
             return this;
         }
 
-        public Loader loadDataFromTsv(String path) {
-            sourceDataBuilder.dataTsv(path);
+        public Loader loadIndividualAssociationsFromTsv(String path) {
+            sourceDataBuilder.individualAssociationsTsv(path);
             return this;
         }
 
-        public Loader loadDataFromTsv(String... paths) {
-            sourceDataBuilder.dataTsv(paths);
+        public Loader loadIndividualAssociationsFromTsv(String... paths) {
+            sourceDataBuilder.individualAssociationsTsv(paths);
             return this;
         }
 
-        public Loader loadDataFromTsv(Collection<String> paths) {
-            sourceDataBuilder.dataTsv(paths);
+        public Loader loadIndividualAssociationsFromTsv(Collection<String> paths) {
+            sourceDataBuilder.individualAssociationsTsv(paths);
+            return this;
+        }
+
+        public Loader loadIndividualAssociations(Map<String, ? extends Collection<String>> data) {
+            sourceDataBuilder.individualAssociations(data);
             return this;
         }
 

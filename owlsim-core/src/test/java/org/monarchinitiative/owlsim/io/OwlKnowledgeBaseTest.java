@@ -1,13 +1,12 @@
 package org.monarchinitiative.owlsim.io;
 
+import com.google.common.collect.Sets;
 import org.junit.Test;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import uk.ac.manchester.cs.jfact.JFactFactory;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -77,7 +76,7 @@ public class OwlKnowledgeBaseTest {
     @Test(expected = OntologyLoadException.class)
     public void testLoadGzippedDataFileNoOntology() {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
-                .loadDataFromTsv("src/test/resources/data/human-pheno.assocs.gz")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/human-pheno.assocs.gz")
                 .createKnowledgeBase();
     }
 
@@ -103,8 +102,9 @@ public class OwlKnowledgeBaseTest {
     public void loadDataFromTsv() {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
-                .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv("src/test/resources/data/human-pheno.assocs.gz")
+//                .loadOntology("src/test/resources/species-no-individuals.owl")
+                .loadOntology("src/test/resources/species.owl")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/species-individuals.tsv")
                 .createKnowledgeBase();
     }
 
@@ -113,7 +113,7 @@ public class OwlKnowledgeBaseTest {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
                 .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv("src/test/resources/data/human-pheno.assocs.gz")
+                .loadIndividualAssociationsFromTsv("src/test/resources/data/human-pheno.assocs.gz")
                 .createKnowledgeBase();
     }
 
@@ -122,7 +122,7 @@ public class OwlKnowledgeBaseTest {
         BMKnowledgeBase bmKnowledgeBase = OwlKnowledgeBase.loader()
                 .loadCuries(curies())
                 .loadOntology("src/test/resources/ontologies/mammal.obo.gz")
-                .loadDataFromTsv(Arrays.asList(
+                .loadIndividualAssociationsFromTsv(Arrays.asList(
                         "src/test/resources/data/gene2taxon.tsv.gz",
                         "src/test/resources/data/mouse-pheno.assocs.gz",
                         "src/test/resources/data/human-pheno.assocs.gz"))
@@ -139,6 +139,28 @@ public class OwlKnowledgeBaseTest {
         //lastly, why -1? This is because http://www.w3.org/2002/07/owl#Thing is also reported as class.
         assertEquals(38627, bmKnowledgeBase.getClassIdsInSignature().size() - 1);
         assertEquals(14200, bmKnowledgeBase.getIndividualIdsInSignature().size());
+    }
+
+    @Test
+    public void loadDataFromMap() {
+        Map<String, String> curies = new HashMap<>();
+        curies.put("HP", "http://purl.obolibrary.org/obo/HP_");
+        curies.put("NAME:", "http://x.org/NAME_");
+
+        Map<String, List<String>> data = new HashMap<>();
+        data.put("NAME:Kevin", Arrays.asList("HP:0000952","HP:0001090","HP:0004322","HP:0001006","HP:0006101","HP:0009914"));
+        data.put("NAME:Bob", Arrays.asList("HP:0000952","HP:0001090","HP:0004322","HP:0001006","HP:0006101","HP:0001100"));
+        data.put("NAME:Stuart", Arrays.asList("HP:0000952","HP:0001090","HP:0004322","HP:0001006","HP:0006101","HP:0100754"));
+
+        BMKnowledgeBase knowledgeBase = BMKnowledgeBase.owlLoader()
+                .loadOntology("src/test/resources/species-no-individuals.owl")
+                .loadCuries(curies)
+                .loadIndividualAssociations(data)
+                .createKnowledgeBase();
+
+        System.out.println("knowledgebase individuals are: " + knowledgeBase.getIndividualIdsInSignature());
+        System.out.println(knowledgeBase.getEntity("NAME:Kevin"));
+        assertEquals(Sets.newHashSet("NAME:Kevin", "NAME:Bob", "NAME:Stuart"), knowledgeBase.getIndividualIdsInSignature());
     }
 
     @Test

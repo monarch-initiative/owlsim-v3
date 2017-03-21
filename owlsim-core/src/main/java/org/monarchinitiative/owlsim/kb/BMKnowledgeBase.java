@@ -1,13 +1,13 @@
 package org.monarchinitiative.owlsim.kb;
 
-import java.util.Map;
-import java.util.Set;
-
+import com.googlecode.javaewah.EWAHCompressedBitmap;
+import org.monarchinitiative.owlsim.io.OwlKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.impl.BMKnowledgeBaseOWLAPIImpl;
 import org.monarchinitiative.owlsim.model.kb.Attribute;
 import org.monarchinitiative.owlsim.model.kb.Entity;
 
-import com.googlecode.javaewah.EWAHCompressedBitmap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An interface to an ontology in which the fundamental unit of representation of 
@@ -358,5 +358,10 @@ public interface BMKnowledgeBase {
 	 */
 	public String resolveIri(String entity);
 
+	
+	
+	public static OwlKnowledgeBase.Loader owlLoader() {
+		return OwlKnowledgeBase.loader();
+	}
 
 }

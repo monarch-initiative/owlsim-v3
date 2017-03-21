@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -34,6 +35,7 @@ public class Ontology {
     private final OWLOntology owlOntology;
 
     private final OWLOntologyManager ontologyManager;
+    private final OWLDataFactory owlDataFactory;
 
     private Ontology(OntologySourceData sourceData, Concurrency concurrency) {
         Objects.requireNonNull(sourceData, "Unable to create Ontology without data sources.");
@@ -41,6 +43,7 @@ public class Ontology {
         this.curieUtil = new CurieUtil(sourceData.getCuries());
         this.ontologyManager = createOntologyManager(concurrency);
         this.owlOntology = createEmptyOntology(ontologyManager);
+        this.owlDataFactory = ontologyManager.getOWLDataFactory();
         loadOwlOntology();
     }
 
@@ -81,12 +84,29 @@ public class Ontology {
         return curieUtil;
     }
 
+    /**
+     * @param curie
+     * @return
+     */
+    public OWLClass getOWLClass(String curie) {
+        return owlDataFactory.getOWLClass(toIri(curie));
+    }
+
+    public OWLNamedIndividual getOWLNamedIndividual(String curie) {
+        return owlDataFactory.getOWLNamedIndividual(toIri(curie));
+    }
+
+    public String toCurie(IRI iri) {
+        String iriString = iri.toString();
+        return curieUtil.getCurie(iriString).orElse(iriString);
+    }
+
     private void loadOwlOntology() {
         //Order matters here - don't change it.
         mergeOntologies(sourceData.getOntologies());
         mergeOntologies(sourceData.getDataOntologies());
-        loadDataFromTsv(sourceData.getDataTsvs());
-        loadDataFromPairwiseMappings(sourceData.getPairwiseMappings());
+        loadIndividualAssociationsFromTsv(sourceData.getIndividualAssociationTsvs());
+        loadIndividualAssociationsFromMap(sourceData.getIndividualAssociations());
         logger.info("Ontology loaded");
     }
 
@@ -116,10 +136,6 @@ public class Ontology {
     private OWLOntology mergeOntologies(Collection<String> uris) {
         uris.forEach(uri -> mergeOntology(uri));
         return owlOntology;
-    }
-
-    private ChangeApplied addAxiom(OWLAxiom axiom) {
-        return ontologyManager.addAxiom(owlOntology, axiom);
     }
 
     private ChangeApplied addAxioms(Set<OWLAxiom> axioms) {
@@ -159,12 +175,12 @@ public class Ontology {
         }
     }
 
-    private OWLOntology loadDataFromTsv(Collection<String> paths) {
-        paths.forEach(this::loadDataFromTsv);
+    private OWLOntology loadIndividualAssociationsFromTsv(Collection<String> paths) {
+        paths.forEach(this::loadIndividualAssociationsFromTsv);
         return owlOntology;
     }
 
-    private OWLOntology loadDataFromTsv(String path) {
+    private OWLOntology loadIndividualAssociationsFromTsv(String path) {
         if (path.endsWith(".gz")) {
             return loadDataFromTsvGzip(path);
         }
@@ -191,8 +207,20 @@ public class Ontology {
         return owlOntology;
     }
 
-    private void loadDataFromPairwiseMappings(Map<String, String> pairwiseMappings) {
-        pairwiseMappings.forEach(this::addInstanceOf);
+    private void loadIndividualAssociationsFromMap(Map<String, Collection<String>> individuals) {
+        if(!individuals.isEmpty()){
+            logger.info("Loading individuals from map");
+        }
+        //e.g. 'ORPHA:710': ['HP:0000194','HP:0000218','HP:0000262','HP:0000303','HP:0000316']
+        individuals.forEach(addIndividual());
+    }
+
+    private BiConsumer<String, Collection<String>> addIndividual() {
+        return (individual, annotations) -> {
+            for (String curie : annotations) {
+                addInstanceOf(individual, curie);
+            }
+        };
     }
 
     private void loadLineIntoDataOntology(String line) {
@@ -204,15 +232,22 @@ public class Ontology {
     }
 
     private void addInstanceOf(String individual, String ontologyClass) {
-//                logger.info("Adding axiom " + individual + ": " + ontologyClass);
-        OWLDataFactory owlDataFactory = ontologyManager.getOWLDataFactory();
-        OWLClass owlClass = owlDataFactory.getOWLClass(toIri(ontologyClass));
-        OWLNamedIndividual owlNamedIndividual = owlDataFactory.getOWLNamedIndividual(toIri(individual));
-        OWLClassAssertionAxiom axiom = owlDataFactory.getOWLClassAssertionAxiom(owlClass, owlNamedIndividual);
-        addAxiom(axiom);
+        Objects.requireNonNull(individual, "Individual identifier cannot be null. Check your input.");
+        Objects.requireNonNull(ontologyClass, "Class identifier(s) cannot be null. Check your input.");
+        if (!ontologyClass.isEmpty()) {
+//            logger.info("Adding axiom " + individual + ": " + ontologyClass);
+            OWLClass owlClass = getOWLClass(ontologyClass);
+            OWLNamedIndividual owlNamedIndividual = getOWLNamedIndividual(individual);
+            OWLClassAssertionAxiom axiom = owlDataFactory.getOWLClassAssertionAxiom(owlClass, owlNamedIndividual);
+            addAxiom(axiom);
+        }
     }
 
-    private IRI toIri(String id) {
+    private ChangeApplied addAxiom(OWLAxiom axiom) {
+        return ontologyManager.addAxiom(owlOntology, axiom);
+    }
+
+    IRI toIri(String id) {
         return IRI.create(curieUtil.getIri(id).orElse(id));
     }
 
