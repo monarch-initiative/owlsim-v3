@@ -67,12 +67,8 @@ public class OntologyMatchResource {
             @ApiParam(value = "ontology to be matched, e.g. HP",
             required = true) @PathParam("ontology") String ontology)
                     throws UnknownFilterException, IncoherentStateException {
-    	
-    	// TODO it's weird to resolve the curie here
-    	String resolveEntity = curieUtil.getIri(entity).orElse(entity);
-    	
         List<SimpleClassMatch> matches = 
-                classMatcher.matchEntity(resolveEntity, ontology);
+                classMatcher.matchEntity(entity, ontology);
 		return matches;
 	}
 

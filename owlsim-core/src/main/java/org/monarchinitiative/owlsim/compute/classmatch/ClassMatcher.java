@@ -47,7 +47,7 @@ public class ClassMatcher {
 	 */
 	public List<SimpleClassMatch> matchEntity(String entity, String tOnt) {
 		Set<String> tids = kb.getClassIdsByOntology(tOnt);
-		return matchClassSets(Sets.newHashSet(entity), tids);
+		return matchClassSets(Sets.newHashSet(kb.resolveIri(entity)), tids);
 	}
 
 	public List<SimpleClassMatch> matchClassSets(Set<String> qids, Set<String> tids) {
