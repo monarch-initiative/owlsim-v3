@@ -78,6 +78,8 @@ public class ProfileMatchEvaluator {
 
 		if (jsonWriter != null) {
 			LOG.info("Writing MatchSet using "+jsonWriter+" results will appear in "+jsonWriter);
+			jsonWriter.write(mp.getMatches().get(0));
+			LOG.info("MATCHES:"+mp);
 			jsonWriter.write(mp);
 		}
 

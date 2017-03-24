@@ -23,7 +23,8 @@ import org.monarchinitiative.owlsim.model.match.ProfileQuery;
  *
  */
 public class MatchSetImpl implements MatchSet {
-	private ProfileQuery query;
+
+    private ProfileQuery query;
 	private List<Match> matches; // TODO - make this neutral
 	ExecutionMetadata executionMetadata;
 	MethodMetadata methodMetadata;
@@ -210,8 +211,10 @@ public class MatchSetImpl implements MatchSet {
 
 	public void calculateMatchSignificance(DescriptiveStatistics background) {
 		for (Match m : this.matches) {
-			double p = TestUtils.tTest(m.getScore(), background);
-			m.setSignificance(p);
+		    if (background.getN() > 1) { 
+		        double p = TestUtils.tTest(m.getScore(), background);
+		        m.setSignificance(p);
+		    }
 		}
 	}
 

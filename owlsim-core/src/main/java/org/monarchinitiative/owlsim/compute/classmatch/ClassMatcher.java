@@ -27,8 +27,8 @@ public class ClassMatcher {
 	/**
 	 * Find best match for every class in ont1, where the best match is in ont2
 	 * 
-	 * @param qOnt
-	 * @param tOnt
+	 * @param qOnt - ontology prefix
+	 * @param tOnt - ontology prefix
 	 * @return list of matches
 	 */
 	public List<SimpleClassMatch> matchOntologies(String qOnt, String tOnt) {
@@ -37,8 +37,17 @@ public class ClassMatcher {
 		return matchClassSets(qids, tids);
 	}
 
+	/**
+	 * Find best matches for all class combos {qid1, ...} x {tid1, ...}
+	 * 
+	 * @param qids - classes
+	 * @param tids - classes
+	 * @return list of matches
+	 */
 	public List<SimpleClassMatch> matchClassSets(Set<String> qids, Set<String> tids) {
 		ArrayList<SimpleClassMatch> matches = new ArrayList<>();
+		
+		// TODO: consider optimization, by first grouping by system
 		for (String q : qids) {
 			matches.add(getBestMatch(q, tids));
 		}
@@ -58,6 +67,8 @@ public class ClassMatcher {
 				bestEqScore = eqScore;
 				best = t;
 			}
+			if (bestEqScore >= 1.0)
+			    break;
 		}
 
 		EWAHCompressedBitmap tbm = kb.getSuperClassesBM(best);

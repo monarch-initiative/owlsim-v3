@@ -27,4 +27,14 @@ public class TestQuery {
 		this.expectedId = expectedId;
 		this.maxRank = maxRank;
 	}
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "TestQuery [query=" + query + ", expectedId=" + expectedId
+                + ", maxRank=" + maxRank + ", matchSet=" + matchSet + "]";
+    }
+	
+	
 }
