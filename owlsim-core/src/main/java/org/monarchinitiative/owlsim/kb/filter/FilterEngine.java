@@ -95,14 +95,22 @@ public class FilterEngine {
             int ix = knowledgeBase.getClassIndex(tf.getTypeId());
             return typesBM.getPositions().contains(ix) ^ tf.isNegated();
 		}
-		else if (filter instanceof IdFilter) {
-			IdFilter idf = (IdFilter)filter;
-			if (idf.getIds().contains(id)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+        else if (filter instanceof IdFilter) {
+            IdFilter idf = (IdFilter)filter;
+            if (idf.getIds().contains(id)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (filter instanceof IdPrefixFilter) {
+            IdPrefixFilter idf = (IdPrefixFilter)filter;
+            if (id.startsWith(idf.getPrefix())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         else if (filter instanceof AnonIndividualFilter) {
             return false;
         }

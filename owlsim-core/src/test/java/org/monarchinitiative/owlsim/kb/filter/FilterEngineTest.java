@@ -50,6 +50,9 @@ public class FilterEngineTest extends AbstractFilterEngineTest {
         //System.out.println(tf6);
         //testFilter(tf6);
  
+        IdPrefixFilter pf = IdPrefixFilter.create("http://x.org/ia");
+        testFilter(pf, "http://x.org/ia", "http://x.org/iabc");
+
 	}
 
 }
