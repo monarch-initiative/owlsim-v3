@@ -7,6 +7,7 @@ import java.util.Set;
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.monarchinitiative.owlsim.kb.LabelMapper;
 
+import com.google.common.collect.Sets;
 import com.googlecode.javaewah.EWAHCompressedBitmap;
 
 /**
@@ -35,6 +36,18 @@ public class ClassMatcher {
 		Set<String> qids = kb.getClassIdsByOntology(qOnt);
 		Set<String> tids = kb.getClassIdsByOntology(tOnt);
 		return matchClassSets(qids, tids);
+	}
+
+	/**
+	 * Find best match for one entity in a whole ontology
+	 * 
+	 * @param entity
+	 * @param tOnt
+	 * @return list of matches
+	 */
+	public List<SimpleClassMatch> matchEntity(String entity, String tOnt) {
+		Set<String> tids = kb.getClassIdsByOntology(tOnt);
+		return matchClassSets(Sets.newHashSet(kb.resolveIri(entity)), tids);
 	}
 
 	public List<SimpleClassMatch> matchClassSets(Set<String> qids, Set<String> tids) {

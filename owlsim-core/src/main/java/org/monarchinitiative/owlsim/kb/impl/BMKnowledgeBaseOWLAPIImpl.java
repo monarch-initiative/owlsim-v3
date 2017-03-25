@@ -141,12 +141,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	}
 
 	private String getShortForm(IRI iri) {
-		if (curieUtil.getCurieMap().isEmpty()) {
-			return iri.toString();
-		} else {
-			String iriString = iri.toString();
-			return curieUtil.getCurie(iriString).orElse(iriString);
-		}
+		String iriString = iri.toString();
+		return curieUtil.getCurie(iriString).orElse(iriString);
 	}
 
 	private void populateLabelsFromOntology(LabelMapper labelMapper, OWLOntology ontology) {
@@ -1006,11 +1002,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 */
 	private OWLClass getOWLClass(String id) {
 		Preconditions.checkNotNull(id);
-		if (curieUtil.getCurieMap().isEmpty()) {
-			return getOWLClass(IRI.create(id));
-		} else {
-			return getOWLClass(IRI.create(curieUtil.getIri(id).orElse(id)));
-		}
+		return getOWLClass(IRI.create(curieUtil.getIri(id).orElse(id)));
 	}
 
 	/**
@@ -1036,12 +1028,7 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 	 */
 	private OWLNamedIndividual getOWLNamedIndividual(String id) {
 		Preconditions.checkNotNull(id);
-		//TODO: check - this is redundant code simply return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id))); will suffice
-		if (curieUtil.getCurieMap().isEmpty()) {
-			return getOWLNamedIndividual(IRI.create(id));
-		} else {
-			return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id)));
-		}
+		return getOWLNamedIndividual(IRI.create(curieUtil.getIri(id).orElse(id)));
 	}
 
 	public Attribute getAttribute(String id) {
@@ -1111,6 +1098,11 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 
 		return ontoEWAHStore.getDirectTypes(classBits, getClassIndex(classId));
 
+	}
+
+	@Override
+	public String resolveIri(String entity) {
+		return curieUtil.getIri(entity).orElse(entity);
 	}
 
 }

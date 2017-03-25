@@ -351,11 +351,17 @@ public interface BMKnowledgeBase {
 	public int getRootIndex();
 
 
+	/**
+	 * Resolves a CURIE into an IRI, if possible.
+	 * 
+	 * @return IRI version of a CURIE, or the string itself
+	 */
+	public String resolveIri(String entity);
+
+	
+	
 	public static OwlKnowledgeBase.Loader owlLoader() {
 		return OwlKnowledgeBase.loader();
 	}
-
-
-
 
 }
