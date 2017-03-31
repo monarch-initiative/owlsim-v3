@@ -32,9 +32,6 @@ public class OntologyMatchResource {
     @Inject
     ClassMatcher classMatcher;
     
-    @Inject
-    CurieUtil curieUtil;
-
     @GET
     @Path("/{queryOntology}/{targetOntology}")
     @Timed
@@ -56,7 +53,7 @@ public class OntologyMatchResource {
     // TODO - API for comparing two entities
 
     @GET
-    @Path("/{entity}/{ontology}")
+    @Path("/single/{entity}/{ontology}")
     @Timed
     @CacheControl(maxAge = 2, maxAgeUnit = TimeUnit.HOURS)
     @ApiOperation(value = "Match", response = MatchSet.class,
