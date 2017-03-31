@@ -23,6 +23,8 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.google.monitoring.runtime.instrumentation.common.com.google.common.collect.Sets;
+
 public class ApplicationConfiguration extends Configuration {
 
     @NotNull
@@ -35,8 +37,10 @@ public class ApplicationConfiguration extends Configuration {
     private Set<String> dataTsvs;
     
     private Map<String, String> curies = new HashMap<String, String>();
+    
+    private Set<String> labelTsvs = Sets.newHashSet();
 
-    public Set<String> getOntologyUris() {
+	public Set<String> getOntologyUris() {
         return ontologyUris;
     }
 
@@ -51,5 +55,9 @@ public class ApplicationConfiguration extends Configuration {
     public Map<String, String> getCuries() {
         return curies;
     }
+
+	public Set<String> getLabelTsvs() {
+		return labelTsvs;
+	}
 
 }

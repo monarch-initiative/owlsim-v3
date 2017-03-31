@@ -22,7 +22,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 
 	private final BMKnowledgeBase bmKnowledgeBase;
 
-	public KnowledgeBaseModule(Collection<String> ontologyUris, Collection<String> ontologyDataUris, Set<String> dataTsvs, Map<String, String> curies) {
+	public KnowledgeBaseModule(Collection<String> ontologyUris, Collection<String> ontologyDataUris, Set<String> dataTsvs,  Set<String> labelTsvs, Map<String, String> curies) {
 
 		logger.info("Loading ontologyUris:");
 		ontologyUris.forEach(logger::info);
@@ -32,6 +32,8 @@ public class KnowledgeBaseModule extends AbstractModule {
 		dataTsvs.forEach(logger::info);
 		logger.info("Loading curies:");
 		curies.entrySet().forEach(logger::info);
+		logger.info("Loading labels:");
+		//labels.entrySet().forEach(logger::info);
 
 		//The OwlKnowledgeBase.Loader uses the ELKReasonerFactory and Concurrency.CONCURRENT as defaults.
 		this.bmKnowledgeBase = OwlKnowledgeBase.loader()
@@ -39,6 +41,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 				.loadDataFromOntologies(ontologyDataUris)
 				.loadIndividualAssociationsFromTsv(dataTsvs)
 				.loadCuries(curies)
+				.loadLabelsFromTsv(labelTsvs)
 				.createKnowledgeBase();
 
 		logger.info("Created BMKnowledgebase");

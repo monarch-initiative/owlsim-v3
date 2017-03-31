@@ -2,6 +2,8 @@ package org.monarchinitiative.owlsim.io;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+
 import org.monarchinitiative.owlsim.kb.BMKnowledgeBase;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -22,7 +24,7 @@ public class OntologySourceData {
     private final Map<String, String> curies;
     private final List<String> individualAssociationTsvs;
     private final Map<String, Collection<String>> individualAssociations;
-    //TODO - labels?
+    private final Set<String> labelTsvs;
 
     private OntologySourceData(Builder builder) {
         this.ontologies = distinctImmutableListOf(builder.ontologies);
@@ -30,6 +32,7 @@ public class OntologySourceData {
         this.curies = ImmutableMap.copyOf(builder.curies);
         this.individualAssociationTsvs = distinctImmutableListOf(builder.individualAssociationTsvs);
         this.individualAssociations = ImmutableMap.copyOf(builder.individualAssociations);
+        this.labelTsvs = ImmutableSet.copyOf(builder.labelTsvs);
     }
 
     private ImmutableList<String> distinctImmutableListOf(List<String> list) {
@@ -46,6 +49,10 @@ public class OntologySourceData {
 
     public Map<String, String> getCuries() {
         return curies;
+    }
+
+    public Set<String> getLabelTsvs() {
+        return labelTsvs;
     }
 
     public List<String> getIndividualAssociationTsvs() {
@@ -65,7 +72,8 @@ public class OntologySourceData {
                 Objects.equals(dataOntologies, that.dataOntologies) &&
                 Objects.equals(curies, that.curies) &&
                 Objects.equals(individualAssociationTsvs, that.individualAssociationTsvs) &&
-                Objects.equals(individualAssociations, that.individualAssociations);
+                Objects.equals(individualAssociations, that.individualAssociations) &&
+                Objects.equals(labelTsvs, that.labelTsvs);
     }
 
     @Override
@@ -81,6 +89,7 @@ public class OntologySourceData {
                 ", curies=" + curies +
                 ", individualAssociationTsvs=" + individualAssociationTsvs +
                 ", individualAssociations=" + individualAssociations +
+                ", labelTsvs=" + labelTsvs +
                 '}';
     }
 
@@ -95,6 +104,7 @@ public class OntologySourceData {
         private Map<String, String> curies = Collections.emptyMap();
         private List<String> individualAssociationTsvs = new ArrayList<>();
         private Map<String, Collection<String>> individualAssociations = new HashMap<>();
+        private Set<String> labelTsvs = Collections.emptySet();
 
         private Builder(){
             //use the static method.
@@ -178,6 +188,11 @@ public class OntologySourceData {
 
         public Builder individualAssociations(Map<String, ? extends Collection<String>> mappings) {
             individualAssociations.putAll(mappings);
+            return this;
+        }
+        
+        public Builder labelTsvs(Set<String> labelTsvs) {
+            this.labelTsvs = labelTsvs;
             return this;
         }
 
