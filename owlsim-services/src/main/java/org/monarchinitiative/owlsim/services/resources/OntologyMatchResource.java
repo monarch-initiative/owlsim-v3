@@ -15,7 +15,6 @@ import org.monarchinitiative.owlsim.compute.classmatch.SimpleClassMatch;
 import org.monarchinitiative.owlsim.compute.cpt.IncoherentStateException;
 import org.monarchinitiative.owlsim.kb.filter.UnknownFilterException;
 import org.monarchinitiative.owlsim.model.match.MatchSet;
-import org.prefixcommons.CurieUtil;
 
 import com.codahale.metrics.annotation.Timed;
 

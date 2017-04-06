@@ -11,6 +11,7 @@ import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A convenience wrapper to enable easy loading of a {@link BMKnowledgeBase} from OWL ontologies and data files.
@@ -48,6 +49,15 @@ public final class OwlKnowledgeBase {
          */
         public Loader loadCuries(Map<String, String> curies) {
             sourceDataBuilder.curies(curies);
+            return this;
+        }
+
+        /**
+         * @param labelTsvs
+         * @return
+         */
+        public Loader loadLabelsFromTsv(Set<String> labelTsvs) {
+            sourceDataBuilder.labelTsvs(labelTsvs);
             return this;
         }
 

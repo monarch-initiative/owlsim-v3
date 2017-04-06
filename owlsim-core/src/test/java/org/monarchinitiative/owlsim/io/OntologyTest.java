@@ -1,171 +1,205 @@
 package org.monarchinitiative.owlsim.io;
 
-import com.google.common.collect.ImmutableSet;
-import org.junit.Test;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.model.parameters.Imports;
+import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.parameters.Imports;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 
 /**
  * @author Jules Jacobsen <j.jacobsen@qmul.ac.uk>
  */
 public class OntologyTest {
 
-    private Map<String, String> getHpAndNameCurieMap() {
-        Map<String, String> curies = new HashMap<>();
-        curies.put("HP", "http://purl.obolibrary.org/obo/HP_");
-        curies.put("MINION", "http://despicableme.wikia.com/wiki/");
-        return curies;
-    }
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder();
 
-    private Ontology getBobOnlyOntology() {
-        Map<String, String> curies = getHpAndNameCurieMap();
+	private Map<String, String> getHpAndNameCurieMap() {
+		Map<String, String> curies = new HashMap<>();
+		curies.put("HP", "http://purl.obolibrary.org/obo/HP_");
+		curies.put("MINION", "http://despicableme.wikia.com/wiki/");
+		return curies;
+	}
 
-        Map<String, Set<String>> data = new HashMap<>();
-        data.put("MINION:Bob", toSet("HP:0000952;HP:0001090;HP:0008857;HP:0001006;HP:0006101;HP:0001100"));
+	private Ontology getBobOnlyOntology() {
+		Map<String, String> curies = getHpAndNameCurieMap();
 
-        OntologySourceData sourceData = OntologySourceData.builder()
-                .ontology("src/test/resources/species-no-individuals.owl")
-                .curies(curies)
-                .individualAssociations(data)
-                .build();
+		Map<String, Set<String>> data = new HashMap<>();
+		data.put("MINION:Bob", toSet("HP:0000952;HP:0001090;HP:0008857;HP:0001006;HP:0006101;HP:0001100"));
 
-        return Ontology.load(sourceData);
-    }
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies).individualAssociations(data)
+				.build();
 
-    private Set<String> toSet(String input) {
-        return Arrays.stream(input.split("[,;]")).map(String::trim).collect(ImmutableSet.toImmutableSet());
-    }
+		return Ontology.load(sourceData);
+	}
 
-    private Set<OWLIndividualAxiom> getAxiomsForIndividual(Ontology ontology, String individual) {
-        OWLOntology owlOntology = ontology.getOwlOntology();
-        OWLOntologyManager manager = owlOntology.getOWLOntologyManager();
-        OWLDataFactory owlDataFactory = manager.getOWLDataFactory();
-        OWLNamedIndividual owlNamedIndividual = owlDataFactory.getOWLNamedIndividual(ontology.toIri(individual));
-        return owlOntology.getAxioms(owlNamedIndividual, Imports.INCLUDED);
-    }
+	private Set<String> toSet(String input) {
+		return Arrays.stream(input.split("[,;]")).map(String::trim).collect(ImmutableSet.toImmutableSet());
+	}
 
-    @Test(expected = NullPointerException.class)
-    public void testAddNullIndividuals() {
-        Map<String, String> curies = getHpAndNameCurieMap();
+	private Set<OWLIndividualAxiom> getAxiomsForIndividual(Ontology ontology, String individual) {
+		OWLOntology owlOntology = ontology.getOwlOntology();
+		OWLOntologyManager manager = owlOntology.getOWLOntologyManager();
+		OWLDataFactory owlDataFactory = manager.getOWLDataFactory();
+		OWLNamedIndividual owlNamedIndividual = owlDataFactory.getOWLNamedIndividual(ontology.toIri(individual));
+		return owlOntology.getAxioms(owlNamedIndividual, Imports.INCLUDED);
+	}
 
-        Map<String, Set<String>> data = new HashMap<>();
-        data.put(null, toSet("HP:0000952,HP:0001090,HP:0004322,HP:0001006,HP:0006101"));
+	@Test(expected = NullPointerException.class)
+	public void testAddNullIndividuals() {
+		Map<String, String> curies = getHpAndNameCurieMap();
 
-        OntologySourceData sourceData = OntologySourceData.builder()
-                .ontology("src/test/resources/species-no-individuals.owl")
-                .curies(curies)
-                .individualAssociations(data)
-                .build();
+		Map<String, Set<String>> data = new HashMap<>();
+		data.put(null, toSet("HP:0000952,HP:0001090,HP:0004322,HP:0001006,HP:0006101"));
 
-        Ontology.load(sourceData);
-    }
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies).individualAssociations(data)
+				.build();
 
-    @Test(expected = NullPointerException.class)
-    public void testAddNullClasses() {
-        Map<String, String> curies = getHpAndNameCurieMap();
+		Ontology.load(sourceData);
+	}
 
-        Map<String, Set<String>> data = new HashMap<>();
-        data.put("MINION:Kevin", null);
+	@Test(expected = NullPointerException.class)
+	public void testAddNullClasses() {
+		Map<String, String> curies = getHpAndNameCurieMap();
 
-        OntologySourceData sourceData = OntologySourceData.builder()
-                .ontology("src/test/resources/species-no-individuals.owl")
-                .curies(curies)
-                .individualAssociations(data)
-                .build();
+		Map<String, Set<String>> data = new HashMap<>();
+		data.put("MINION:Kevin", null);
 
-        Ontology.load(sourceData);
-    }
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies).individualAssociations(data)
+				.build();
 
-    @Test
-    public void testAddIndividuals() {
-        Map<String, String> curies = getHpAndNameCurieMap();
+		Ontology.load(sourceData);
+	}
 
-        Map<String, Set<String>> data = new HashMap<>();
-        //Concatenated - should be able to parse TSV, CSV and trim whitespace
-        data.put("MINION:Kevin", toSet("HP:0000952,HP:0001090,HP:0004322,HP:0001006,HP:0006101"));
-        data.put("MINION:Bob", toSet("HP:0000952;HP:0001090;HP:0008857;HP:0001006;HP:0006101;HP:0001100"));
-        //mixed
-        data.put("MINION:Stuart", toSet("HP:0000952; HP:0001090;HP:0008857 ;HP:0001006, HP:0006101,HP:0100754, HP:0009914  "));
+	@Test
+	public void testAddIndividuals() {
+		Map<String, String> curies = getHpAndNameCurieMap();
 
-        OntologySourceData sourceData = OntologySourceData.builder()
-                .ontology("src/test/resources/species-no-individuals.owl")
-                .curies(curies)
-                .individualAssociations(data)
-                .build();
+		Map<String, Set<String>> data = new HashMap<>();
+		// Concatenated - should be able to parse TSV, CSV and trim whitespace
+		data.put("MINION:Kevin", toSet("HP:0000952,HP:0001090,HP:0004322,HP:0001006,HP:0006101"));
+		data.put("MINION:Bob", toSet("HP:0000952;HP:0001090;HP:0008857;HP:0001006;HP:0006101;HP:0001100"));
+		// mixed
+		data.put("MINION:Stuart",
+				toSet("HP:0000952; HP:0001090;HP:0008857 ;HP:0001006, HP:0006101,HP:0100754, HP:0009914  "));
 
-        Ontology ontology = Ontology.load(sourceData);
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies).individualAssociations(data)
+				.build();
 
-        Set<OWLIndividualAxiom> kevinAxioms = getAxiomsForIndividual(ontology, "MINION:Kevin");
-        kevinAxioms.forEach(axiom -> {
-            Set<OWLClass> classes = axiom.getClassesInSignature();
-            classes.forEach(ontologyClass -> System.out.printf("Individual: %s Class: %s%n", axiom.getIndividualsInSignature(), ontologyClass));
-        });
+		Ontology ontology = Ontology.load(sourceData);
 
-        assertEquals(5, kevinAxioms.size());
-        Set<OWLIndividualAxiom> bobAxioms = getAxiomsForIndividual(ontology, "MINION:Bob");
-        assertEquals(6, bobAxioms.size());
-        Set<OWLIndividualAxiom> stuartAxioms = getAxiomsForIndividual(ontology, "MINION:Stuart");
-        assertEquals(7, stuartAxioms.size());
-    }
+		Set<OWLIndividualAxiom> kevinAxioms = getAxiomsForIndividual(ontology, "MINION:Kevin");
+		kevinAxioms.forEach(axiom -> {
+			Set<OWLClass> classes = axiom.getClassesInSignature();
+			classes.forEach(ontologyClass -> System.out.printf("Individual: %s Class: %s%n",
+					axiom.getIndividualsInSignature(), ontologyClass));
+		});
 
-    @Test
-    public void testIriConversion() {
-        Map<String, String> curies = getHpAndNameCurieMap();
+		assertEquals(5, kevinAxioms.size());
+		Set<OWLIndividualAxiom> bobAxioms = getAxiomsForIndividual(ontology, "MINION:Bob");
+		assertEquals(6, bobAxioms.size());
+		Set<OWLIndividualAxiom> stuartAxioms = getAxiomsForIndividual(ontology, "MINION:Stuart");
+		assertEquals(7, stuartAxioms.size());
+	}
 
-        OntologySourceData sourceData = OntologySourceData.builder()
-                .ontology("src/test/resources/species-no-individuals.owl")
-                .curies(curies)
-                .build();
+	@Test
+	public void testIriConversion() {
+		Map<String, String> curies = getHpAndNameCurieMap();
 
-        Ontology ontology = Ontology.load(sourceData);
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies).build();
 
-        IRI bobNotFound = ontology.toIri("Bob");
-        System.out.println(bobNotFound);
-        assertEquals("Bob", bobNotFound.toString());
-        assertEquals(ontology.toCurie(bobNotFound), "Bob");
+		Ontology ontology = Ontology.load(sourceData);
 
-        IRI bobFound = ontology.toIri("MINION:Bob");
-        System.out.println(bobFound);
-        assertEquals("http://despicableme.wikia.com/wiki/Bob", bobFound.toString());
-        assertEquals(ontology.toCurie(bobFound), "MINION:Bob");
+		IRI bobNotFound = ontology.toIri("Bob");
+		System.out.println(bobNotFound);
+		assertEquals("Bob", bobNotFound.toString());
+		assertEquals(ontology.toCurie(bobNotFound), "Bob");
 
-    }
+		IRI bobFound = ontology.toIri("MINION:Bob");
+		System.out.println(bobFound);
+		assertEquals("http://despicableme.wikia.com/wiki/Bob", bobFound.toString());
+		assertEquals(ontology.toCurie(bobFound), "MINION:Bob");
 
-    @Test
-    public void testGetOwlClass() {
-        Ontology ontology = getBobOnlyOntology();
+	}
 
-        OWLClass hpClass = ontology.getOWLClass("HP:0000952");
-        System.out.println(hpClass);
-        assertEquals(hpClass.toString(), "<http://purl.obolibrary.org/obo/HP_0000952>");
+	@Test
+	public void testGetOwlClass() {
+		Ontology ontology = getBobOnlyOntology();
 
-        OWLClass bobFound = ontology.getOWLClass("MINION:Bob");
-        System.out.println(bobFound);
-        assertEquals(bobFound.toString(), "<http://despicableme.wikia.com/wiki/Bob>");
-    }
+		OWLClass hpClass = ontology.getOWLClass("HP:0000952");
+		System.out.println(hpClass);
+		assertEquals(hpClass.toString(), "<http://purl.obolibrary.org/obo/HP_0000952>");
 
-    @Test
-    public void testGetOwlNamedIndividual() {
-        Ontology ontology = getBobOnlyOntology();
+		OWLClass bobFound = ontology.getOWLClass("MINION:Bob");
+		System.out.println(bobFound);
+		assertEquals(bobFound.toString(), "<http://despicableme.wikia.com/wiki/Bob>");
+	}
 
-        OWLNamedIndividual notFound = ontology.getOWLNamedIndividual("wibble");
-        System.out.println(notFound);
-        assertEquals(notFound.toString(), "<wibble>");
+	@Test
+	public void testGetOwlNamedIndividual() {
+		Ontology ontology = getBobOnlyOntology();
 
-        OWLNamedIndividual hpTerm = ontology.getOWLNamedIndividual("HP:0000952");
-        System.out.println(hpTerm);
-        assertEquals(hpTerm.toString(), "<http://purl.obolibrary.org/obo/HP_0000952>");
+		OWLNamedIndividual notFound = ontology.getOWLNamedIndividual("wibble");
+		System.out.println(notFound);
+		assertEquals(notFound.toString(), "<wibble>");
 
-        OWLNamedIndividual bob = ontology.getOWLNamedIndividual("MINION:Bob");
-        System.out.println(bob);
-        assertEquals(bob.toString(), "<http://despicableme.wikia.com/wiki/Bob>");
-    }
+		OWLNamedIndividual hpTerm = ontology.getOWLNamedIndividual("HP:0000952");
+		System.out.println(hpTerm);
+		assertEquals(hpTerm.toString(), "<http://purl.obolibrary.org/obo/HP_0000952>");
+
+		OWLNamedIndividual bob = ontology.getOWLNamedIndividual("MINION:Bob");
+		System.out.println(bob);
+		assertEquals(bob.toString(), "<http://despicableme.wikia.com/wiki/Bob>");
+	}
+
+	@Test
+	public void testLabels() throws IOException {
+		String target = "MINION:Bob";
+		String label = "Bobby bob";
+
+		File tmpFile = folder.newFile("labels.tsv");
+		FileUtils.writeStringToFile(tmpFile, target + "\t" + label, "UTF-8");
+
+		Map<String, String> curies = getHpAndNameCurieMap();
+
+		OntologySourceData sourceData = OntologySourceData.builder()
+				.ontology("src/test/resources/species-no-individuals.owl").curies(curies)
+				.labelTsvs(Sets.newHashSet(tmpFile.getAbsolutePath())).build();
+
+		Ontology ontology = Ontology.load(sourceData);
+		OWLNamedIndividual individual = ontology.getOWLNamedIndividual(target);
+
+		Set<OWLAnnotationAssertionAxiom> annotations = ontology.getOwlOntology()
+				.getAnnotationAssertionAxioms(individual.getIRI());
+		assertEquals(annotations.size(), 1);
+		String extractedProperty = annotations.iterator().next().getValue().asLiteral().get().getLiteral();
+		assertEquals(extractedProperty, label);
+
+	}
 
 }
