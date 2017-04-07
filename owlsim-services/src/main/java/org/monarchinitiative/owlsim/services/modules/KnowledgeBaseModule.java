@@ -33,7 +33,7 @@ public class KnowledgeBaseModule extends AbstractModule {
 		logger.info("Loading curies:");
 		curies.entrySet().forEach(logger::info);
 		logger.info("Loading labels:");
-		//labels.entrySet().forEach(logger::info);
+		labelTsvs.forEach(logger::info);
 
 		//The OwlKnowledgeBase.Loader uses the ELKReasonerFactory and Concurrency.CONCURRENT as defaults.
 		this.bmKnowledgeBase = OwlKnowledgeBase.loader()

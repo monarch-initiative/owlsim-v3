@@ -76,6 +76,7 @@ To restrict to specific species:
 
 ```
 docker build --build-arg species=all -t owlsim-all . # default if no args is provided or not matching any species
-docker build --build-arg species=human -t owlsim-human
-
+docker build --build-arg species=Hs -t owlsim-human .
+docker build --build-arg species=Hs,Mm -t owlsim-multi .
+# supported species: Hs,Mm,Dr,Dm,Ce
 ```
