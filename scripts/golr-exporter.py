@@ -43,7 +43,8 @@ def transformAssociation(input, output):
 
 def main():
 
-    biolink = "http://localhost:5000/api" #mart/labels/gene/phenotype/NCBITaxon%3A7955
+    #biolink = "http://localhost:5000/api" #mart/labels/gene/phenotype/NCBITaxon%3A7955
+    biolink = "https://api.monarchinitiative.org/api"
 
     taxon_map = {
         'Hs': 9606,

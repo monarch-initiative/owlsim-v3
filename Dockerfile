@@ -27,14 +27,20 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 # Define working directory.
 WORKDIR /data
 ADD owlsim-services/target/owlsim-services-3.0-SNAPSHOT.jar /data/
-ADD configuration-samples/configuration-all.yaml /data/configuration.yaml
+#ADD configuration-samples/configuration-all.yaml /data/configuration.yaml
+ADD scripts/golr-exporter.py /data/golr-exporter.py
+ADD scripts/configuration-generator.py /data/configuration-generator.py
 
-RUN if [ $species = "human" ];  \
+RUN apt-get -y update && apt-get install python-pip -y
+RUN pip install pyyaml
+
+RUN if [ $species = "all" ];  \
   then \
-    wget https://data.monarchinitiative.org/owl/all-hp.owl -O /data/all.owl; \
+    cd /data && python golr-exporter.py; \
   else \
-    wget http://ci.monarchinitiative.org/view/dev/job/create-owlsim-files-on-dev/lastSuccessfulBuild/artifact/server/all.owl -O /data/all.owl; \
+    cd /data && python golr-exporter.py -t $species; \
   fi
+RUN cd /data && python configuration-generator.py
 
 CMD java -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
 

@@ -363,8 +363,8 @@ public class BMKnowledgeBaseOWLAPIImpl implements BMKnowledgeBase {
 						addPropertyValue(pvm, pid, getShortForm(((OWLNamedIndividual) obj).getIRI()));
 
 					}
-
-				} else if (false) {
+					// TODO check this...
+				} else if (false) { 
 					String pid = getShortForm(((OWLDataProperty) p).getIRI());
 					OWLLiteral obj = ((OWLDataPropertyAssertionAxiom) paa).getObject();
 					if (obj instanceof OWLLiteral) {
