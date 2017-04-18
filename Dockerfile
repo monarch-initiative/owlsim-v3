@@ -42,6 +42,6 @@ RUN if [ $species = "all" ];  \
   fi
 RUN cd /data && python configuration-generator.py
 
-CMD java -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
+CMD java -Xmx10g -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
 
 EXPOSE 8080
