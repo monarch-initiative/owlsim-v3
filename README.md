@@ -69,7 +69,7 @@ Run those commands from the root directory (with Docker >= 1.9):
 ```
 mvn package
 docker build -t owlsim-all . # by default contains all the species
-docker run -p 8080:8080 owlsim-all
+docker run -e JAVA_OPTS='-Xmx10g' -p 8080:8080 owlsim-all
 ```
 
 To restrict to specific species:
