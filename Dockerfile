@@ -10,6 +10,8 @@ FROM ubuntu:16.04
 
 ARG species=all
 
+ENV JAVA_OPTS ""
+
 RUN apt-get -y update && apt-get install -y software-properties-common python-software-properties
 
 # Install Java.
@@ -42,6 +44,6 @@ RUN if [ $species = "all" ];  \
   fi
 RUN cd /data && python configuration-generator.py
 
-CMD java -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
+CMD java $JAVA_OPTS -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
 
 EXPOSE 8080
