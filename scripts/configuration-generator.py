@@ -5,7 +5,7 @@
 # output an owlsim config file
 
 import yaml
-import urllib2
+import requests
 import fnmatch
 import os
 
@@ -21,7 +21,7 @@ def main():
     labelTsvs = [filename for filename in tsvs if filename.endswith('label.tsv')]
 
     # Note: the yaml dump is buggy with the empty string key, so I'm just appending the raw string and add indentation manually
-    curies = urllib2.urlopen("https://raw.githubusercontent.com/monarch-initiative/dipper/master/dipper/curie_map.yaml").read()
+    curies = requests.get("https://raw.githubusercontent.com/monarch-initiative/dipper/master/dipper/curie_map.yaml").text
 
     data = dict(
         ontologyUris = ['http://purl.obolibrary.org/obo/upheno/monarch.owl'],

@@ -2,7 +2,7 @@
 
 import os
 import getopt
-import urllib
+import requests
 import json
 import csv
 import shutil
@@ -10,16 +10,14 @@ import argparse
 
 def uniqAndSort(output):
     sorted_suffix = '.sorted2'
-    f = open(output, "r")
-    fs = open(output + sorted_suffix, "w")
+    f = open(output, "r", encoding='utf-8')
+    fs = open(output + sorted_suffix, "w+", encoding='utf-8')
     fs.writelines(sorted(set(f.readlines())))
     shutil.move(output + sorted_suffix, output)
 
-def transformLabel(input, output):
-    with open(input) as data_file:
-        data = json.load(data_file)
+def transformLabel(data, output):
 
-    with open(output, 'w') as tsvfile:
+    with open(output, 'w', encoding='utf-8') as tsvfile:
         writer = csv.writer(tsvfile, delimiter='\t')
         for entry in data:
             id = entry["subject"]
@@ -28,11 +26,9 @@ def transformLabel(input, output):
 
     uniqAndSort(output)
 
-def transformAssociation(input, output):
-    with open(input) as data_file:
-        data = json.load(data_file)
+def transformAssociation(data, output):
 
-    with open(output, 'w') as tsvfile:
+    with open(output, 'w', encoding='utf-8') as tsvfile:
         writer = csv.writer(tsvfile, delimiter='\t')
         for entry in data:
             id = entry["subject"]
@@ -83,10 +79,10 @@ def main():
 
             assocURL = biolink + "/mart/" + subj + "/" + obj + "/NCBITaxon:" + str(taxon_map.get(tax))
             print("fetching " + assocURL)
-            urllib.urlretrieve (assocURL, assocFileJson)
-            transformAssociation(assocFileJson, assocFileTsv)
-            transformLabel(assocFileJson, labelFileTsv)
-            os.remove(assocFileJson)
+            req = requests.get(assocURL)
+            data = req.json()
+            transformAssociation(data, assocFileTsv)
+            transformLabel(data, labelFileTsv)
 
 if __name__ == "__main__":
     main()
