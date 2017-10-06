@@ -70,7 +70,7 @@ def main():
         obj = "phenotype"
 
         if tax == "Hs":
-            subjs = ["disease", "case"]
+            subjs = ["disease", "case", "gene"]
 
         for subj in subjs:
             assocFileJson = tax + "/" + subj + "-" + obj + ".json"
