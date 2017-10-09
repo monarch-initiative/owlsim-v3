@@ -33,16 +33,16 @@ ADD owlsim-services/target/owlsim-services-3.0-SNAPSHOT.jar /data/
 ADD scripts/golr-exporter.py /data/golr-exporter.py
 ADD scripts/configuration-generator.py /data/configuration-generator.py
 
-RUN apt-get -y update && apt-get install python-pip -y
-RUN pip install pyyaml
+RUN apt-get -y update && apt-get install python3-pip -y
+RUN pip3 install pyyaml requests
 
 RUN if [ $species = "all" ];  \
   then \
-    cd /data && python golr-exporter.py; \
+    cd /data && python3 golr-exporter.py; \
   else \
-    cd /data && python golr-exporter.py -t $species; \
+    cd /data && python3 golr-exporter.py -t $species; \
   fi
-RUN cd /data && python configuration-generator.py
+RUN cd /data && python3 configuration-generator.py
 
 CMD java $JAVA_OPTS -jar /data/owlsim-services-3.0-SNAPSHOT.jar server /data/configuration.yaml
 
