@@ -43,11 +43,7 @@ def main():
     biolink = "https://api.monarchinitiative.org/api"
 
     taxon_map = {
-        'Hs': 9606,
-        'Mm': 10090,
-        'Dr': 7955,
-        'Dm': 7227,
-        'Ce': 6239
+        'Hs': 9606
         }
 
     parser = argparse.ArgumentParser(description='Fetcher from biolink for monarch data',
@@ -70,7 +66,7 @@ def main():
         obj = "phenotype"
 
         if tax == "Hs":
-            subjs = ["disease", "case", "gene"]
+            subjs = ["disease"]
 
         for subj in subjs:
             assocFileJson = tax + "/" + subj + "-" + obj + ".json"
