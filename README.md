@@ -6,12 +6,6 @@ Ontology Based Profile Matching
 [![Coverage Status](https://coveralls.io/repos/monarch-initiative/owlsim-v3/badge.svg?branch=master&service=github)](https://coveralls.io/github/monarch-initiative/owlsim-v3?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/owlsim/badge/?version=latest)](http://owlsim.readthedocs.org/en/latest/?badge=latest)
 
-This will eventually replace sim2 currently distributed as part of owltools
-
-## Reference Implementation
-
-Monarch owlsim instance:
-* http://owlsim3.monarchinitiative.org/api/docs/
 
 ## Documentation
 
